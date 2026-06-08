@@ -44,7 +44,7 @@ export default function About() {
   return (
     <section
       id="about"
-      className="relative overflow-hidden bg-[#FAF7F0] py-24 md:py-32"
+      className="relative overflow-hidden bg-[#F9F3DB] py-24 md:py-32"
     >
       {/* Decorative dot pattern */}
       <div className="pointer-events-none absolute right-0 top-0 h-64 w-64 opacity-[0.04]">
@@ -55,14 +55,14 @@ export default function About() {
               cx={(i % 8) * 32 + 16}
               cy={Math.floor(i / 8) * 32 + 16}
               r="2"
-              fill="#2C3E2D"
+              fill="#1028AB"
             />
           ))}
         </svg>
       </div>
 
       {/* Subtle decorative element */}
-      <div className="pointer-events-none absolute -left-32 bottom-0 h-[500px] w-[500px] rounded-full bg-[#4A6741]/[0.03]" />
+      <div className="pointer-events-none absolute -left-32 bottom-0 h-[500px] w-[500px] rounded-full bg-[#D9A261]/[0.05]" />
 
       <div className="mx-auto max-w-6xl px-6 lg:px-8">
         {/* Section header */}
@@ -73,13 +73,13 @@ export default function About() {
           transition={{ duration: 0.6 }}
           className="mx-auto max-w-2xl text-center"
         >
-          <span className="text-sm font-medium uppercase tracking-widest text-[#4A6741]">
+          <span className="text-sm font-medium uppercase tracking-widest text-[#D9A261]">
             O nas
           </span>
-          <h2 className="mt-3 font-heading text-3xl font-bold tracking-tight text-[#2C3E2D] md:text-5xl">
+          <h2 className="mt-3 font-heading text-3xl font-bold tracking-tight text-[#CA5254] md:text-5xl">
             Więcej niż restauracja
           </h2>
-          <Separator className="mx-auto mt-6 w-16 bg-[#D4A853]/40" />
+          <Separator className="mx-auto mt-6 w-16 bg-[#D9A261]/40" />
         </motion.div>
 
         {/* Story */}
@@ -90,18 +90,18 @@ export default function About() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="mx-auto mt-12 max-w-3xl text-center"
         >
-          <p className="text-lg leading-relaxed text-[#2C3E2D]/70 md:text-xl">
+          <p className="text-lg leading-relaxed text-[#1028AB]/80 md:text-xl">
             Poleczka to nowoczesna kuchnia polska we Wrocławiu. Opieramy się na{" "}
-            <strong className="text-[#2C3E2D]">
+            <strong className="text-[#CA5254] font-semibold">
               tradycyjnych, lokalnych składnikach
             </strong>
             , wydobywając z nich pełnię smaku dzięki nowoczesnym technikom
             kulinarnym. Miejsce stworzone z pasją, gdzie klasyka spotyka się
             z finezją.
           </p>
-          <p className="mt-6 text-lg leading-relaxed text-[#2C3E2D]/70 md:text-xl">
+          <p className="mt-6 text-lg leading-relaxed text-[#1028AB]/80 md:text-xl">
             Na naszym unikalnym{" "}
-            <strong className="text-[#2C3E2D]">zacienionym patio</strong>{" "}
+            <strong className="text-[#CA5254] font-semibold">zacienionym patio</strong>{" "}
             poczujesz atmosferę starego Wrocławia, delektując się smakami nowej
             polskiej kuchni. Świeże zioła prosto z&nbsp;naszego mini-ogródka,
             sery od lokalnych serowarów i sezonowe warzywa od dolnośląskich
@@ -119,15 +119,15 @@ export default function About() {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-80px" }}
-              className="group rounded-2xl border border-[#2C3E2D]/5 bg-white/60 p-6 backdrop-blur-sm transition-all hover:border-[#4A6741]/20 hover:shadow-lg hover:shadow-[#4A6741]/5"
+              className="group rounded-2xl border border-[#A6A6A6]/20 bg-white/60 p-6 backdrop-blur-sm transition-all hover:border-[#1028AB]/30 hover:shadow-lg hover:shadow-[#1028AB]/5"
             >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#2C3E2D]/5 transition-colors group-hover:bg-[#4A6741]/10">
-                <value.icon className="h-5 w-5 text-[#4A6741]" />
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#1028AB]/5 transition-colors group-hover:bg-[#1028AB]/10">
+                <value.icon className="h-5 w-5 text-[#1028AB]" />
               </div>
-              <h3 className="mb-2 text-lg font-semibold text-[#2C3E2D]">
+              <h3 className="mb-2 text-lg font-semibold text-[#CA5254]">
                 {value.title}
               </h3>
-              <p className="text-sm leading-relaxed text-[#2C3E2D]/60">
+              <p className="text-sm leading-relaxed text-[#A6A6A6]">
                 {value.description}
               </p>
             </motion.div>

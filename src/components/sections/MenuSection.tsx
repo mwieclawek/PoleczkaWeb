@@ -172,9 +172,9 @@ const fadeInUp = {
 
 export default function MenuSection() {
   return (
-    <section id="menu" className="relative bg-white py-24 md:py-32">
-      {/* Subtle green decorative element */}
-      <div className="pointer-events-none absolute right-0 top-1/4 h-[300px] w-[300px] rounded-full bg-[#4A6741]/[0.02]" />
+    <section id="menu" className="relative bg-[#F9F3DB] py-24 md:py-32">
+      {/* Subtle decorative element */}
+      <div className="pointer-events-none absolute right-0 top-1/4 h-[300px] w-[300px] rounded-full bg-[#D9A261]/[0.05]" />
 
       <div className="mx-auto max-w-5xl px-6 lg:px-8">
         {/* Header */}
@@ -185,27 +185,27 @@ export default function MenuSection() {
           transition={{ duration: 0.6 }}
           className="text-center"
         >
-          <span className="text-sm font-medium uppercase tracking-widest text-[#4A6741]">
+          <span className="text-sm font-medium uppercase tracking-widest text-[#D9A261]">
             Menu
           </span>
-          <h2 className="mt-3 font-heading text-3xl font-bold tracking-tight text-[#2C3E2D] md:text-5xl">
+          <h2 className="mt-3 font-heading text-3xl font-bold tracking-tight text-[#CA5254] md:text-5xl">
             Nasze menu
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-[#2C3E2D]/60">
+          <p className="mx-auto mt-4 max-w-xl text-[#A6A6A6]">
             Polskie klasyki w nowoczesnym wydaniu. Wszystkie dania przygotowane
             ze świeżych, lokalnych składników od dolnośląskich dostawców.
           </p>
-          <Separator className="mx-auto mt-8 w-16 bg-[#D4A853]/40" />
+          <Separator className="mx-auto mt-8 w-16 bg-[#D9A261]/40" />
         </motion.div>
 
         {/* Tabs */}
         <Tabs defaultValue="przystawki" className="mt-14">
-          <TabsList className="mx-auto grid w-full max-w-lg grid-cols-4 bg-[#2C3E2D]/5">
+          <TabsList className="mx-auto grid w-full max-w-lg grid-cols-4 bg-[#A6A6A6]/10">
             {menuCategories.map((cat) => (
               <TabsTrigger
                 key={cat.key}
                 value={cat.key}
-                className="text-sm data-[state=active]:bg-[#2C3E2D] data-[state=active]:text-[#FAF7F0] data-active:bg-[#2C3E2D] data-active:text-[#FAF7F0]"
+                className="text-sm text-[#1028AB] data-[state=active]:bg-[#CA5254] data-[state=active]:text-[#F9F3DB] data-active:bg-[#CA5254] data-active:text-[#F9F3DB] transition-all"
               >
                 <span className="mr-1 hidden sm:inline">{cat.emoji}</span>
                 {cat.label}
@@ -215,7 +215,7 @@ export default function MenuSection() {
 
           {menuCategories.map((cat) => (
             <TabsContent key={cat.key} value={cat.key} className="mt-10">
-              <div className="divide-y divide-[#2C3E2D]/5">
+              <div className="divide-y divide-[#A6A6A6]/20">
                 {cat.items.map((item, i) => (
                   <motion.div
                     key={item.id}
@@ -224,21 +224,21 @@ export default function MenuSection() {
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, margin: "-50px" }}
-                    className="group flex items-start justify-between gap-4 rounded-lg px-4 py-6 -mx-4 transition-colors hover:bg-[#FAF7F0]/60"
+                    className="group flex items-start justify-between gap-4 rounded-lg px-4 py-6 -mx-4 transition-colors hover:bg-white/60"
                   >
                     <div className="flex-1">
                       <div className="flex items-center gap-3">
-                        <h3 className="text-lg font-semibold text-[#2C3E2D]">
+                        <h3 className="text-lg font-semibold text-[#1028AB]">
                           {item.name}
                         </h3>
                       </div>
-                      <p className="mt-1.5 text-sm leading-relaxed text-[#2C3E2D]/50">
+                      <p className="mt-1.5 text-sm leading-relaxed text-[#A6A6A6]">
                         {item.description}
                       </p>
                     </div>
                     {/* Decorative dotted line */}
-                    <div className="mt-3 hidden flex-1 border-b border-dotted border-[#2C3E2D]/10 sm:block" />
-                    <span className="shrink-0 pt-0.5 text-lg font-bold text-[#4A6741]">
+                    <div className="mt-3 hidden flex-1 border-b border-dotted border-[#A6A6A6]/30 sm:block" />
+                    <span className="shrink-0 pt-0.5 text-lg font-bold text-[#CA5254]">
                       {item.price}&nbsp;zł
                     </span>
                   </motion.div>

@@ -62,7 +62,7 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-[#2C3E2D] text-[#FAF7F0]">
+    <footer className="bg-[#1028AB] text-[#F9F3DB]">
       <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8 lg:py-20">
         <div className="grid gap-12 md:grid-cols-3">
           {/* Brand */}
@@ -73,11 +73,11 @@ export default function Footer() {
             transition={{ duration: 0.6 }}
           >
             <Link href="/" className="inline-block">
-              <span className="font-heading text-2xl font-bold tracking-tight text-[#FAF7F0]">
+              <span className="font-heading text-2xl font-bold tracking-tight text-[#F9F3DB] hover:text-[#D9A261] transition-colors">
                 Poleczka
               </span>
             </Link>
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-[#FAF7F0]/50">
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-[#F9F3DB]/70">
               Nowoczesna kuchnia polska we Wrocławiu. Tradycyjne składniki,
               nowoczesne techniki — miejsce, gdzie klasyka spotyka się
               z finezją.
@@ -91,7 +91,7 @@ export default function Footer() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            <h3 className="mb-6 text-sm font-semibold uppercase tracking-widest text-[#D4A853]">
+            <h3 className="mb-6 text-sm font-semibold uppercase tracking-widest text-[#D9A261]">
               Nawigacja
             </h3>
             <ul className="space-y-3">
@@ -99,7 +99,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-[#FAF7F0]/60 transition-colors hover:text-[#FAF7F0]"
+                    className="text-sm text-[#F9F3DB]/70 transition-colors hover:text-[#CA5254]"
                   >
                     {link.label}
                   </Link>
@@ -115,16 +115,16 @@ export default function Footer() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <h3 className="mb-6 text-sm font-semibold uppercase tracking-widest text-[#D4A853]">
+            <h3 className="mb-6 text-sm font-semibold uppercase tracking-widest text-[#D9A261]">
               Znajdź nas
             </h3>
-            <p className="text-sm text-[#FAF7F0]/60">
+            <p className="text-sm text-[#F9F3DB]/70 leading-relaxed">
               ul. Stefana Jaracza 77B
               <br />
               50-305 Wrocław
             </p>
 
-            <Separator className="my-6 bg-[#FAF7F0]/10" />
+            <Separator className="my-6 bg-[#F9F3DB]/10" />
 
             <div className="flex gap-4">
               {socialLinks.map((link) => (
@@ -133,7 +133,7 @@ export default function Footer() {
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-[#FAF7F0]/10 text-[#FAF7F0]/50 transition-all hover:border-[#D4A853]/30 hover:text-[#D4A853]"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-[#F9F3DB]/20 text-[#F9F3DB]/70 transition-all hover:border-[#CA5254] hover:text-[#CA5254] hover:bg-[#CA5254]/10"
                   aria-label={link.label}
                 >
                   <link.icon className="h-4 w-4" />
@@ -144,14 +144,14 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <Separator className="my-10 bg-[#FAF7F0]/10" />
-        <div className="flex flex-col items-center justify-between gap-4 text-xs text-[#FAF7F0]/30 md:flex-row">
+        <Separator className="my-10 bg-[#F9F3DB]/10" />
+        <div className="flex flex-col items-center justify-between gap-4 text-xs text-[#F9F3DB]/40 md:flex-row">
           <span>
             © {new Date().getFullYear()} Poleczka. Wszelkie prawa zastrzeżone.
           </span>
           <span>
             Zbudowane z{" "}
-            <span className="text-[#D4A853]/50">♥</span> we Wrocławiu
+            <span className="text-[#CA5254]">♥</span> we Wrocławiu
           </span>
         </div>
       </div>
