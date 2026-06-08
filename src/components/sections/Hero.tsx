@@ -1,0 +1,138 @@
+"use client";
+
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { ArrowDown, MapPin, Clock } from "lucide-react";
+
+export default function Hero() {
+  return (
+    <section
+      id="hero"
+      className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#2C3E2D]"
+    >
+      {/* Gradient overlay for depth */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#1A2B1B]/40 via-transparent to-[#2C3E2D]/80" />
+
+      {/* Subtle grain overlay */}
+      <div className="pointer-events-none absolute inset-0 opacity-[0.03] mix-blend-overlay bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNhKSIvPjwvc3ZnPg==')]" />
+
+      {/* Decorative botanical-inspired circles */}
+      <motion.div
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 0.06 }}
+        transition={{ duration: 1.5, ease: "easeOut" as const }}
+        className="absolute -right-32 -top-32 h-[600px] w-[600px] rounded-full border border-[#FAF7F0]/15"
+      />
+      <motion.div
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 0.04 }}
+        transition={{ duration: 1.8, ease: "easeOut" as const, delay: 0.3 }}
+        className="absolute -bottom-48 -left-48 h-[800px] w-[800px] rounded-full border border-[#FAF7F0]/10"
+      />
+      <motion.div
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 0.03 }}
+        transition={{ duration: 2, ease: "easeOut" as const, delay: 0.5 }}
+        className="absolute top-1/4 -left-20 h-[400px] w-[400px] rounded-full bg-[#4A6741]/10"
+      />
+
+      <div className="relative z-10 mx-auto max-w-5xl px-6 text-center">
+        {/* Badge */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="mb-8 inline-flex items-center gap-2 rounded-full border border-[#FAF7F0]/15 bg-[#FAF7F0]/8 px-5 py-2.5 text-sm text-[#FAF7F0]/70 backdrop-blur-sm"
+        >
+          <MapPin className="h-3.5 w-3.5 text-[#D4A853]" />
+          <span>Wrocław · ul. Stefana Jaracza 77B</span>
+        </motion.div>
+
+        {/* Title */}
+        <motion.h1
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="mb-6 font-heading text-6xl font-bold leading-tight tracking-tight text-[#FAF7F0] md:text-7xl lg:text-9xl"
+        >
+          Poleczka
+        </motion.h1>
+
+        {/* Tagline */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.55 }}
+          className="mx-auto mb-2 text-sm font-medium uppercase tracking-[0.3em] text-[#D4A853]"
+        >
+          Nowoczesna kuchnia polska
+        </motion.p>
+
+        {/* Subtitle */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.7 }}
+          className="mx-auto mb-12 max-w-2xl text-lg leading-relaxed text-[#FAF7F0]/60 md:text-xl"
+        >
+          Tradycyjne, lokalne składniki w nowym wydaniu. Klasyka spotyka się
+          z&nbsp;finezją w&nbsp;sercu Wrocławia.
+        </motion.p>
+
+        {/* CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.9 }}
+          className="flex flex-col items-center justify-center gap-4 sm:flex-row"
+        >
+          <Link
+            href="#menu"
+            className="inline-flex h-11 items-center justify-center rounded-full bg-[#D4A853] px-8 text-base font-semibold text-[#2C3E2D] shadow-lg shadow-[#D4A853]/20 transition-all hover:bg-[#C49A43] hover:shadow-xl hover:shadow-[#D4A853]/30"
+          >
+            Zobacz Menu
+          </Link>
+          <Link
+            href="#contact"
+            className="inline-flex h-11 items-center justify-center rounded-full border border-[#FAF7F0]/25 px-8 text-base font-medium text-[#FAF7F0] transition-colors hover:bg-[#FAF7F0]/10"
+          >
+            Zarezerwuj Stolik
+          </Link>
+        </motion.div>
+
+        {/* Info pills */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 1.2 }}
+          className="mt-16 flex flex-wrap items-center justify-center gap-6 text-sm text-[#FAF7F0]/45"
+        >
+          <span className="flex items-center gap-1.5">
+            <Clock className="h-3.5 w-3.5" />
+            Wt–Pt 12:00–22:00
+          </span>
+          <span className="hidden h-4 w-px bg-[#FAF7F0]/15 sm:block" />
+          <span className="flex items-center gap-1.5">
+            <Clock className="h-3.5 w-3.5" />
+            Sob–Ndz 12:00–23:00
+          </span>
+        </motion.div>
+      </div>
+
+      {/* Scroll indicator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5, duration: 0.8 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2"
+      >
+        <motion.div
+          animate={{ y: [0, 8, 0] }}
+          transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" as const }}
+        >
+          <ArrowDown className="h-5 w-5 text-[#FAF7F0]/30" />
+        </motion.div>
+      </motion.div>
+    </section>
+  );
+}
