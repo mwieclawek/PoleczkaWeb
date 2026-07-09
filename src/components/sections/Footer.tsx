@@ -76,7 +76,7 @@ export default function Footer() {
               <img
                 src="/logo.png"
                 alt="Poleczka — Bistro Kuchnia Polska"
-                className="h-8 w-auto brightness-0 invert transition-opacity hover:opacity-80"
+                className="h-14 w-auto md:h-16 brightness-0 invert transition-opacity hover:opacity-80"
               />
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-[#FFFDF6]/70">

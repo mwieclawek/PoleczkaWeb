@@ -53,7 +53,7 @@ function MenuItem({
     >
       <div className="flex-1">
         <div className="flex items-center gap-3">
-          <h3 className="text-lg font-semibold text-[#960C3F]">
+          <h3 className="font-heading text-xl font-bold text-[#960C3F]">
             {item.name}
           </h3>
           {item.highlighted && (
@@ -82,30 +82,31 @@ const menuCategories: MenuCategory[] = [
     items: [
       {
         id: "1",
-        name: "Seler pieczony w soli i kawie",
+        name: "Seler pieczony w soli i kawie / Café de Paris",
         description:
-          "Stek z korzenia selera pieczony przez trzy godziny w masie solnej | gorący sos Café de Paris z anchois i kaparami",
+          "Stek z korzenia selera pieczony przez długie godziny w masie solnej i kawie | gorący sos Café de Paris z anchois i kaparami",
         price: 39,
+        highlighted: true,
       },
       {
         id: "2",
-        name: "Polska surowa w cydrze",
+        name: "Kiełbasa śląska duszona w cydrze",
         description:
-          "Śląska kiełbasa duszona w rzemieślniczym cydrze ze Wzgórz Trzebnickich | świeże pieczywo | rzemieślnicze masło",
+          "Rzemieślnicza kiełbasa duszona w cydrze ze Wzgórz Trzebnickich | świeże pieczywo | aromatyczny sos z redukcji",
         price: 28,
       },
       {
         id: "3",
-        name: "Krem z wędzonego twarogu",
+        name: "Krem z wędzonego twarogu z botwinką",
         description:
-          "Twaróg wędzony emulsyfikowany ze śmietanką | smażona botwinka i buraczki | szalotka | kapary | palone masło | pieczywo",
-        price: 24,
+          "Aksamitny krem z twarogu wędzonego | smażona botwinka i buraczki z patelni | świeże zioła | rzemieślnicze pieczywo",
+        price: 26,
       },
       {
         id: "4",
-        name: "Gofry ziemniaczane",
+        name: "Gofr ziemniaczany z wędzonym karpiem",
         description:
-          "Chrupiące gofry z tartych ziemniaków | wędzony karp z Doliny Baryczy (milicki) | autorski majonez koperkowy | olej grzybowy",
+          "Chrupiący gofr z tartych ziemniaków | wędzony karp milicki z Doliny Baryczy | autorski majonez koperkowy i grzybowy",
         price: 36,
         highlighted: true,
       },
@@ -113,9 +114,15 @@ const menuCategories: MenuCategory[] = [
         id: "5",
         name: "Pasztet z karmelizowaną cebulą",
         description:
-          "Domowy pasztet z wieprzowiny, wołowiny z rosołu i wątróbki | cebula wolno duszona z octem winnym i miodem | pikle | olej szczypiorkowy | pieczywo",
+          "Domowy pasztet mięsny | słodko-kwaśna karmelizowana cebula | chrupiące pikle | olej szczypiorkowy | świeże pieczywo",
         price: 32,
-        highlighted: true,
+      },
+      {
+        id: "6",
+        name: "Smalec i masło ziołowe z pieczywem",
+        description:
+          "Domowy smalec ze skwarkami | krem z wędzonego twarogu | rzemieślnicze masło z solą morską i ziołami | świeże pieczywo",
+        price: 24,
       },
     ],
   },
@@ -124,22 +131,22 @@ const menuCategories: MenuCategory[] = [
     label: "Zupy",
     items: [
       {
-        id: "6",
-        name: "Domowy rosół",
+        id: "7",
+        name: "Domowy rosół na kaczce",
         description:
-          "Esencjonalny bulion na korpusach z kaczki, szpondrze wołowym i palonych warzywach | makaron z naleśnika z mąki graham | olej szczypiorkowy",
+          "Esencjonalny bulion na korpusach z kaczki i palonych warzywach | makaron z naleśnika razowego (graham) | świeży olej szczypiorkowy",
         price: 24,
       },
       {
-        id: "7",
-        name: "Botwinka",
+        id: "8",
+        name: "Letnia botwinka z zielonymi kluskami",
         description:
-          "Tradycyjna letnia zupa na wywarze warzywnym | zielone kluski lane ze szpinakiem | koperek | kwaśna śmietana",
+          "Tradycyjna letnia zupa z młodych buraków | zielone kluski lane ze szpinakiem | koperek | kwaśna śmietana",
         price: 26,
       },
       {
-        id: "8",
-        name: "Krem z selera",
+        id: "9",
+        name: "Krem z pieczonego selera",
         description:
           "Aksamitna zupa z pieczonego selera i ziemniaków | kawior z pstrąga | mikroliście rzodkiewki",
         price: 29,
@@ -152,55 +159,55 @@ const menuCategories: MenuCategory[] = [
     label: "Dania główne",
     items: [
       {
-        id: "9",
-        name: "Pierś z kaczki",
-        description:
-          "Kaczka przygotowywana techniką sous-vide, obsmażana na chrupiąco | sos winno-porzeczkowy z jeżynami | gładkie puree z kalafiora",
-        price: 68,
-      },
-      {
         id: "10",
-        name: "Kluski z maczanką",
+        name: "Pierś z kaczki z sosem porzeczkowym",
         description:
-          "Ręcznie formowane kluski śląskie z mączystych ziemniaków | rwana karkówka duszona w winie i bulionie (maczanka) | karmelizowana cebula",
-        price: 49,
+          "Kaczka sous-vide obsmażana na chrupiąco | sos winno-porzeczkowy z jeżynami | jedwabiste puree z kalafiora | piklowana cebulka",
+        price: 68,
         highlighted: true,
       },
       {
         id: "11",
-        name: "Kluski z porem",
+        name: "Kluski śląskie z polikami wieprzowymi",
         description:
-          "Ręcznie formowane kluski śląskie z mączystych ziemniaków | pieczony por duszony w śmietance",
-        price: 38,
-      },
-      {
-        id: "12",
-        name: "Klasyczny schabowy",
-        description:
-          "Złocisty kotlet schabowy smażony na smalcu z panko | jedwabiste puree ziemniaczane na mleku i maśle | mizeria z ogórków gruntowych",
-        price: 46,
-      },
-      {
-        id: "13",
-        name: "Wątróbka drobiowa",
-        description:
-          "Krótko smażona wątróbka oprószona mąką | duszona cebula i polskie jabłko (Szara Reneta) | jedwabiste puree ziemniaczane",
-        price: 29,
+          "Ręcznie formowane kluski śląskie z mączystych ziemniaków | rwane poliki wieprzowe w ciemnym, esencjonalnym sosie | chrupiące pikle",
+        price: 49,
         highlighted: true,
       },
       {
-        id: "14",
-        name: "Młode ziemniaki",
+        id: "12",
+        name: "Kluski śląskie z sosem grzybowym",
         description:
-          "Ziemniaki z wody w mundurkach | bób z patelni na szalotce i maśle | jajo sadzone | kruszony twaróg wędzony | świeże zioła",
-        price: 36,
+          "Ręcznie formowane kluski śląskie | głęboki sos leśny z podgrzybków | chrupka ziołowa z czerstwego chleba lub marynowany akcent",
+        price: 44,
+      },
+      {
+        id: "13",
+        name: "Klasyczny schabowy na smalcu",
+        description:
+          "Złocisty kotlet schabowy smażony na smalcu z panko | jedwabiste maślane puree ziemniaczane | mizeria z ogórków gruntowych",
+        price: 46,
+      },
+      {
+        id: "14",
+        name: "Leniwe z fasolką szparagową",
+        description:
+          "Domowe kluski z twarogu półtłustego | letnia fasolka szparagowa | chrupka ziołowa | złote palone masło",
+        price: 39,
       },
       {
         id: "15",
-        name: "Leniwe",
+        name: "Młode ziemniaki z bobem i jajem",
         description:
-          "Domowe kluski z twarogu półtłustego | letnia fasolka szparagowa | chrupka ziołowa z czerstwego chleba | złote palone masło",
-        price: 39,
+          "Ziemniaki z wody w mundurkach | bób podsmażany na maśle i szalotce | jajo sadzone | kruszony wędzony twaróg | świeże zioła",
+        price: 36,
+      },
+      {
+        id: "16",
+        name: "Ziemniaki w mundurkach z puree i kaszą",
+        description:
+          "Wegetariańska kompozycja: młode ziemniaki w mundurkach | jedwabiste puree ziemniaczane | kasza gryczana | surówki i domowe kiszonki",
+        price: 36,
       },
     ],
   },
@@ -209,18 +216,60 @@ const menuCategories: MenuCategory[] = [
     label: "Desery",
     items: [
       {
-        id: "16",
-        name: "Sezonowe owoce pod kruszonką",
+        id: "17",
+        name: "Sezonowe owoce pod maślaną kruszonką",
         description:
-          "Gorące owoce jagodowe | maślana kruszonka | domowy krem chantilly z prawdziwą wanilią",
+          "Gorące owoce jagodowe prosto z sadu | chrupiąca maślana kruszonka | domowa puszysta bita śmietana z prawdziwą wanilią",
         price: 29,
       },
       {
-        id: "17",
-        name: "Leniwe na słodko",
+        id: "18",
+        name: "Leniwe na słodko z palonym masłem",
         description:
           "Klasyczne kluski twarogowe | palone masło ze złotą bułką tartą | redukowany sos jeżynowy | kwaśna śmietana",
         price: 26,
+      },
+    ],
+  },
+  {
+    key: "napoje",
+    label: "Napoje & Spritz",
+    items: [
+      {
+        id: "19",
+        name: "Porzeczka Hugo Spritz",
+        description:
+          "Autorski spritz na bazie prosecco, syropu z czarnej porzeczki, mięty i limonki",
+        price: 32,
+        highlighted: true,
+      },
+      {
+        id: "20",
+        name: "Lawenda & Ogórek Spritz",
+        description:
+          "Odświeżające koktajle spritz do wyboru: aromatyczny Lawenda Spritz lub wytrawny Spritz Ogórkowy",
+        price: 32,
+      },
+      {
+        id: "21",
+        name: "Wyselekcjonowane wina & Piwa rzemieślnicze",
+        description:
+          "Piwo lane i butelkowe z lokalnych browarów | Wina białe (Chardonnay, Vinho Verde) i czerwone (Cabernet, Musaco)",
+        price: 22,
+      },
+      {
+        id: "22",
+        name: "Lemoniady rzemieślnicze & Napoje",
+        description:
+          "Soki sezonowe (zapytaj obsługę) | Lipton | Mio Mio | Woda gazowana lub niegazowana",
+        price: 16,
+      },
+      {
+        id: "23",
+        name: "Kawa z lokalnej palarni & Herbata liściasta",
+        description:
+          "Kawa (Czarna / Biała / Espresso / Cappuccino) | Herbata (Czarna / Zielona / Owocowa / Ziołowa w czajniczku)",
+        price: 14,
       },
     ],
   },
@@ -229,26 +278,26 @@ const menuCategories: MenuCategory[] = [
     label: "Dla dzieci",
     items: [
       {
-        id: "18",
+        id: "24",
         name: "Zupa pomidorowa",
         description: "Klasyka domowego obiadu | drobny makaron",
         price: 16,
       },
       {
-        id: "19",
+        id: "25",
         name: "Mały rosół z kluseczkami",
         description: "Klarowny bulion | drobne kluseczki lane",
         price: 16,
       },
       {
-        id: "20",
+        id: "26",
         name: "Mini schabowy z puree",
         description:
           "Mniejsza porcja naszego schabowego | jedwabiste puree ziemniaczane",
         price: 24,
       },
       {
-        id: "21",
+        id: "27",
         name: "Leniwe na słodko z masłem i cukrem",
         description: "Domowe kluski twarogowe | rozpuszczone masło | cukier puder",
         price: 19,
@@ -274,7 +323,7 @@ export default function MenuSection() {
           <span className="text-sm font-medium uppercase tracking-widest text-[#D9A261]">
             Sezon: Lato 2026
           </span>
-          <h2 className="mt-3 font-heading text-3xl font-bold tracking-tight text-[#CA5254] md:text-5xl">
+          <h2 className="mt-3 font-heading text-3xl font-bold tracking-tight text-[#960C3F] md:text-5xl">
             Menu Letnie
           </h2>
           <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-[#960C3F]/60">
@@ -288,12 +337,12 @@ export default function MenuSection() {
 
         {/* Tabs */}
         <Tabs defaultValue="przystawki" className="mt-16">
-          <TabsList className="mx-auto grid w-full max-w-xl grid-cols-5 bg-[#A6A6A6]/10">
+          <TabsList className="mx-auto flex flex-wrap justify-center gap-1.5 p-1.5 w-full max-w-2xl h-auto bg-[#A6A6A6]/10 rounded-2xl">
             {menuCategories.map((cat) => (
               <TabsTrigger
                 key={cat.key}
                 value={cat.key}
-                className="text-xs sm:text-sm text-[#960C3F] data-[state=active]:bg-[#CA5254] data-[state=active]:text-[#FFFDF6] data-active:bg-[#CA5254] data-active:text-[#FFFDF6] transition-all"
+                className="text-xs sm:text-sm text-[#960C3F] data-[state=active]:bg-[#CA5254] data-[state=active]:text-[#FFFDF6] data-active:bg-[#CA5254] data-active:text-[#FFFDF6] transition-all px-4 py-2 rounded-xl"
               >
                 {cat.label}
               </TabsTrigger>

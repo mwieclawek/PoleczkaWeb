@@ -39,13 +39,13 @@ export default function Navbar() {
           : "bg-transparent py-2"
       }`}
     >
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3 lg:px-8">
         {/* Logo */}
         <Link href="/" className="group flex items-center">
           <img
             src="/logo.png"
             alt="Poleczka — Bistro Kuchnia Polska"
-            className="h-10 w-auto transition-opacity group-hover:opacity-80"
+            className="h-16 w-auto md:h-20 transition-opacity group-hover:opacity-80"
           />
         </Link>
 

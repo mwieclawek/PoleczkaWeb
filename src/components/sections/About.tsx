@@ -103,7 +103,7 @@ export default function About() {
               key={item.title}
               className="bg-[#FFFDF6] p-8 transition-colors hover:bg-white/50"
             >
-              <h3 className="mb-3 text-base font-semibold text-[#CA5254]">
+              <h3 className="mb-3 font-heading text-lg font-bold text-[#CA5254]">
                 {item.title}
               </h3>
               <p className="text-sm leading-relaxed text-[#A6A6A6]">
