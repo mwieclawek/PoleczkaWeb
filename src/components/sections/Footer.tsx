@@ -151,7 +151,7 @@ export default function Footer() {
           </span>
           <span>
             Zbudowane z{" "}
-            <span className="text-[#CA5254]">♥</span> we Wrocławiu
+            pasją we Wrocławiu
           </span>
         </div>
       </div>
