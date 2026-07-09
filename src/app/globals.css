@@ -51,81 +51,81 @@
 /* ── Poleczka – Premium Polish Kitchen palette ───────────────── */
 :root {
   /* Główne Tło (Kremowy) */
-  --background: #F9F3DB;
-  /* Akcent Kontrastowy (Ultramaryna) as default text for high contrast */
-  --foreground: #1028AB;
+  --background: #FFFDF6;
+  /* Akcent Kontrastowy (Burgundia / Deep Wine) as default text for high contrast */
+  --foreground: #960C3F;
 
-  --card: #F9F3DB;
-  --card-foreground: #1028AB;
-  --popover: #F9F3DB;
-  --popover-foreground: #1028AB;
+  --card: #FFFDF6;
+  --card-foreground: #960C3F;
+  --popover: #FFFDF6;
+  --popover-foreground: #960C3F;
 
   /* Akcent Główny (Red/Pink) */
   --primary: #CA5254;
-  --primary-foreground: #F9F3DB;
+  --primary-foreground: #FFFDF6;
 
-  /* Kolor Dopełniający (Drewno) */
+  /* Kolor Dopełniający (Drewno/Złoto) */
   --secondary: #D9A261;
-  --secondary-foreground: #1028AB;
+  --secondary-foreground: #960C3F;
 
-  --muted: #F9F3DB;
+  --muted: #FFFDF6;
   /* Tekst Pomocniczy (Szary) */
   --muted-foreground: #A6A6A6;
 
   --accent: #CA5254;
-  --accent-foreground: #F9F3DB;
+  --accent-foreground: #FFFDF6;
 
   --destructive: #CA5254;
   --border: #A6A6A6;
   --input: #A6A6A6;
-  --ring: #1028AB;
+  --ring: #960C3F;
 
   --chart-1: #CA5254;
-  --chart-2: #1028AB;
+  --chart-2: #960C3F;
   --chart-3: #D9A261;
   --chart-4: #A6A6A6;
-  --chart-5: #1028AB;
+  --chart-5: #960C3F;
 
   --radius: 0.625rem;
 
-  --sidebar: #F9F3DB;
-  --sidebar-foreground: #1028AB;
+  --sidebar: #FFFDF6;
+  --sidebar-foreground: #960C3F;
   --sidebar-primary: #CA5254;
-  --sidebar-primary-foreground: #F9F3DB;
+  --sidebar-primary-foreground: #FFFDF6;
   --sidebar-accent: #D9A261;
-  --sidebar-accent-foreground: #1028AB;
+  --sidebar-accent-foreground: #960C3F;
   --sidebar-border: #A6A6A6;
-  --sidebar-ring: #1028AB;
+  --sidebar-ring: #960C3F;
 }
 
 .dark {
   /* Retaining same variables but inverted mapping for dark mode if ever activated */
-  --background: #1028AB;
-  --foreground: #F9F3DB;
-  --card: #1028AB;
-  --card-foreground: #F9F3DB;
-  --popover: #1028AB;
-  --popover-foreground: #F9F3DB;
+  --background: #960C3F;
+  --foreground: #FFFDF6;
+  --card: #960C3F;
+  --card-foreground: #FFFDF6;
+  --popover: #960C3F;
+  --popover-foreground: #FFFDF6;
   --primary: #CA5254;
-  --primary-foreground: #F9F3DB;
+  --primary-foreground: #FFFDF6;
   --secondary: #D9A261;
-  --secondary-foreground: #1028AB;
-  --muted: #1028AB;
+  --secondary-foreground: #960C3F;
+  --muted: #960C3F;
   --muted-foreground: #A6A6A6;
   --accent: #CA5254;
-  --accent-foreground: #F9F3DB;
+  --accent-foreground: #FFFDF6;
   --destructive: #CA5254;
   --border: #A6A6A6;
   --input: #A6A6A6;
-  --ring: #F9F3DB;
-  --sidebar: #1028AB;
-  --sidebar-foreground: #F9F3DB;
+  --ring: #FFFDF6;
+  --sidebar: #960C3F;
+  --sidebar-foreground: #FFFDF6;
   --sidebar-primary: #CA5254;
-  --sidebar-primary-foreground: #F9F3DB;
+  --sidebar-primary-foreground: #FFFDF6;
   --sidebar-accent: #D9A261;
-  --sidebar-accent-foreground: #1028AB;
+  --sidebar-accent-foreground: #960C3F;
   --sidebar-border: #A6A6A6;
-  --sidebar-ring: #F9F3DB;
+  --sidebar-ring: #FFFDF6;
 }
 
 @layer base {

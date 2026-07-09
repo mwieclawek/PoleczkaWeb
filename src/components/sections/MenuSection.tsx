@@ -53,7 +53,7 @@ function MenuItem({
     >
       <div className="flex-1">
         <div className="flex items-center gap-3">
-          <h3 className="text-lg font-semibold text-[#1028AB]">
+          <h3 className="text-lg font-semibold text-[#960C3F]">
             {item.name}
           </h3>
           {item.highlighted && (
@@ -261,7 +261,7 @@ const menuCategories: MenuCategory[] = [
 
 export default function MenuSection() {
   return (
-    <section id="menu" className="relative bg-[#F9F3DB] py-28 md:py-40">
+    <section id="menu" className="relative bg-[#FFFDF6] py-28 md:py-40">
       <div className="mx-auto max-w-4xl px-6 lg:px-8">
         {/* Header */}
         <motion.div
@@ -277,7 +277,7 @@ export default function MenuSection() {
           <h2 className="mt-3 font-heading text-3xl font-bold tracking-tight text-[#CA5254] md:text-5xl">
             Menu Letnie
           </h2>
-          <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-[#1028AB]/60">
+          <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-[#960C3F]/60">
             Korzystamy z pełni polskiego lata. W&nbsp;tej karcie znajdziecie
             botwinkę, młody bób, fasolkę szparagową i&nbsp;owoce jagodowe
             z&nbsp;lokalnych zbiorów. Pracujemy z&nbsp;naturą, dlatego nasze
@@ -293,7 +293,7 @@ export default function MenuSection() {
               <TabsTrigger
                 key={cat.key}
                 value={cat.key}
-                className="text-xs sm:text-sm text-[#1028AB] data-[state=active]:bg-[#CA5254] data-[state=active]:text-[#F9F3DB] data-active:bg-[#CA5254] data-active:text-[#F9F3DB] transition-all"
+                className="text-xs sm:text-sm text-[#960C3F] data-[state=active]:bg-[#CA5254] data-[state=active]:text-[#FFFDF6] data-active:bg-[#CA5254] data-active:text-[#FFFDF6] transition-all"
               >
                 {cat.label}
               </TabsTrigger>

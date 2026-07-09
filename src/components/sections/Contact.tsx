@@ -20,22 +20,22 @@ const contactDetails = [
   {
     icon: Mail,
     label: "E-mail",
-    value: "kontakt@poleczka.pl",
-    href: "mailto:kontakt@poleczka.pl",
+    value: "kontakt@bistropoleczka.pl",
+    href: "mailto:kontakt@bistropoleczka.pl",
   },
 ];
 
 const openingHours = [
   { days: "Poniedziałek", hours: "Nieczynne" },
-  { days: "Wtorek – Piątek", hours: "12:00 – 22:00" },
-  { days: "Sobota – Niedziela", hours: "12:00 – 23:00" },
+  { days: "Wtorek – Piątek", hours: "13:00 – 21:30" },
+  { days: "Sobota – Niedziela", hours: "13:00 – 22:00" },
 ];
 
 export default function Contact() {
   return (
     <section
       id="contact"
-      className="relative overflow-hidden bg-[#F9F3DB] py-24 md:py-32"
+      className="relative overflow-hidden bg-[#FFFDF6] py-24 md:py-32"
     >
       {/* Decorative elements */}
       <div className="pointer-events-none absolute left-0 top-0 h-64 w-64 opacity-[0.03]">
@@ -46,7 +46,7 @@ export default function Contact() {
               cx={(i % 8) * 32 + 16}
               cy={Math.floor(i / 8) * 32 + 16}
               r="2"
-              fill="#1028AB"
+              fill="#960C3F"
             />
           ))}
         </svg>
@@ -95,14 +95,14 @@ export default function Contact() {
                     rel="noopener noreferrer"
                     className="group flex items-start gap-4 transition-colors"
                   >
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#1028AB]/5 transition-colors group-hover:bg-[#1028AB]/10">
-                      <item.icon className="h-4 w-4 text-[#1028AB]" />
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#960C3F]/5 transition-colors group-hover:bg-[#960C3F]/10">
+                      <item.icon className="h-4 w-4 text-[#960C3F]" />
                     </div>
                     <div>
                       <span className="text-xs font-medium uppercase tracking-wider text-[#A6A6A6]">
                         {item.label}
                       </span>
-                      <p className="mt-0.5 whitespace-pre-line font-medium text-[#1028AB]/80 transition-colors group-hover:text-[#CA5254]">
+                      <p className="mt-0.5 whitespace-pre-line font-medium text-[#960C3F]/80 transition-colors group-hover:text-[#CA5254]">
                         {item.value}
                       </p>
                     </div>
@@ -133,11 +133,10 @@ export default function Contact() {
                       {slot.days}
                     </span>
                     <span
-                      className={`text-sm font-bold ${
-                        slot.hours === "Nieczynne"
-                          ? "text-[#A6A6A6]"
-                          : "text-[#1028AB]"
-                      }`}
+                      className={`text-sm font-bold ${slot.hours === "Nieczynne"
+                        ? "text-[#A6A6A6]"
+                        : "text-[#960C3F]"
+                        }`}
                     >
                       {slot.hours}
                     </span>
@@ -152,19 +151,19 @@ export default function Contact() {
             </div>
 
             {/* Map placeholder */}
-            <div className="mt-6 overflow-hidden rounded-2xl border border-[#1028AB]/5 bg-[#1028AB] p-8 text-center shadow-lg shadow-[#1028AB]/10">
+            <div className="mt-6 overflow-hidden rounded-2xl border border-[#960C3F]/5 bg-[#960C3F] p-8 text-center shadow-lg shadow-[#960C3F]/10">
               <MapPin className="mx-auto mb-3 h-8 w-8 text-[#CA5254]" />
-              <p className="font-heading text-lg font-semibold text-[#F9F3DB]">
+              <p className="font-heading text-lg font-semibold text-[#FFFDF6]">
                 ul. Stefana Jaracza 77B
               </p>
-              <p className="mt-1 text-sm text-[#F9F3DB]/70">
+              <p className="mt-1 text-sm text-[#FFFDF6]/70">
                 50-305 Wrocław
               </p>
               <a
                 href="https://maps.google.com/?q=ul.+Stefana+Jaracza+77B,+50-305+Wrocław"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-[#F9F3DB]/20 bg-[#F9F3DB]/10 px-4 py-2 text-xs font-medium text-[#F9F3DB] transition-colors hover:bg-[#F9F3DB]/20"
+                className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-[#FFFDF6]/20 bg-[#FFFDF6]/10 px-4 py-2 text-xs font-medium text-[#FFFDF6] transition-colors hover:bg-[#FFFDF6]/20"
               >
                 <MapPin className="h-3 w-3" />
                 Otwórz w Google Maps

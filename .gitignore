@@ -46,3 +46,8 @@ firebase-debug.*.log
 .firebase/
 functions/lib/
 functions/node_modules/
+
+# source assets (originals kept locally)
+*.pdf
+*.bak
+Poleczka Logo*

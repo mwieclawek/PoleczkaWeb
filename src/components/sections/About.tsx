@@ -7,7 +7,7 @@ export default function About() {
   return (
     <section
       id="about"
-      className="relative overflow-hidden bg-[#F9F3DB] py-28 md:py-40"
+      className="relative overflow-hidden bg-[#FFFDF6] py-28 md:py-40"
     >
       {/* Decorative dot pattern */}
       <div className="pointer-events-none absolute right-0 top-0 h-64 w-64 opacity-[0.04]">
@@ -18,7 +18,7 @@ export default function About() {
               cx={(i % 8) * 32 + 16}
               cy={Math.floor(i / 8) * 32 + 16}
               r="2"
-              fill="#1028AB"
+              fill="#960C3F"
             />
           ))}
         </svg>
@@ -50,13 +50,13 @@ export default function About() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="mt-16 space-y-8"
         >
-          <p className="text-lg leading-relaxed text-[#1028AB]/80 md:text-xl">
+          <p className="text-lg leading-relaxed text-[#960C3F]/80 md:text-xl">
             Poleczka to miejsce stworzone z pasji do prawdziwego jedzenia.
             Nie idziemy na skróty. Wierzymy, że to, co najlepsze w polskiej
             kuchni, leży w&nbsp;naturze i&nbsp;rzemiośle.
           </p>
 
-          <p className="text-lg leading-relaxed text-[#1028AB]/80 md:text-xl">
+          <p className="text-lg leading-relaxed text-[#960C3F]/80 md:text-xl">
             Nasz seler pieczemy przez długie godziny w&nbsp;masie solnej
             i&nbsp;kawie, by wydobyć z&nbsp;niego głębię smaku umami.
             Własnoręcznie zagniatamy ciasto na kluski śląskie i&nbsp;leniwe,
@@ -64,7 +64,7 @@ export default function About() {
             i&nbsp;palonym maśle.
           </p>
 
-          <p className="text-lg leading-relaxed text-[#1028AB]/80 md:text-xl">
+          <p className="text-lg leading-relaxed text-[#960C3F]/80 md:text-xl">
             W&nbsp;sercu wrocławskiego Śródmieścia, przy ulicy Jaracza,
             stworzyliśmy przestrzeń bez zadęcia. Z&nbsp;intymnym patio, na
             którym czas płynie wolniej. To nie jest po prostu restauracja.
@@ -101,7 +101,7 @@ export default function About() {
           ].map((item) => (
             <div
               key={item.title}
-              className="bg-[#F9F3DB] p-8 transition-colors hover:bg-white/50"
+              className="bg-[#FFFDF6] p-8 transition-colors hover:bg-white/50"
             >
               <h3 className="mb-3 text-base font-semibold text-[#CA5254]">
                 {item.title}

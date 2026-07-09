@@ -1,23 +1,24 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Open_Sans, Poiret_One } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
+const openSans = Open_Sans({
   variable: "--font-sans",
   subsets: ["latin", "latin-ext"],
   display: "swap",
 });
 
-const playfair = Playfair_Display({
+const poiretOne = Poiret_One({
   variable: "--font-heading",
+  weight: "400",
   subsets: ["latin", "latin-ext"],
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Poleczka | Nowoczesna Kuchnia Polska we Wrocławiu",
+  title: "Poleczka | Bistro Kuchnia Polska — Wrocław",
   description:
-    "Poleczka to nowoczesna kuchnia polska we Wrocławiu. Opieramy się na tradycyjnych, lokalnych składnikach, wydobywając z nich pełnię smaku dzięki nowoczesnym technikom kulinarnym. Miejsce stworzone z pasją, gdzie klasyka spotyka się z finezją.",
+    "Poleczka to nowoczesna kuchnia polska we Wrocławiu. Opieramy się na tradycyjnych, lokalnych składnikach, wydobywając z nich pełnię smaku dzięki nowoczesnym technikom kulinarnym.",
 };
 
 export default function RootLayout({
@@ -28,7 +29,7 @@ export default function RootLayout({
   return (
     <html
       lang="pl"
-      className={`${inter.variable} ${playfair.variable} h-full antialiased`}
+      className={`${openSans.variable} ${poiretOne.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">{children}</body>
     </html>
