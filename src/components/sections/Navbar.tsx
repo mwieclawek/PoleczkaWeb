@@ -32,20 +32,23 @@ export default function Navbar() {
     <motion.header
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut" as const }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-[#FFFDF6]/95 backdrop-blur-md shadow-sm border-b border-[#A6A6A6]/20"
-          : "bg-transparent py-2"
+          ? "bg-[#FFFDF6]/95 backdrop-blur-md shadow-md shadow-[#960C3F]/5 border-b border-[#960C3F]/20 py-2"
+          : "bg-transparent py-3"
       }`}
     >
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3 lg:px-8">
+      {/* Top accent bar matching footer color */}
+      <div className="absolute top-0 left-0 right-0 h-1.5 bg-[#960C3F] shadow-sm" />
+
+      <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 pt-1 lg:px-8">
         {/* Logo */}
         <Link href="/" className="group flex items-center">
           <img
             src="/logo.png"
             alt="Poleczka — Bistro Kuchnia Polska"
-            className="h-16 w-auto md:h-20 transition-opacity group-hover:opacity-80"
+            className="h-16 w-auto md:h-20 transition-transform duration-300 group-hover:scale-105"
           />
         </Link>
 
@@ -55,14 +58,14 @@ export default function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className="relative text-sm font-medium transition-colors after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:transition-all hover:after:w-full text-[#960C3F] hover:text-[#CA5254] after:bg-[#CA5254]"
+              className="relative text-base font-semibold tracking-wide transition-colors after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:transition-all hover:after:w-full text-[#960C3F] hover:text-[#CA5254] after:bg-[#960C3F]"
             >
               {link.label}
             </Link>
           ))}
           <Link
             href="#menu"
-            className="inline-flex h-8 items-center justify-center rounded-full px-6 text-sm font-medium transition-colors bg-[#CA5254] text-[#FFFDF6] hover:bg-[#960C3F]"
+            className="inline-flex h-10 items-center justify-center rounded-full px-7 text-sm font-semibold transition-all bg-[#960C3F] text-[#FFFDF6] shadow-md shadow-[#960C3F]/20 hover:bg-[#CA5254] hover:shadow-lg"
           >
             Zobacz menu
           </Link>
@@ -76,7 +79,7 @@ export default function Navbar() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-[#960C3F] hover:bg-[#960C3F]/5 hover:text-[#CA5254]"
+                  className="text-[#960C3F] hover:bg-[#960C3F]/10 hover:text-[#CA5254]"
                 />
               }
             >
@@ -87,14 +90,14 @@ export default function Navbar() {
               side="right"
               className="w-[300px] border-l-[#960C3F]/20 bg-[#FFFDF6]"
             >
-              <SheetTitle className="text-[#CA5254] font-heading text-xl">Nawigacja</SheetTitle>
+              <SheetTitle className="text-[#960C3F] font-heading font-bold text-2xl">Nawigacja</SheetTitle>
               <div className="mt-8 flex flex-col gap-6">
                 {navLinks.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
                     onClick={() => setOpen(false)}
-                    className="text-lg font-medium text-[#960C3F]/80 transition-colors hover:text-[#CA5254]"
+                    className="text-lg font-semibold text-[#960C3F] transition-colors hover:text-[#CA5254]"
                   >
                     {link.label}
                   </Link>
@@ -102,7 +105,7 @@ export default function Navbar() {
                 <Link
                   href="#menu"
                   onClick={() => setOpen(false)}
-                  className="mt-4 inline-flex w-full items-center justify-center rounded-full bg-[#CA5254] px-6 py-2.5 text-sm font-medium text-[#FFFDF6] transition-colors hover:bg-[#960C3F]"
+                  className="mt-4 inline-flex w-full items-center justify-center rounded-full bg-[#960C3F] px-6 py-3 text-base font-semibold text-[#FFFDF6] shadow-md shadow-[#960C3F]/20 transition-all hover:bg-[#CA5254]"
                 >
                   Zobacz menu
                 </Link>

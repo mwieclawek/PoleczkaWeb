@@ -246,26 +246,28 @@ export default function ContactClient({
                 {data.footerNote}
               </p>
             </div>
-
-            {/* Map placeholder */}
-            <div className="mt-6 overflow-hidden rounded-2xl border border-[#960C3F]/5 bg-[#960C3F] p-8 text-center shadow-lg shadow-[#960C3F]/10">
-              <MapPin className="mx-auto mb-3 h-8 w-8 text-[#CA5254]" />
-              <p className="font-heading text-lg font-semibold text-[#FFFDF6]">
-                ul. Stefana Jaracza 77B
-              </p>
-              <p className="mt-1 text-sm text-[#FFFDF6]/70">50-305 Wrocław</p>
-              <a
-                href={data.googleMapsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-[#FFFDF6]/20 bg-[#FFFDF6]/10 px-4 py-2 text-xs font-medium text-[#FFFDF6] transition-colors hover:bg-[#FFFDF6]/20"
-              >
-                <MapPin className="h-3 w-3" />
-                Otwórz w Google Maps
-              </a>
-            </div>
           </motion.div>
         </div>
+
+        {/* Interactive Google Map on the bottom */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="mt-16 overflow-hidden rounded-3xl border border-[#960C3F]/15 shadow-2xl bg-[#FFFDF6]"
+        >
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d749.7661774770557!2d17.05717557505761!3d51.12819280088703!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470fe993eb819151%3A0xf33797cb88f8c434!2sBistro%20Poleczka!5e1!3m2!1spl!2spl!4v1783777536513!5m2!1spl!2spl"
+            width="100%"
+            height="450"
+            style={{ border: 0 }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="strict-origin-when-cross-origin"
+            className="w-full h-[400px] sm:h-[480px]"
+          />
+        </motion.div>
       </div>
     </section>
   );

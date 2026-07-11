@@ -76,6 +76,11 @@ export const contactType = defineType({
           ],
         },
       ],
+      initialValue: [
+        { days: 'Poniedziałek', hours: 'Nieczynne' },
+        { days: 'Wtorek – Piątek', hours: '13:00 – 21:30' },
+        { days: 'Sobota – Niedziela', hours: '13:00 – 22:00' },
+      ],
     }),
     defineField({
       name: 'footerNote',
