@@ -7,7 +7,9 @@ export default async function ComingSoonPage() {
     .fetch<ComingSoonData | null>(`*[_type == "comingSoon"][0]{
       addressTag,
       mainTitle,
-      description
+      description,
+      instagramUrl,
+      facebookUrl
     }`)
     .catch(() => null);
 

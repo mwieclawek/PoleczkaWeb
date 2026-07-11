@@ -24,5 +24,17 @@ export const comingSoonType = defineType({
       rows: 2,
       initialValue: 'Trwają ostatnie przygotowania. Do zobaczenia w sierpniu na obiadku!',
     }),
+    defineField({
+      name: 'instagramUrl',
+      title: 'Link do Instagrama na ekranie powitalnym',
+      type: 'string',
+      initialValue: 'https://instagram.com/poleczka.wroclaw',
+    }),
+    defineField({
+      name: 'facebookUrl',
+      title: 'Link do Facebooka na ekranie powitalnym',
+      type: 'string',
+      initialValue: 'https://facebook.com/poleczka.wroclaw',
+    }),
   ],
 })

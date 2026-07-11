@@ -9,6 +9,8 @@ export interface ComingSoonData {
   addressTag?: string;
   mainTitle?: string;
   description?: string;
+  instagramUrl?: string;
+  facebookUrl?: string;
 }
 
 export const defaultComingSoonData: Required<ComingSoonData> = {
@@ -16,7 +18,45 @@ export const defaultComingSoonData: Required<ComingSoonData> = {
   mainTitle: "Bistro Poleczka. Wkrótce otwarcie.",
   description:
     "Trwają ostatnie przygotowania. Do zobaczenia w sierpniu na obiadku!",
+  instagramUrl: "https://instagram.com/poleczka.wroclaw",
+  facebookUrl: "https://facebook.com/poleczka.wroclaw",
 };
+
+function InstagramIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+    </svg>
+  );
+}
+
+function FacebookIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+    </svg>
+  );
+}
 
 export default function ComingSoonClient({
   initialData,
@@ -27,6 +67,9 @@ export default function ComingSoonClient({
     addressTag: initialData?.addressTag || defaultComingSoonData.addressTag,
     mainTitle: initialData?.mainTitle || defaultComingSoonData.mainTitle,
     description: initialData?.description || defaultComingSoonData.description,
+    instagramUrl:
+      initialData?.instagramUrl || defaultComingSoonData.instagramUrl,
+    facebookUrl: initialData?.facebookUrl || defaultComingSoonData.facebookUrl,
   });
 
   useEffect(() => {
@@ -35,7 +78,9 @@ export default function ComingSoonClient({
       .fetch<ComingSoonData | null>(`*[_type == "comingSoon"][0]{
         addressTag,
         mainTitle,
-        description
+        description,
+        instagramUrl,
+        facebookUrl
       }`)
       .then((fetched) => {
         if (isMounted && fetched) {
@@ -45,6 +90,10 @@ export default function ComingSoonClient({
             mainTitle: fetched.mainTitle || defaultComingSoonData.mainTitle,
             description:
               fetched.description || defaultComingSoonData.description,
+            instagramUrl:
+              fetched.instagramUrl || defaultComingSoonData.instagramUrl,
+            facebookUrl:
+              fetched.facebookUrl || defaultComingSoonData.facebookUrl,
           });
         }
       })
@@ -105,6 +154,33 @@ export default function ComingSoonClient({
         <p className="text-base sm:text-lg md:text-xl text-[#960C3F]/80 leading-relaxed font-sans max-w-lg mx-auto">
           {data.description}
         </p>
+
+        {/* Social links */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="mt-10 flex items-center justify-center gap-5"
+        >
+          <a
+            href={data.instagramUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex h-12 w-12 items-center justify-center rounded-full border border-[#960C3F]/20 bg-[#960C3F]/5 text-[#960C3F] transition-all duration-300 hover:border-[#CA5254] hover:bg-[#CA5254] hover:text-[#FFFDF6] hover:shadow-lg"
+            aria-label="Instagram"
+          >
+            <InstagramIcon className="h-5 w-5 transition-transform group-hover:scale-110" />
+          </a>
+          <a
+            href={data.facebookUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex h-12 w-12 items-center justify-center rounded-full border border-[#960C3F]/20 bg-[#960C3F]/5 text-[#960C3F] transition-all duration-300 hover:border-[#CA5254] hover:bg-[#CA5254] hover:text-[#FFFDF6] hover:shadow-lg"
+            aria-label="Facebook"
+          >
+            <FacebookIcon className="h-5 w-5 transition-transform group-hover:scale-110" />
+          </a>
+        </motion.div>
 
         {/* Footer note */}
         <div className="mt-16 text-xs tracking-widest uppercase text-[#A6A6A6]">
