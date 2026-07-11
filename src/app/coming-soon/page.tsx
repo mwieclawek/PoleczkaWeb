@@ -37,12 +37,12 @@ export default function ComingSoonPage() {
           transition={{ duration: 0.6, delay: 0.1 }}
           src="/logo.png"
           alt="Poleczka — Bistro Kuchnia Polska"
-          className="h-20 sm:h-28 w-auto mb-10 transition-transform duration-500 hover:scale-105"
+          className="h-28 sm:h-36 md:h-44 w-auto mb-10 transition-transform duration-500 hover:scale-105"
         />
 
         {/* Subtitle tag */}
         <span className="mb-4 text-xs sm:text-sm font-semibold uppercase tracking-[0.25em] text-[#D9A261]">
-          Wrocław — Śródmieście
+          Stefana Jaracza 77B Wrocław
         </span>
 
         {/* Main Title */}
@@ -54,7 +54,7 @@ export default function ComingSoonPage() {
 
         {/* Subtitle / Description */}
         <p className="text-base sm:text-lg md:text-xl text-[#960C3F]/80 leading-relaxed font-sans max-w-lg mx-auto">
-          Trwają ostatnie przygotowania. Do zobaczenia w lipcu we Wrocławiu.
+          Trwają ostatnie przygotowania. Do zobaczenia w sierpniu na obiadku!
         </p>
 
         {/* Footer note */}
