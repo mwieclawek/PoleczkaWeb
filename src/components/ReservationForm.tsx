@@ -65,7 +65,7 @@ const GUEST_OPTIONS = [
   "5 osób", "6 osób", "7 osób", "8 osób", "9 osób", "10+ osób"
 ];
 
-export function ReservationForm() {
+export function ReservationForm({ onSuccess }: { onSuccess?: () => void }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittedData, setSubmittedData] = useState<ReservationFormValues | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -89,44 +89,69 @@ export function ReservationForm() {
     },
   });
 
+  const saveToLocalStorage = (docData: Record<string, any>) => {
+    try {
+      const existing: any[] = JSON.parse(
+        localStorage.getItem("poleczka_reservations") || "[]"
+      );
+      const newEntry = {
+        ...docData,
+        id: `local_${Date.now()}`,
+        createdAt: new Date().toISOString(),
+      };
+      existing.unshift(newEntry);
+      localStorage.setItem("poleczka_reservations", JSON.stringify(existing));
+    } catch {
+      // localStorage not available (SSR guard)
+    }
+  };
+
   const onSubmit = async (data: ReservationFormValues) => {
     setIsSubmitting(true);
     setErrorMessage(null);
 
+    const formattedDate = format(data.date, "yyyy-MM-dd");
+
+    const docData = {
+      name: data.name,
+      phone: data.phone,
+      email: data.email,
+      date: formattedDate,
+      time: data.time,
+      guests: data.guests,
+      notes: data.notes || "",
+      status: "pending",
+    };
+
     try {
-      const formattedDate = format(data.date, "yyyy-MM-dd");
-
-      const docData = {
-        name: data.name,
-        phone: data.phone,
-        email: data.email,
-        date: formattedDate,
-        time: data.time,
-        guests: data.guests,
-        notes: data.notes || "",
-        status: "pending",
-        createdAt: serverTimestamp(),
-      };
-
-      // Timeout 5s — jeśli Firebase (np. klucze demo) nie odpowie, pokazujemy sukces i nie blokujemy UX
+      // 5s timeout so demo keys don't block the UX indefinitely
       const timeout = new Promise<void>((_, reject) =>
         setTimeout(() => reject(new Error("Firebase timeout")), 5000)
       );
-
-      await Promise.race([addDoc(collection(db, "reservations"), docData), timeout]);
-
-      setSubmittedData(data);
-      reset();
+      await Promise.race([
+        addDoc(collection(db, "reservations"), {
+          ...docData,
+          createdAt: serverTimestamp(),
+        }),
+        timeout,
+      ]);
     } catch (err: any) {
-      console.warn("Firestore write failed (demo keys or timeout), showing UI success:", err?.message);
-      // Fallback: pokaż ekran sukcesu nawet gdy Firebase jest niedostępny
+      // Firebase unreachable — persist locally so admin panel can still show it
+      console.warn("Firestore write failed, falling back to localStorage:", err?.message);
+      saveToLocalStorage(docData);
+    } finally {
       setSubmittedData(data);
       reset();
-    } finally {
       setIsSubmitting(false);
+      // If used inside a modal, close it after showing the thank-you screen
+      if (onSuccess) {
+        setTimeout(() => {
+          onSuccess();
+          setSubmittedData(null);
+        }, 3000);
+      }
     }
   };
-
 
   return (
     <div className="w-full">
