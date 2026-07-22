@@ -30,9 +30,39 @@ Aplikacja została zaprojektowana zgodnie z księgą znaku i kolorystyką **Bist
 
 ---
 
+## 🍽️ System Rezerwacji Miejsc i Integracja z Telegramem
+
+Aplikacja zawiera dedykowany system rezerwacji z powiadomieniami w czasie rzeczywistym, botem na Telegramie oraz panelem dla obsługi na tablecie.
+
+### 🤖 Instrukcja Skonfigurowania Bota Telegram & Webhooka
+
+1. **Utworzenie Bota w Telegramie (@BotFather):**
+   * Otwórz Telegram i wyszukaj użytkownika `@BotFather`.
+   * Wyślij komendę `/newbot` i postępuj zgodnie z instrukcjami (podaj nazwę oraz username bota, np. `PoleczkaReservationBot`).
+   * `@BotFather` wygeneruje **API Token** (np. `123456789:ABCdefGHI...`). Zapisz go w pliku `.env` jako `TELEGRAM_BOT_TOKEN`.
+
+2. **Pozyskanie `TELEGRAM_CHAT_ID` dla grupy obsługi:**
+   * Utwórz grupę na Telegramie dla pracowników restauracji / obsługi.
+   * Dodaj utworzonego bota do grupy.
+   * Dodaj bota `@raw_data_bot` lub `@userinfobot` do grupy, aby odczytać ID grupy (zazwyczaj zaczyna się od `-100...`). Zapisz go w pliku `.env` jako `TELEGRAM_CHAT_ID`.
+
+3. **Ustawienie Webhooka Telegrama (Dla Cloud Functions):**
+   * Po wdrożeniu funkcji `telegramWebhook` w Firebase Cloud Functions (lub lokalnie przez ngrok/emulator), ustaw webhook wywołując w przeglądarce URL:
+     ```http
+     https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook?url=https://<REGION>-<PROJECT_ID>.cloudfunctions.net/telegramWebhook
+     ```
+   * Odpowiedź z Telegrama powinna potwierdzić: `{"ok":true,"result":true,"description":"Webhook was set"}`.
+
+4. **Panel Tabletu / Obsługi:**
+   * Dostęp pod adresem: `/admin/reservations` lub `/panel/rezerwacje`.
+   * Panel wykorzystuje `onSnapshot` z Firebase Firestore do nasłuchiwania na żywo.
+   * Przy pojawieniu się rezerwacji o statusie `pending`, panel automatycznie odtwarza powiadomienie dźwiękowe (Web Audio API Chime) oraz wyświetla interaktywne okno z danymi klienta i przyciskami **Akceptuj** / **Odrzuć**.
+
+---
+
 ## 🏗️ Architektura i Hybrydowy System CMS
 
-Aby zapewnić **maksymalną wydajność (SEO i szybkość ładowania)** oraz jednoczesną **pełną edytowalność dla zespołu restoracji**, aplikacja wykorzystuje architekturę hybrydową Next.js App Router (`Server + Client Components`):
+Aplikacja wykorzystuje architekturę hybrydową Next.js App Router (`Server + Client Components`):
 
 ```
 ┌────────────────────────────────────────────────────────┐
@@ -49,16 +79,13 @@ Aby zapewnić **maksymalną wydajność (SEO i szybkość ładowania)** oraz jed
 │             Client Component (np. MenuSectionClient)   │
 │  Zarządza animacjami Framer Motion i stanem zakładek. │
 │  Posiada wbudowane dane domyślne (fallback defaults)   │
+└───────────────────────────┬────────────────────────────┘
+                            ▼
+┌────────────────────────────────────────────────────────┐
+│              System Rezerwacji & Firestore             │
+│        Formularz, Telegram Bot & Panel Tabletu         │
 └────────────────────────────────────────────────────────┘
 ```
-
-### 📂 Zarejestrowane Schematy w Sanity (`src/sanity/schemaTypes/`)
-1. **`heroType` (`hero.ts`)** — Główny baner, tagline, nagłówki, przyciski CTA.
-2. **`aboutType` (`about.ts`)** — Historia restauracji, data wielkiego otwarcia, 4 filary filozofii kuchni.
-3. **`menuType` (`menu.ts`)** — Karta dań podzielona na dynamiczne kategorie (*Przystawki, Zupy, Dania główne, Desery, Napoje & Spritz, Dla dzieci*), ceny i oznaczenia *"Klasyk Poleczki"*.
-4. **`contactType` (`contact.ts`)** — Adres, telefony, link do Google Maps oraz harmonogram godzin otwarcia w poszczególne dni.
-5. **`comingSoonType` (`comingSoon.ts`)** — Teksty widoczne na ekranie zaślepki *"Wkrótce otwarcie"*.
-6. **`siteSettingsType` (`siteSettings.ts`)** — Opis w stopce, linki społecznościowe (Instagram, Facebook) i prawa autorskie.
 
 ---
 
@@ -67,12 +94,8 @@ Aby zapewnić **maksymalną wydajność (SEO i szybkość ładowania)** oraz jed
 Aplikacja jest chroniona przed niepowołanym dostępem w okresie przed otwarciem restauracji, przy jednoczesnym zachowaniu wygody dla programistów i redaktorów:
 
 * **Dla zwykłych odwiedzających:** Każde wejście pod dowolny adres (np. `https://bistropoleczka.pl/`) zostaje po stronie serwera dyskretnie przepisywane (`NextResponse.rewrite`) na widok `/coming-soon`. Pasek adresu URL pozostaje czysty.
-* **Dla programistów i zespołu (Odblokowanie):** Aby wejść na pełną stronę lub do panelu CMS, wystarczy dopisać do adresu parametr `?admin=poleczka`:
-  👉 **`https://bistropoleczka.pl/?admin=poleczka`** (lub lokalnie: `http://localhost:3000/?admin=poleczka`)
-  
-  Middleware automatycznie:
-  1. Nadaje bezpieczne ciasteczko `dev_access=true` (ważne przez **30 dni**).
-  2. Przekierowuje na czysty adres `/`, odblokowując całe menu, sekcje oraz panel `/studio`.
+* **Dla programistów i zespołu (Odblokowanie):** Aby wejść na pełną stronę lub do panelu CMS / Admina, wystarczy dopisać do adresu parametr `?admin=poleczka`:
+  👉 **`https://bistropoleczka.pl/?admin=poleczka`** (lub lokalnie: `http://localhost:3000/?admin=poleczka` / `http://localhost:3000/admin/reservations?admin=poleczka`)
 
 ---
 
@@ -83,22 +106,16 @@ Aplikacja jest chroniona przed niepowołanym dostępem w okresie przed otwarciem
 * **npm** / **pnpm** / **yarn**
 
 ### 2. Instalacja zależności
-Z racji rygorystycznych wymogów środowisk chmurowych (Firebase App Hosting), rekomendowane jest używanie zsynchronizowanego pliku `package-lock.json`:
 
 ```bash
 git clone https://github.com/mwieclawek/PoleczkaWeb.git
 cd PoleczkaWeb
-npm ci
-# lub standardowo: npm install
+git checkout feature/reservation-system
+npm install
 ```
 
 ### 3. Konfiguracja zmiennych środowiskowych (`.env.local`)
-Utwórz plik `.env.local` w głównym katalogu projektu:
-
-```env
-NEXT_PUBLIC_SANITY_PROJECT_ID="2hk4fqe9"
-NEXT_PUBLIC_SANITY_DATASET="production"
-```
+Skopiuj wzorzec z `.env.example` do `.env.local` i uzupełnij klucze.
 
 ### 4. Uruchomienie serwera deweloperskiego
 
@@ -106,54 +123,9 @@ NEXT_PUBLIC_SANITY_DATASET="production"
 npm run dev
 ```
 
-* 🌐 **Aplikacja (Strona Główna / Coming Soon):** [http://localhost:3000](http://localhost:3000)
-* ✏️ **Panel Zarządzania Treścią (Sanity Studio):** [http://localhost:3000/studio](http://localhost:3000/studio)
-
----
-
-## ☁️ Wdrożenie na Firebase App Hosting
-
-Projekt jest skonfigurowany pod automatyczne wdrożenia w chmurze **Google Firebase App Hosting** (region `europe-west4`).
-
-1. Każdą zmianę w kodzie wypychamy na gałąź `main`:
-   ```bash
-   git add -A
-   git commit -m "feat: opis Twoich zmian"
-   git push origin main
-   ```
-2. Firebase automatycznie pobiera repozytorium, instaluje pakiety komendą `npm ci --quiet` i buduje kontener produkcyjny Next.js Turbopack.
-
-> [!WARNING]
-> **Ważne dla kompatybilności `npm ci` w Firebase:**  
-> Jeśli dodajesz nową bibliotekę komendą `npm install <pakiet>`, upewnij się, że plik `package-lock.json` został wygenerowany poprawnie i zacommitowany razem z `package.json`. Nigdy nie usuwaj pliku lockfile przed wysłaniem na GitHub.
-
----
-
-## 📚 Struktura Katalogów
-
-```
-PoleczkaWeb/
-├── public/                  # Pliki statyczne, favicon, logotyp (/logo.png)
-├── src/
-│   ├── app/                 # Next.js App Router
-│   │   ├── coming-soon/     # Widok zaślepki przed otwarciem
-│   │   ├── studio/          # Zintegrowane Sanity Studio (/studio)
-│   │   ├── globals.css      # Design system, zmienne kolorów i utility Tailwind
-│   │   ├── layout.tsx       # Główny układ, konfiguracja czcionek Google Fonts
-│   │   └── page.tsx         # Strona główna łącząca wszystkie sekcje
-│   ├── components/
-│   │   ├── sections/        # Moduły strony (Hero, About, MenuSection, Contact, Navbar, Footer)
-│   │   └── ui/              # Komponenty interfejsu (Shadcn/ui: Tabs, Separator, Button)
-│   ├── lib/                 # Funkcje pomocnicze (utils.ts)
-│   ├── middleware.ts        # Ochrona dostępu (Coming Soon & ciasteczko dev_access)
-│   └── sanity/
-│       ├── client.ts        # Klient Sanity (z fallbackiem zmiennych .env)
-│       ├── env.ts           # Konfiguracja środowiska Sanity
-│       └── schemaTypes/     # Definicje schematów (hero, about, menu, contact, comingSoon...)
-├── package.json
-├── tailwind.config.ts / postcss
-└── README.md
-```
+* 🌐 **Aplikacja (Strona Główna / Rezerwacja):** [http://localhost:3000](http://localhost:3000)
+* 📱 **Panel Tabletu (Rezerwacje):** [http://localhost:3000/admin/reservations](http://localhost:3000/admin/reservations)
+* ✏️ **Panel CMS (Sanity Studio):** [http://localhost:3000/studio](http://localhost:3000/studio)
 
 ---
 

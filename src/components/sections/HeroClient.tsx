@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowDown } from "lucide-react";
 import { client } from "@/sanity/client";
+import { useReservationModal } from "@/components/ReservationModalContext";
 
 export interface HeroData {
   tagline?: string;
@@ -49,6 +50,7 @@ export default function HeroClient({
     ctaSecondaryHref:
       initialData?.ctaSecondaryHref || defaultHeroData.ctaSecondaryHref,
   });
+  const { openModal } = useReservationModal();
 
   useEffect(() => {
     let isMounted = true;
@@ -168,12 +170,12 @@ export default function HeroClient({
           >
             {data.ctaPrimaryText}
           </Link>
-          <Link
-            href={data.ctaSecondaryHref}
+          <button
+            onClick={openModal}
             className="inline-flex h-12 items-center justify-center rounded-full border border-[#960C3F]/20 px-10 text-base font-medium text-[#960C3F] transition-colors hover:bg-[#960C3F]/5"
           >
             {data.ctaSecondaryText}
-          </Link>
+          </button>
         </motion.div>
       </div>
 

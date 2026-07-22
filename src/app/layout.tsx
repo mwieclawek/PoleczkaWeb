@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Open_Sans, Poiret_One } from "next/font/google";
 import "./globals.css";
+import { ReservationModalProvider } from "@/components/ReservationModalContext";
+import { ReservationModal } from "@/components/ReservationModal";
 
 const openSans = Open_Sans({
   variable: "--font-sans",
@@ -31,7 +33,12 @@ export default function RootLayout({
       lang="pl"
       className={`${openSans.variable} ${poiretOne.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans">{children}</body>
+      <body className="min-h-full flex flex-col font-sans">
+        <ReservationModalProvider>
+          {children}
+          <ReservationModal />
+        </ReservationModalProvider>
+      </body>
     </html>
   );
 }

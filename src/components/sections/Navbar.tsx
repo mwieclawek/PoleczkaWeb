@@ -11,6 +11,7 @@ import {
   SheetTrigger,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { useReservationModal } from "@/components/ReservationModalContext";
 
 const navLinks = [
   { label: "O nas", href: "#about" },
@@ -21,6 +22,7 @@ const navLinks = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const { openModal } = useReservationModal();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -39,7 +41,7 @@ export default function Navbar() {
           : "bg-transparent py-3"
       }`}
     >
-      {/* Top accent bar matching footer color */}
+      {/* Top accent bar */}
       <div className="absolute top-0 left-0 right-0 h-1.5 bg-[#960C3F] shadow-sm" />
 
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 pt-1 lg:px-8">
@@ -63,12 +65,14 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
-          <Link
-            href="#menu"
+
+          {/* Reservation button */}
+          <button
+            onClick={openModal}
             className="inline-flex h-10 items-center justify-center rounded-full px-7 text-sm font-semibold transition-all bg-[#960C3F] text-[#FFFDF6] shadow-md shadow-[#960C3F]/20 hover:bg-[#CA5254] hover:shadow-lg"
           >
-            Zobacz menu
-          </Link>
+            Zarezerwuj stolik
+          </button>
         </div>
 
         {/* Mobile nav */}
@@ -90,7 +94,9 @@ export default function Navbar() {
               side="right"
               className="w-[300px] border-l-[#960C3F]/20 bg-[#FFFDF6]"
             >
-              <SheetTitle className="text-[#960C3F] font-heading font-bold text-2xl">Nawigacja</SheetTitle>
+              <SheetTitle className="text-[#960C3F] font-heading font-bold text-2xl">
+                Nawigacja
+              </SheetTitle>
               <div className="mt-8 flex flex-col gap-6">
                 {navLinks.map((link) => (
                   <Link
@@ -102,13 +108,17 @@ export default function Navbar() {
                     {link.label}
                   </Link>
                 ))}
-                <Link
-                  href="#menu"
-                  onClick={() => setOpen(false)}
+
+                {/* Mobile reservation button */}
+                <button
+                  onClick={() => {
+                    setOpen(false);
+                    openModal();
+                  }}
                   className="mt-4 inline-flex w-full items-center justify-center rounded-full bg-[#960C3F] px-6 py-3 text-base font-semibold text-[#FFFDF6] shadow-md shadow-[#960C3F]/20 transition-all hover:bg-[#CA5254]"
                 >
-                  Zobacz menu
-                </Link>
+                  Zarezerwuj stolik
+                </button>
               </div>
             </SheetContent>
           </Sheet>
