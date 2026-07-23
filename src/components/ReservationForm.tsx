@@ -8,6 +8,7 @@ import { format } from "date-fns";
 import { pl } from "date-fns/locale";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { analytics } from "@/lib/analytics";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Calendar as CalendarIcon,
@@ -140,6 +141,7 @@ export function ReservationForm({ onSuccess }: { onSuccess?: () => void }) {
       console.warn("Firestore write failed, falling back to localStorage:", err?.message);
       saveToLocalStorage(docData);
     } finally {
+      analytics.reservationSubmitted(docData.guests);
       setSubmittedData(data);
       reset();
       setIsSubmitting(false);

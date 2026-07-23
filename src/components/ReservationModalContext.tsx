@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState } from "react";
+import { analytics } from "@/lib/analytics";
 
 interface ReservationModalContextType {
   isOpen: boolean;
@@ -21,11 +22,16 @@ export function ReservationModalProvider({
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
+  const openModal = () => {
+    setIsOpen(true);
+    analytics.reservationModalOpened();
+  };
+
   return (
     <ReservationModalContext.Provider
       value={{
         isOpen,
-        openModal: () => setIsOpen(true),
+        openModal,
         closeModal: () => setIsOpen(false),
       }}
     >
