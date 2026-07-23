@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Open_Sans, Poiret_One } from "next/font/google";
 import "./globals.css";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { ReservationModalProvider } from "@/components/ReservationModalContext";
 import { ReservationModal } from "@/components/ReservationModal";
+import { MicrosoftClarity } from "@/components/MicrosoftClarity";
 
 const openSans = Open_Sans({
   variable: "--font-sans",
@@ -38,6 +40,14 @@ export default function RootLayout({
           {children}
           <ReservationModal />
         </ReservationModalProvider>
+
+        {/* Google Analytics 4 — set NEXT_PUBLIC_GA_ID in .env.local */}
+        {process.env.NEXT_PUBLIC_GA_ID && (
+          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+        )}
+
+        {/* Microsoft Clarity — set NEXT_PUBLIC_CLARITY_ID in .env.local */}
+        <MicrosoftClarity />
       </body>
     </html>
   );

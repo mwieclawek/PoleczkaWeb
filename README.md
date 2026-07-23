@@ -99,6 +99,22 @@ Aplikacja jest chroniona przed niepowołanym dostępem w okresie przed otwarciem
 
 ---
 
+## 📊 Analityka i Nagrania Sesji (GA4 & Microsoft Clarity)
+
+Aplikacja ma wbudowaną integrację z **Google Analytics 4** (ruch, zdarzenia rezerwacji) oraz **Microsoft Clarity** (heatmaps, nagrania sesji).
+
+### 🛠️ Gdzie wkleić identyfikatory:
+W pliku `.env.local` uzupełnij:
+* **Google Analytics 4 (`NEXT_PUBLIC_GA_ID`):**
+  Pobierz **Identyfikator strumienia danych** (format: `G-XXXXXXXXXX`) z panelu *Google Analytics -> Administracja -> Strumienie danych*.
+* **Microsoft Clarity (`NEXT_PUBLIC_CLARITY_ID`):**
+  Pobierz **Project ID** (format np.: `xxxxxxxxxx`) z panelu *Microsoft Clarity -> Settings -> Overview*.
+
+Skrypty analityczne ładują się asynchronicznie (oparte o `@next/third-parties` oraz `next/script` ze strategią `afterInteractive`), dzięki czemu nie wpływają na wskaźniki wydajności (Core Web Vitals).
+
+---
+
+
 ## 🚀 Uruchomienie Projektu Lokalnie
 
 ### 1. Wymagania wstępne
