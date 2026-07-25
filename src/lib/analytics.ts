@@ -23,21 +23,34 @@ export function trackEvent(
   eventName: string,
   params?: Record<string, string | number | boolean>
 ): void {
-  if (typeof window === "undefined" || !window.gtag) return;
-  window.gtag("event", eventName, params ?? {});
+  try {
+    if (typeof window === "undefined" || !window.gtag) return;
+    window.gtag("event", eventName, params ?? {});
+  } catch (err) {
+    console.warn("Analytics trackEvent error:", err);
+  }
 }
 
 /**
  * Pre-defined event helpers for common actions.
  */
 export const analytics = {
+  reservationIntent: () => trackEvent("reservation_intent"),
+
+  reservationSuccess: (params?: Record<string, string | number | boolean>) =>
+    trackEvent("reservation_success", params),
+
+  viewedMenuSection: () => trackEvent("viewed_menu_section"),
+
+  // Backward-compatible aliases
   reservationSubmitted: (guests: string) =>
-    trackEvent("reservation_submitted", { guests }),
+    trackEvent("reservation_success", { guests }),
 
-  reservationModalOpened: () => trackEvent("reservation_modal_opened"),
+  reservationModalOpened: () => trackEvent("reservation_intent"),
 
-  menuViewed: () => trackEvent("menu_section_viewed"),
+  menuViewed: () => trackEvent("viewed_menu_section"),
 
   ctaClicked: (label: string) =>
     trackEvent("cta_clicked", { button_label: label }),
 };
+

@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { client } from "@/sanity/client";
+import { trackEvent } from "@/lib/analytics";
 
 export interface MenuItemData {
   id?: string;
@@ -374,13 +375,46 @@ export default function MenuSectionClient({
     };
   }, []);
 
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const hasTrackedView = useRef(false);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el || hasTrackedView.current) return;
+
+    if (typeof window === "undefined" || !("IntersectionObserver" in window)) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasTrackedView.current) {
+            hasTrackedView.current = true;
+            try {
+              trackEvent("viewed_menu_section");
+            } catch (err) {
+              console.warn("Analytics error:", err);
+            }
+            observer.disconnect();
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    observer.observe(el);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
   const activeCategories =
     data.categories && data.categories.length > 0
       ? data.categories
       : defaultMenuSectionData.categories;
 
   return (
-    <section id="menu" className="relative bg-[#FFFDF6] py-28 md:py-40">
+    <section id="menu" ref={sectionRef} className="relative bg-[#FFFDF6] py-28 md:py-40">
       <div className="mx-auto max-w-4xl px-6 lg:px-8">
         {/* Header */}
         <motion.div

@@ -141,7 +141,7 @@ export function ReservationForm({ onSuccess }: { onSuccess?: () => void }) {
       console.warn("Firestore write failed, falling back to localStorage:", err?.message);
       saveToLocalStorage(docData);
     } finally {
-      analytics.reservationSubmitted(docData.guests);
+      analytics.reservationSuccess({ guests: docData.guests });
       setSubmittedData(data);
       reset();
       setIsSubmitting(false);

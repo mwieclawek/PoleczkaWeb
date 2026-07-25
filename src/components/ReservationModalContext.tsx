@@ -24,7 +24,7 @@ export function ReservationModalProvider({
 
   const openModal = () => {
     setIsOpen(true);
-    analytics.reservationModalOpened();
+    analytics.reservationIntent();
   };
 
   return (

@@ -1,13 +1,24 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useReservationModal } from "@/components/ReservationModalContext";
 import { ReservationForm } from "@/components/ReservationForm";
+import { trackEvent } from "@/lib/analytics";
 import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export function ReservationModal() {
   const { isOpen, closeModal } = useReservationModal();
+
+  useEffect(() => {
+    if (isOpen) {
+      try {
+        trackEvent("reservation_intent");
+      } catch (err) {
+        console.warn("Analytics error:", err);
+      }
+    }
+  }, [isOpen]);
 
   return (
     <AnimatePresence>

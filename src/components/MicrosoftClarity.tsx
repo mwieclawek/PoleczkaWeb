@@ -8,9 +8,7 @@ import Script from "next/script";
  * Requires NEXT_PUBLIC_CLARITY_ID env variable.
  */
 export function MicrosoftClarity() {
-  const clarityId = process.env.NEXT_PUBLIC_CLARITY_ID;
-
-  if (!clarityId) return null;
+  const clarityId = process.env.NEXT_PUBLIC_CLARITY_ID || "xrz6w6krkw";
 
   return (
     <Script
