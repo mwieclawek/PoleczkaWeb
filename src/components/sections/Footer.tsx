@@ -8,6 +8,7 @@ export default async function Footer() {
     initialData = await client.fetch<SiteSettingsData | null>(
       `*[_type == "siteSettings"][0]{
         footerDescription,
+        contactEmail,
         instagramUrl,
         facebookUrl,
         copyrightText

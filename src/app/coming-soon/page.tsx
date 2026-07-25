@@ -8,6 +8,7 @@ export default async function ComingSoonPage() {
       addressTag,
       mainTitle,
       description,
+      email,
       instagramUrl,
       facebookUrl
     }`)

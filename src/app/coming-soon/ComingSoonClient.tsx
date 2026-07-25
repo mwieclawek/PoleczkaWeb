@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { Mail } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { client } from "@/sanity/client";
 
@@ -9,6 +10,7 @@ export interface ComingSoonData {
   addressTag?: string;
   mainTitle?: string;
   description?: string;
+  email?: string;
   instagramUrl?: string;
   facebookUrl?: string;
 }
@@ -18,6 +20,7 @@ export const defaultComingSoonData: Required<ComingSoonData> = {
   mainTitle: "Bistro Poleczka. Wkrótce otwarcie.",
   description:
     "Trwają ostatnie przygotowania. Do zobaczenia w sierpniu na obiadku!",
+  email: "kontakt@bistropoleczka.pl",
   instagramUrl: "https://instagram.com/poleczka.wroclaw",
   facebookUrl: "https://facebook.com/poleczka.wroclaw",
 };
@@ -67,6 +70,7 @@ export default function ComingSoonClient({
     addressTag: initialData?.addressTag || defaultComingSoonData.addressTag,
     mainTitle: initialData?.mainTitle || defaultComingSoonData.mainTitle,
     description: initialData?.description || defaultComingSoonData.description,
+    email: initialData?.email || defaultComingSoonData.email,
     instagramUrl:
       initialData?.instagramUrl || defaultComingSoonData.instagramUrl,
     facebookUrl: initialData?.facebookUrl || defaultComingSoonData.facebookUrl,
@@ -79,6 +83,7 @@ export default function ComingSoonClient({
         addressTag,
         mainTitle,
         description,
+        email,
         instagramUrl,
         facebookUrl
       }`)
@@ -90,6 +95,7 @@ export default function ComingSoonClient({
             mainTitle: fetched.mainTitle || defaultComingSoonData.mainTitle,
             description:
               fetched.description || defaultComingSoonData.description,
+            email: fetched.email || defaultComingSoonData.email,
             instagramUrl:
               fetched.instagramUrl || defaultComingSoonData.instagramUrl,
             facebookUrl:
@@ -155,31 +161,41 @@ export default function ComingSoonClient({
           {data.description}
         </p>
 
-        {/* Social links */}
+        {/* Contact Email & Social links */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="mt-10 flex items-center justify-center gap-5"
+          className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4"
         >
           <a
-            href={data.instagramUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex h-12 w-12 items-center justify-center rounded-full border border-[#960C3F]/20 bg-[#960C3F]/5 text-[#960C3F] transition-all duration-300 hover:border-[#CA5254] hover:bg-[#CA5254] hover:text-[#FFFDF6] hover:shadow-lg"
-            aria-label="Instagram"
+            href={`mailto:${data.email}`}
+            className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full border border-[#960C3F]/20 bg-[#960C3F]/5 text-[#960C3F] text-sm font-semibold transition-all duration-300 hover:border-[#CA5254] hover:bg-[#CA5254] hover:text-[#FFFDF6] hover:shadow-md"
           >
-            <InstagramIcon className="h-5 w-5 transition-transform group-hover:scale-110" />
+            <Mail className="h-4 w-4" />
+            <span>{data.email}</span>
           </a>
-          <a
-            href={data.facebookUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex h-12 w-12 items-center justify-center rounded-full border border-[#960C3F]/20 bg-[#960C3F]/5 text-[#960C3F] transition-all duration-300 hover:border-[#CA5254] hover:bg-[#CA5254] hover:text-[#FFFDF6] hover:shadow-lg"
-            aria-label="Facebook"
-          >
-            <FacebookIcon className="h-5 w-5 transition-transform group-hover:scale-110" />
-          </a>
+
+          <div className="flex items-center gap-4">
+            <a
+              href={data.instagramUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex h-10 w-10 items-center justify-center rounded-full border border-[#960C3F]/20 bg-[#960C3F]/5 text-[#960C3F] transition-all duration-300 hover:border-[#CA5254] hover:bg-[#CA5254] hover:text-[#FFFDF6] hover:shadow-lg"
+              aria-label="Instagram"
+            >
+              <InstagramIcon className="h-4 w-4 transition-transform group-hover:scale-110" />
+            </a>
+            <a
+              href={data.facebookUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex h-10 w-10 items-center justify-center rounded-full border border-[#960C3F]/20 bg-[#960C3F]/5 text-[#960C3F] transition-all duration-300 hover:border-[#CA5254] hover:bg-[#CA5254] hover:text-[#FFFDF6] hover:shadow-lg"
+              aria-label="Facebook"
+            >
+              <FacebookIcon className="h-4 w-4 transition-transform group-hover:scale-110" />
+            </a>
+          </div>
         </motion.div>
 
         {/* Footer note */}

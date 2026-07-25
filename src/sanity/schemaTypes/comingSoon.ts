@@ -25,6 +25,12 @@ export const comingSoonType = defineType({
       initialValue: 'Trwają ostatnie przygotowania. Do zobaczenia w sierpniu na obiadku!',
     }),
     defineField({
+      name: 'email',
+      title: 'Adres e-mail do kontaktu',
+      type: 'string',
+      initialValue: 'kontakt@bistropoleczka.pl',
+    }),
+    defineField({
       name: 'instagramUrl',
       title: 'Link do Instagrama na ekranie powitalnym',
       type: 'string',

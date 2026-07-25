@@ -14,6 +14,12 @@ export const siteSettingsType = defineType({
         'Nowoczesna kuchnia polska we Wrocławiu. Tradycyjne składniki, nowoczesne techniki — miejsce, gdzie klasyka spotyka się z finezją.',
     }),
     defineField({
+      name: 'contactEmail',
+      title: 'Adres e-mail kontaktowy w stopce',
+      type: 'string',
+      initialValue: 'kontakt@bistropoleczka.pl',
+    }),
+    defineField({
       name: 'instagramUrl',
       title: 'Link do Instagrama',
       type: 'string',

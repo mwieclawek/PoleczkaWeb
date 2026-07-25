@@ -3,11 +3,13 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { Mail } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { client } from "@/sanity/client";
 
 export interface SiteSettingsData {
   footerDescription?: string;
+  contactEmail?: string;
   instagramUrl?: string;
   facebookUrl?: string;
   copyrightText?: string;
@@ -16,6 +18,7 @@ export interface SiteSettingsData {
 export const defaultSiteSettings: Required<SiteSettingsData> = {
   footerDescription:
     "Nowoczesna kuchnia polska we Wrocławiu. Tradycyjne składniki, nowoczesne techniki — miejsce, gdzie klasyka spotyka się z finezją.",
+  contactEmail: "kontakt@bistropoleczka.pl",
   instagramUrl: "https://instagram.com/poleczka.wroclaw",
   facebookUrl: "https://facebook.com/poleczka.wroclaw",
   copyrightText: "Bistro Poleczka. Wszystkie prawa zastrzeżone.",
@@ -71,6 +74,7 @@ export default function FooterClient({
   const [data, setData] = useState<Required<SiteSettingsData>>({
     footerDescription:
       initialData?.footerDescription || defaultSiteSettings.footerDescription,
+    contactEmail: initialData?.contactEmail || defaultSiteSettings.contactEmail,
     instagramUrl:
       initialData?.instagramUrl || defaultSiteSettings.instagramUrl,
     facebookUrl: initialData?.facebookUrl || defaultSiteSettings.facebookUrl,
@@ -83,6 +87,7 @@ export default function FooterClient({
     client
       .fetch<SiteSettingsData | null>(`*[_type == "siteSettings"][0]{
         footerDescription,
+        contactEmail,
         instagramUrl,
         facebookUrl,
         copyrightText
@@ -93,6 +98,8 @@ export default function FooterClient({
             footerDescription:
               fetched.footerDescription ||
               defaultSiteSettings.footerDescription,
+            contactEmail:
+              fetched.contactEmail || defaultSiteSettings.contactEmail,
             instagramUrl:
               fetched.instagramUrl || defaultSiteSettings.instagramUrl,
             facebookUrl:
@@ -183,6 +190,13 @@ export default function FooterClient({
               <br />
               50-305 Wrocław
             </p>
+            <a
+              href={`mailto:${data.contactEmail}`}
+              className="mt-3 inline-flex items-center gap-2 text-sm text-[#FFFDF6]/80 hover:text-[#CA5254] transition-colors"
+            >
+              <Mail className="h-4 w-4 text-[#D9A261]" />
+              <span>{data.contactEmail}</span>
+            </a>
 
             <Separator className="my-6 bg-[#FFFDF6]/10" />
 
