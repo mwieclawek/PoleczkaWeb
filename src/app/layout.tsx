@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { Open_Sans, Poiret_One } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { ReservationModalProvider } from "@/components/ReservationModalContext";
 import { ReservationModal } from "@/components/ReservationModal";
 import { MicrosoftClarity } from "@/components/MicrosoftClarity";
+import { CookieBanner } from "@/components/CookieBanner";
 
 const openSans = Open_Sans({
   variable: "--font-sans",
@@ -47,6 +49,25 @@ export default function RootLayout({
       lang="pl"
       className={`${openSans.variable} ${poiretOne.variable} h-full antialiased`}
     >
+      <head>
+        {/* Google Consent Mode v2 Default Settings */}
+        <Script
+          id="google-consent-mode"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('consent', 'default', {
+                'analytics_storage': 'denied',
+                'ad_storage': 'denied',
+                'ad_user_data': 'denied',
+                'ad_personalization': 'denied'
+              });
+            `,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col font-sans">
         <ReservationModalProvider>
           {children}
@@ -56,8 +77,11 @@ export default function RootLayout({
         {/* Google Analytics 4 */}
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || "G-RDJ9BY67X3"} />
 
-        {/* Microsoft Clarity — set NEXT_PUBLIC_CLARITY_ID in .env.local */}
+        {/* Microsoft Clarity */}
         <MicrosoftClarity />
+
+        {/* Cookie Consent Banner */}
+        <CookieBanner />
       </body>
     </html>
   );
