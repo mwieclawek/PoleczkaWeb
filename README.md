@@ -46,17 +46,25 @@ Aplikacja zawiera dedykowany system rezerwacji z powiadomieniami w czasie rzeczy
    * Dodaj utworzonego bota do grupy.
    * Dodaj bota `@raw_data_bot` lub `@userinfobot` do grupy, aby odczytać ID grupy (zazwyczaj zaczyna się od `-100...`). Zapisz go w pliku `.env` jako `TELEGRAM_CHAT_ID`.
 
-3. **Ustawienie Webhooka Telegrama (Dla Cloud Functions):**
-   * Po wdrożeniu funkcji `telegramWebhook` w Firebase Cloud Functions (lub lokalnie przez ngrok/emulator), ustaw webhook wywołując w przeglądarce URL:
+3. **Ustawienie Webhooka Telegrama (Dla API Route App Router):**
+   * Ustaw webhook wywołując w przeglądarce lub terminalu URL:
      ```http
-     https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook?url=https://<REGION>-<PROJECT_ID>.cloudfunctions.net/telegramWebhook
+     https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook?url=https://bistropoleczka.pl/api/telegram-webhook
      ```
    * Odpowiedź z Telegrama powinna potwierdzić: `{"ok":true,"result":true,"description":"Webhook was set"}`.
+   * Przyciski pod wiadomością **✅ Akceptuj** i **❌ Odrzuć** automatycznie zmieniają status w bazie danych, aktualizują treść wiadomości na Telegramie i wysyłają e-mail do klienta!
 
-4. **Panel Tabletu / Obsługi:**
-   * Dostęp pod adresem: `/admin/reservations` lub `/panel/rezerwacje`.
-   * Panel wykorzystuje `onSnapshot` z Firebase Firestore do nasłuchiwania na żywo.
-   * Przy pojawieniu się rezerwacji o statusie `pending`, panel automatycznie odtwarza powiadomienie dźwiękowe (Web Audio API Chime) oraz wyświetla interaktywne okno z danymi klienta i przyciskami **Akceptuj** / **Odrzuć**.
+4. **Zabezpieczenie & Dostęp do Panelu (Basic Auth):**
+   * Dostęp pod adresem: `/panel/reservations` lub `/admin/reservations`.
+   - Ścieżki `/panel/*` oraz `/admin/*` są chronione przez **HTTP Basic Auth**:
+     - Użytkownik: `admin`
+     - Hasło: zdefiniowane w pliku `.env.local` jako `ADMIN_PASSWORD` (domyślnie: `BistroMPM26!`).
+
+5. **Powiadomienia E-mail (Gmail SMTP / Nodemailer):**
+   - Po zmianie statusu rezerwacji (w panelu lub z poziomu Telegrama) system automatycznie wysyła e-mail do klienta z potwierdzeniem lub uprzejmą odmową.
+   - Wymagane zmienne środowiskowe w `.env.local`:
+     - `GMAIL_USER="kontakt@bistropoleczka.pl"`
+     - `GMAIL_APP_PASSWORD="xxxx xxxx xxxx xxxx"` (Hasło do aplikacji wygenerowane w ustawieniach konta Google).
 
 ---
 

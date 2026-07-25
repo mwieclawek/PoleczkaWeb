@@ -95,7 +95,6 @@ export default function AdminReservationsPage() {
   const chimeIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // --- Audio helpers ---
-
   const playChime = () => {
     try {
       if (!audioCtxRef.current) {
@@ -150,7 +149,7 @@ export default function AdminReservationsPage() {
 
   // --- Firestore real-time listener ---
   useEffect(() => {
-    loadLocalReservations(); // initial load for fallback
+    loadLocalReservations();
 
     const q = query(
       collection(db, "reservations"),
@@ -170,12 +169,11 @@ export default function AdminReservationsPage() {
       (error) => {
         console.error("Firestore onSnapshot error:", error);
         setFirebaseError(
-          "Firebase is not configured. Add real Firebase keys to .env.local to see live reservations."
+          "Baza Firebase nie jest skonfigurowana. Korzystasz z lokalnej bazy (localStorage)."
         );
       }
     );
 
-    // Poll localStorage every 3s so new submissions appear without page reload
     const localPoll = setInterval(() => loadLocalReservations(), 3000);
 
     return () => {
@@ -222,11 +220,18 @@ export default function AdminReservationsPage() {
     setActiveModal(pending.length > 0 ? pending[0] : null);
   }, [reservations, localReservations]);
 
-  // --- Update reservation status (Firestore or localStorage fallback) ---
-  const updateStatus = async (
+  // --- Update reservation status (Firestore or localStorage fallback + Email API) ---
+  const updateReservationStatus = async (
     id: string,
     status: "confirmed" | "rejected"
   ) => {
+    // Call server API route to send confirmation/rejection email
+    fetch("/api/reservations/update-status", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, status }),
+    }).catch((err) => console.error("API update status error:", err));
+
     if (id.startsWith("local_")) {
       updateLocalStatus(id, status);
       if (activeModal?.id === id) setActiveModal(null);
@@ -236,12 +241,12 @@ export default function AdminReservationsPage() {
       await updateDoc(doc(db, "reservations", id), { status });
       if (activeModal?.id === id) setActiveModal(null);
     } catch (err) {
-      console.error("Failed to update reservation status:", err);
+      console.error("Failed to update reservation status in Firestore:", err);
     }
   };
 
-  // --- Filtering (uses merged allReservations) ---
-  const filtered = allReservations.filter((r) => {
+  // --- Filtering ---
+  const filteredReservations = allReservations.filter((r) => {
     const matchesDate = !selectedDate || r.date === selectedDate;
     const matchesStatus = activeTab === "all" || r.status === activeTab;
     return matchesDate && matchesStatus;
@@ -258,12 +263,12 @@ export default function AdminReservationsPage() {
     (r) => !selectedDate || r.date === selectedDate
   ).length;
 
-  const statusLabel = (status: ReservationItem["status"]) =>
+  const getStatusBadgeText = (status: ReservationItem["status"]) =>
     status === "pending"
-      ? "Pending"
+      ? "Oczekująca"
       : status === "confirmed"
-      ? "Confirmed"
-      : "Rejected";
+      ? "Potwierdzona"
+      : "Odrzucona";
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 p-4 md:p-8">
@@ -272,17 +277,17 @@ export default function AdminReservationsPage() {
         <div>
           <div className="flex items-center gap-3">
             <h1 className="text-3xl font-bold tracking-tight text-amber-400">
-              Reservations Panel
+              Panel Rezerwacji Tabletu
             </h1>
             <Badge
               variant="outline"
               className="bg-amber-400/10 text-amber-400 border-amber-400/30"
             >
-              Bistro Poleczka Admin
+              Bistro Poleczka
             </Badge>
           </div>
           <p className="text-slate-400 text-sm mt-1">
-            Real-time table management and notifications
+            Obsługa restauracji i powiadomienia w czasie rzeczywistym
           </p>
         </div>
 
@@ -293,7 +298,7 @@ export default function AdminReservationsPage() {
               className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-semibold gap-2 animate-pulse"
             >
               <Volume2 className="w-4 h-4" />
-              Enable Sound
+              Włącz dźwięk tabletu
             </Button>
           ) : (
             <Button
@@ -310,7 +315,7 @@ export default function AdminReservationsPage() {
               ) : (
                 <VolumeX className="w-4 h-4 mr-2" />
               )}
-              {soundEnabled ? "Sound On" : "Muted"}
+              {soundEnabled ? "Dźwięk aktywny" : "Wyciszony"}
             </Button>
           )}
 
@@ -326,12 +331,12 @@ export default function AdminReservationsPage() {
         </div>
       </header>
 
-      {/* Firebase config warning */}
+      {/* Firebase warning */}
       {firebaseError && (
         <div className="max-w-7xl mx-auto mb-6 bg-amber-500/10 border border-amber-500/30 text-amber-400 rounded-2xl p-4 flex items-start gap-3 text-sm">
           <WifiOff className="w-5 h-5 shrink-0 mt-0.5" />
           <div>
-            <p className="font-semibold mb-1">Firebase not connected</p>
+            <p className="font-semibold mb-1">Połączenie z bazą niedostępne</p>
             <p className="text-amber-400/70">{firebaseError}</p>
           </div>
         </div>
@@ -344,7 +349,7 @@ export default function AdminReservationsPage() {
             [
               {
                 key: "pending",
-                label: "Pending",
+                label: "Oczekujące",
                 count: pendingCount,
                 activeClass: "bg-amber-500/10 border-amber-500/50 text-amber-400",
                 icon: Clock,
@@ -352,7 +357,7 @@ export default function AdminReservationsPage() {
               },
               {
                 key: "confirmed",
-                label: "Confirmed",
+                label: "Potwierdzone",
                 count: confirmedCount,
                 activeClass:
                   "bg-emerald-500/10 border-emerald-500/50 text-emerald-400",
@@ -360,14 +365,14 @@ export default function AdminReservationsPage() {
               },
               {
                 key: "rejected",
-                label: "Rejected",
+                label: "Odrzucone",
                 count: rejectedCount,
                 activeClass: "bg-rose-500/10 border-rose-500/50 text-rose-400",
                 icon: XCircle,
               },
               {
                 key: "all",
-                label: "All",
+                label: "Wszystkie",
                 count: allCount,
                 activeClass: "bg-blue-500/10 border-blue-500/50 text-blue-400",
                 icon: Filter,
@@ -399,26 +404,26 @@ export default function AdminReservationsPage() {
         <div className="space-y-4">
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-semibold text-slate-200">
-              Reservations for:{" "}
+              Lista rezerwacji na dzień:{" "}
               <span className="text-amber-400">{selectedDate}</span>
             </h2>
             <span className="text-xs text-slate-400">
-              Total: {filtered.length}
+              Łącznie: {filteredReservations.length}
             </span>
           </div>
 
-          {filtered.length === 0 ? (
+          {filteredReservations.length === 0 ? (
             <Card className="bg-slate-900/50 border-slate-800 text-center py-12">
               <CardContent className="space-y-3">
                 <Clock className="w-12 h-12 text-slate-600 mx-auto" />
                 <p className="text-slate-400 text-base">
-                  No reservations found for this date and filter.
+                  Brak rezerwacji w wybranym dniu i filtrze.
                 </p>
               </CardContent>
             </Card>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filtered.map((item) => (
+              {filteredReservations.map((item) => (
                 <Card
                   key={item.id}
                   className={`bg-slate-900 border transition-all hover:border-slate-700 ${
@@ -437,7 +442,7 @@ export default function AdminReservationsPage() {
                       </CardTitle>
                       <CardDescription className="text-xs text-slate-400 flex items-center gap-2">
                         <Clock className="w-3.5 h-3.5 text-slate-500" />
-                        {item.date} at{" "}
+                        {item.date} godz.{" "}
                         <span className="font-semibold text-slate-200">
                           {item.time}
                         </span>
@@ -453,7 +458,7 @@ export default function AdminReservationsPage() {
                           : "bg-rose-400/20 text-rose-400 border-rose-400/30"
                       }
                     >
-                      {statusLabel(item.status)}
+                      {getStatusBadgeText(item.status)}
                     </Badge>
                   </CardHeader>
 
@@ -472,7 +477,7 @@ export default function AdminReservationsPage() {
                       <div className="flex items-center gap-2 text-slate-300">
                         <Users className="w-3.5 h-3.5 text-amber-400" />
                         <span>
-                          Guests:{" "}
+                          Liczba osób:{" "}
                           <strong className="text-slate-100">{item.guests}</strong>
                         </span>
                       </div>
@@ -487,22 +492,22 @@ export default function AdminReservationsPage() {
                     <div className="flex gap-2 pt-2">
                       <Button
                         size="sm"
-                        onClick={() => updateStatus(item.id, "confirmed")}
+                        onClick={() => updateReservationStatus(item.id, "confirmed")}
                         disabled={item.status === "confirmed"}
                         className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-medium gap-1 text-xs"
                       >
                         <Check className="w-3.5 h-3.5" />
-                        Accept
+                        Zaakceptuj
                       </Button>
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => updateStatus(item.id, "rejected")}
+                        onClick={() => updateReservationStatus(item.id, "rejected")}
                         disabled={item.status === "rejected"}
                         className="flex-1 border-rose-500/40 text-rose-400 hover:bg-rose-500/10 text-xs gap-1"
                       >
                         <X className="w-3.5 h-3.5" />
-                        Reject
+                        Odrzuć
                       </Button>
                     </div>
                   </CardContent>
@@ -523,23 +528,23 @@ export default function AdminReservationsPage() {
               </div>
               <div>
                 <h3 className="text-2xl font-bold text-slate-100">
-                  NEW RESERVATION!
+                  NOWA REZERWACJA!
                 </h3>
                 <p className="text-xs text-amber-400 font-medium">
-                  Awaiting staff confirmation
+                  Oczekuje na decyzję obsługi
                 </p>
               </div>
             </div>
 
             <div className="space-y-3 bg-slate-950 p-5 rounded-2xl border border-slate-800 text-slate-200">
               <div className="flex justify-between items-center border-b border-slate-800/80 pb-2">
-                <span className="text-slate-400 text-sm">Name:</span>
+                <span className="text-slate-400 text-sm">Imię i nazwisko:</span>
                 <span className="font-bold text-lg text-slate-100">
                   {activeModal.name}
                 </span>
               </div>
               <div className="flex justify-between items-center border-b border-slate-800/80 pb-2">
-                <span className="text-slate-400 text-sm">Phone:</span>
+                <span className="text-slate-400 text-sm">Telefon:</span>
                 <a
                   href={`tel:${activeModal.phone}`}
                   className="font-mono font-bold text-amber-400 text-base"
@@ -548,20 +553,20 @@ export default function AdminReservationsPage() {
                 </a>
               </div>
               <div className="flex justify-between items-center border-b border-slate-800/80 pb-2">
-                <span className="text-slate-400 text-sm">Date & Time:</span>
+                <span className="text-slate-400 text-sm">Data i godzina:</span>
                 <span className="font-semibold text-slate-100">
-                  {activeModal.date} at {activeModal.time}
+                  {activeModal.date} godz. {activeModal.time}
                 </span>
               </div>
               <div className="flex justify-between items-center border-b border-slate-800/80 pb-2">
-                <span className="text-slate-400 text-sm">Guests:</span>
+                <span className="text-slate-400 text-sm">Liczba osób:</span>
                 <span className="font-semibold text-slate-100">
                   {activeModal.guests}
                 </span>
               </div>
               {activeModal.notes && (
                 <div className="pt-1">
-                  <span className="text-slate-400 text-xs block mb-1">Notes:</span>
+                  <span className="text-slate-400 text-xs block mb-1">Uwagi:</span>
                   <p className="text-xs italic bg-slate-900 p-2 rounded border border-slate-800">
                     "{activeModal.notes}"
                   </p>
@@ -571,19 +576,19 @@ export default function AdminReservationsPage() {
 
             <div className="flex flex-col sm:flex-row gap-3 pt-2">
               <Button
-                onClick={() => updateStatus(activeModal.id, "confirmed")}
+                onClick={() => updateReservationStatus(activeModal.id, "confirmed")}
                 className="flex-1 h-12 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-base rounded-xl gap-2 shadow-lg shadow-emerald-600/20"
               >
                 <CheckCircle className="w-5 h-5" />
-                ACCEPT
+                ZAAKCEPTUJ
               </Button>
               <Button
                 variant="outline"
-                onClick={() => updateStatus(activeModal.id, "rejected")}
+                onClick={() => updateReservationStatus(activeModal.id, "rejected")}
                 className="flex-1 h-12 border-rose-500/50 text-rose-400 hover:bg-rose-500/10 font-bold text-base rounded-xl gap-2"
               >
                 <XCircle className="w-5 h-5" />
-                REJECT
+                ODRZUĆ
               </Button>
             </div>
           </div>

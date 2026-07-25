@@ -439,12 +439,12 @@ export default function MenuSectionClient({
         {/* Tabs */}
         {activeCategories && activeCategories.length > 0 && (
           <Tabs defaultValue={activeCategories[0].key || "przystawki"} className="mt-16">
-            <TabsList className="mx-auto flex flex-wrap justify-center gap-1.5 p-1.5 w-full max-w-2xl h-auto bg-[#A6A6A6]/10 rounded-2xl">
+            <TabsList className="mx-auto flex flex-nowrap md:flex-wrap overflow-x-auto md:overflow-visible scrollbar-none [::-webkit-scrollbar]:hidden snap-x snap-mandatory justify-start md:justify-center gap-1.5 p-2 w-full max-w-2xl h-auto bg-[#A6A6A6]/10 rounded-2xl">
               {activeCategories.map((cat) => (
                 <TabsTrigger
                   key={cat.key || cat.label}
                   value={cat.key || "przystawki"}
-                  className="text-xs sm:text-sm text-[#960C3F] data-[state=active]:bg-[#CA5254] data-[state=active]:text-[#FFFDF6] data-active:bg-[#CA5254] data-active:text-[#FFFDF6] transition-all px-4 py-2 rounded-xl"
+                  className="shrink-0 snap-center text-xs sm:text-sm text-[#960C3F] data-[state=active]:bg-[#CA5254] data-[state=active]:text-[#FFFDF6] data-[state=active]:font-bold data-[state=active]:shadow-md transition-all px-4 py-2.5 rounded-xl"
                 >
                   {cat.label}
                 </TabsTrigger>

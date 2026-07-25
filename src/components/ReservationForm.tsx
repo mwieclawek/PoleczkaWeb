@@ -90,14 +90,15 @@ export function ReservationForm({ onSuccess }: { onSuccess?: () => void }) {
     },
   });
 
-  const saveToLocalStorage = (docData: Record<string, any>) => {
+  const saveToLocalStorage = (docData: Record<string, any>): string => {
+    const id = `local_${Date.now()}`;
     try {
       const existing: any[] = JSON.parse(
         localStorage.getItem("poleczka_reservations") || "[]"
       );
       const newEntry = {
         ...docData,
-        id: `local_${Date.now()}`,
+        id,
         createdAt: new Date().toISOString(),
       };
       existing.unshift(newEntry);
@@ -105,6 +106,7 @@ export function ReservationForm({ onSuccess }: { onSuccess?: () => void }) {
     } catch {
       // localStorage not available (SSR guard)
     }
+    return id;
   };
 
   const onSubmit = async (data: ReservationFormValues) => {
@@ -125,21 +127,33 @@ export function ReservationForm({ onSuccess }: { onSuccess?: () => void }) {
     };
 
     try {
-      // 5s timeout so demo keys don't block the UX indefinitely
-      const timeout = new Promise<void>((_, reject) =>
+      const timeout = new Promise<any>((_, reject) =>
         setTimeout(() => reject(new Error("Firebase timeout")), 5000)
       );
-      await Promise.race([
+      const res = await Promise.race([
         addDoc(collection(db, "reservations"), {
           ...docData,
           createdAt: serverTimestamp(),
         }),
         timeout,
       ]);
+
+      if (res && res.id) {
+        fetch("/api/reservations/notify-telegram", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: res.id, ...docData }),
+        }).catch((err) => console.error("Failed to trigger Telegram notification:", err));
+      }
     } catch (err: any) {
       // Firebase unreachable — persist locally so admin panel can still show it
       console.warn("Firestore write failed, falling back to localStorage:", err?.message);
-      saveToLocalStorage(docData);
+      const localId = saveToLocalStorage(docData);
+      fetch("/api/reservations/notify-telegram", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: localId, ...docData }),
+      }).catch(() => {});
     } finally {
       analytics.reservationSuccess({ guests: docData.guests });
       setSubmittedData(data);

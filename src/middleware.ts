@@ -4,7 +4,34 @@ import type { NextRequest } from "next/server";
 export function middleware(request: NextRequest) {
   const url = request.nextUrl.clone();
 
-  // 1. Sprawdź, czy URL zawiera parametr zapytania: ?admin=poleczka
+  // 1. HTTP Basic Authentication for /panel and /admin routes
+  if (url.pathname.startsWith("/panel") || url.pathname.startsWith("/admin")) {
+    const authHeader = request.headers.get("authorization");
+
+    if (authHeader) {
+      const authValue = authHeader.split(" ")[1];
+      if (authValue) {
+        try {
+          const [user, pwd] = atob(authValue).split(":");
+          const expectedPassword = process.env.ADMIN_PASSWORD || "BistroMPM26!";
+          if (user === "admin" && pwd === expectedPassword) {
+            return NextResponse.next();
+          }
+        } catch {
+          // Invalid base64 or format
+        }
+      }
+    }
+
+    return new NextResponse("Authentication Required", {
+      status: 401,
+      headers: {
+        "WWW-Authenticate": 'Basic realm="Secure Area"',
+      },
+    });
+  }
+
+  // 2. Sprawdź, czy URL zawiera parametr zapytania: ?admin=poleczka
   if (url.searchParams.get("admin") === "poleczka") {
     url.searchParams.delete("admin");
     const response = NextResponse.redirect(url);
@@ -18,14 +45,14 @@ export function middleware(request: NextRequest) {
     return response;
   }
 
-  // 2. Sprawdź, czy użytkownik posiada ciasteczko dev_access
+  // 3. Sprawdź, czy użytkownik posiada ciasteczko dev_access
   const hasDevAccess = request.cookies.get("dev_access")?.value === "true";
 
   if (hasDevAccess) {
     return NextResponse.next();
   }
 
-  // 3. Jeśli użytkownik NIE posiada ciasteczka i NIE znajduje się już na ścieżce /coming-soon
+  // 4. Jeśli użytkownik NIE posiada ciasteczka i NIE znajduje się już na ścieżce /coming-soon
   if (url.pathname !== "/coming-soon") {
     const comingSoonUrl = url.clone();
     comingSoonUrl.pathname = "/coming-soon";
