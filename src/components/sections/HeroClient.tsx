@@ -125,7 +125,7 @@ export default function HeroClient({
       <div className="relative z-10 mx-auto max-w-4xl px-6 text-center mt-20">
         {/* Tagline */}
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
           className="mb-8 text-sm font-medium uppercase tracking-[0.3em] text-[#D9A261]"
@@ -135,7 +135,7 @@ export default function HeroClient({
 
         {/* Title */}
         <motion.h1
-          initial={{ opacity: 0, y: 30 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
           className="mb-8 font-heading text-5xl font-bold leading-[1.1] tracking-tight text-[#CA5254] md:text-6xl lg:text-8xl"
@@ -149,7 +149,7 @@ export default function HeroClient({
 
         {/* Subtitle */}
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.7 }}
           className="mx-auto mb-14 max-w-xl text-lg leading-relaxed text-[#960C3F]/60 md:text-xl"
@@ -159,7 +159,7 @@ export default function HeroClient({
 
         {/* CTA */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.9 }}
           className="flex flex-col items-center justify-center gap-4 sm:flex-row"
@@ -181,7 +181,7 @@ export default function HeroClient({
 
       {/* Scroll indicator */}
       <motion.div
-        initial={{ opacity: 0 }}
+        initial={false}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5, duration: 0.8 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2"

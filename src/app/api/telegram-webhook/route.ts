@@ -24,12 +24,17 @@ export async function POST(req: NextRequest) {
     const messageId = message?.message_id;
     const originalText = message?.text || "";
 
-    if (!callbackData.startsWith("accept_") && !callbackData.startsWith("reject_")) {
+    const isAccept = callbackData.startsWith("accept_") || callbackData.startsWith("confirm_");
+    const isReject = callbackData.startsWith("reject_");
+
+    if (!isAccept && !isReject) {
       return NextResponse.json({ ok: true, message: "Ignored callback data" });
     }
 
-    const isAccept = callbackData.startsWith("accept_");
-    const reservationId = callbackData.replace(isAccept ? "accept_" : "reject_", "");
+    const reservationId = callbackData
+      .replace("accept_", "")
+      .replace("confirm_", "")
+      .replace("reject_", "");
     const newStatus = isAccept ? "confirmed" : "rejected";
 
     // 1. Fetch reservation details from Firestore

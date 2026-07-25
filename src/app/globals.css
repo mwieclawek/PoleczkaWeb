@@ -139,3 +139,9 @@
     @apply font-sans;
   }
 }
+
+/* Microsoft Clarity DOM Snapshotter & Unmask Helper */
+[data-clarity-unmask="true"] [style*="opacity: 0"],
+[data-clarity-unmask="true"] [style*="opacity:0"] {
+  opacity: 1 !important;
+}
