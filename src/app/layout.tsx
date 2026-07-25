@@ -53,10 +53,8 @@ export default function RootLayout({
           <ReservationModal />
         </ReservationModalProvider>
 
-        {/* Google Analytics 4 — set NEXT_PUBLIC_GA_ID in .env.local */}
-        {process.env.NEXT_PUBLIC_GA_ID && (
-          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
-        )}
+        {/* Google Analytics 4 */}
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || "G-RDJ9BY67X3"} />
 
         {/* Microsoft Clarity — set NEXT_PUBLIC_CLARITY_ID in .env.local */}
         <MicrosoftClarity />
