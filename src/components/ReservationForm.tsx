@@ -322,18 +322,22 @@ export function ReservationForm({ onSuccess }: { onSuccess?: () => void }) {
                           )}
                         </Button>
                       </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0 z-50 bg-card border-border shadow-xl" align="start">
+                      <PopoverContent className="w-auto p-0 z-[100] bg-card border-border shadow-xl" align="start">
                         <Calendar
                           mode="single"
                           selected={field.value}
                           onSelect={(date) => {
-                            field.onChange(date);
-                            setCalendarOpen(false);
+                            if (date) {
+                              field.onChange(date);
+                              setCalendarOpen(false);
+                            }
                           }}
                           disabled={(date) => {
                             const today = new Date();
                             today.setHours(0, 0, 0, 0);
-                            return date < today;
+                            const d = new Date(date);
+                            d.setHours(0, 0, 0, 0);
+                            return d < today;
                           }}
                           initialFocus
                         />
