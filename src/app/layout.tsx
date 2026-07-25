@@ -20,9 +20,21 @@ const poiretOne = Poiret_One({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://bistropoleczka.pl"),
   title: "Poleczka | Bistro Kuchnia Polska — Wrocław",
   description:
     "Poleczka to nowoczesna kuchnia polska we Wrocławiu. Opieramy się na tradycyjnych, lokalnych składnikach, wydobywając z nich pełnię smaku dzięki nowoczesnym technikom kulinarnym.",
+  icons: {
+    icon: "/icon.png",
+    shortcut: "/icon.png",
+    apple: "/icon.png",
+  },
+  openGraph: {
+    title: "Poleczka | Bistro Kuchnia Polska — Wrocław",
+    description:
+      "Poleczka to nowoczesna kuchnia polska we Wrocławiu. Opieramy się na tradycyjnych, lokalnych składnikach, wydobywając z nich pełnię smaku dzięki nowoczesnym technikom kulinarnym.",
+    images: [{ url: "/icon.png" }],
+  },
 };
 
 export default function RootLayout({
