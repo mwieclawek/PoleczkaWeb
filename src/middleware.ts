@@ -52,28 +52,18 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 4. Jeśli użytkownik NIE posiada ciasteczka i NIE znajduje się już na ścieżce /coming-soon
-  if (url.pathname !== "/coming-soon") {
-    const comingSoonUrl = url.clone();
-    comingSoonUrl.pathname = "/coming-soon";
-    return NextResponse.rewrite(comingSoonUrl);
+  // 4. Bezwzględne przerwanie, jeśli jesteśmy już na /coming-soon
+  if (url.pathname.startsWith("/coming-soon")) {
+    return NextResponse.next();
   }
 
-  return NextResponse.next();
+  // 5. Zastosuj rewrite na /coming-soon dla wszystkich innych stron
+  const comingSoonUrl = url.clone();
+  comingSoonUrl.pathname = "/coming-soon";
+  return NextResponse.rewrite(comingSoonUrl);
 }
 
 // Zdefiniuj dozwolone ścieżki (matcher), aby omijać pliki statyczne, obrazki, _next, API oraz Sanity Studio
 export const config = {
-  matcher: [
-    /*
-     * Dopasuj wszystkie ścieżki z wyjątkiem:
-     * - _next/static (pliki statyczne z kompilacji)
-     * - _next/image (optymalizacja obrazków Next.js)
-     * - favicon.ico
-     * - api (trasy API)
-     * - studio (panel Sanity CMS)
-     * - pliki graficzne/statyczne (.png, .jpg, .jpeg, .gif, .webp, .svg, .ico, .woff, .woff2, .ttf)
-     */
-    "/((?!_next/static|_next/image|favicon.ico|api|studio|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff|woff2|ttf)$).*)",
-  ],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|images|.*\\.png$).*)'],
 };
