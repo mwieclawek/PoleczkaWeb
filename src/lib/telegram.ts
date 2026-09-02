@@ -19,8 +19,10 @@ export interface TelegramReservationPayload {
 export async function sendTelegramNotification(
   payload: TelegramReservationPayload
 ): Promise<boolean> {
-  const botToken = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
+  const botToken =
+    process.env.TELEGRAM_BOT_TOKEN ||
+    "8897914854:AAGLEcpl1MRBmfIjEk8zZcg7TLl7Ll3o31o";
+  const chatId = process.env.TELEGRAM_CHAT_ID || "1098063047";
 
   if (!botToken || !chatId) {
     console.warn(
@@ -90,7 +92,9 @@ export async function answerTelegramCallbackQuery(
   callbackQueryId: string,
   text: string
 ): Promise<boolean> {
-  const botToken = process.env.TELEGRAM_BOT_TOKEN;
+  const botToken =
+    process.env.TELEGRAM_BOT_TOKEN ||
+    "8897914854:AAGLEcpl1MRBmfIjEk8zZcg7TLl7Ll3o31o";
   if (!botToken) return false;
 
   try {
@@ -117,7 +121,9 @@ export async function editTelegramMessage(
   messageId: number,
   text: string
 ): Promise<boolean> {
-  const botToken = process.env.TELEGRAM_BOT_TOKEN;
+  const botToken =
+    process.env.TELEGRAM_BOT_TOKEN ||
+    "8897914854:AAGLEcpl1MRBmfIjEk8zZcg7TLl7Ll3o31o";
   if (!botToken) return false;
 
   try {

@@ -126,40 +126,36 @@ export function ReservationForm({ onSuccess }: { onSuccess?: () => void }) {
       status: "pending",
     };
 
+    const reservationId = `res_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+
+    // 1. Immediately trigger server-side endpoint (handles Telegram notification & Firestore server backup)
+    const apiPromise = fetch("/api/reservations/notify-telegram", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: reservationId, ...docData }),
+    }).catch((err) => console.error("Failed to trigger Telegram notification:", err));
+
+    // 2. Try client-side Firestore write in parallel with 3s timeout
     try {
       const timeout = new Promise<any>((_, reject) =>
-        setTimeout(() => reject(new Error("Firebase timeout")), 5000)
+        setTimeout(() => reject(new Error("Firebase timeout")), 3000)
       );
-      const res = await Promise.race([
+      await Promise.race([
         addDoc(collection(db, "reservations"), {
           ...docData,
           createdAt: serverTimestamp(),
         }),
         timeout,
       ]);
-
-      if (res && res.id) {
-        fetch("/api/reservations/notify-telegram", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id: res.id, ...docData }),
-        }).catch((err) => console.error("Failed to trigger Telegram notification:", err));
-      }
     } catch (err: any) {
-      // Firebase unreachable — persist locally so admin panel can still show it
-      console.warn("Firestore write failed, falling back to localStorage:", err?.message);
-      const localId = saveToLocalStorage(docData);
-      fetch("/api/reservations/notify-telegram", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: localId, ...docData }),
-      }).catch(() => {});
+      console.warn("Client Firestore write fallback:", err?.message);
+      saveToLocalStorage({ ...docData, id: reservationId });
     } finally {
+      await apiPromise.catch(() => {});
       analytics.reservationSuccess({ guests: docData.guests });
       setSubmittedData(data);
       reset();
       setIsSubmitting(false);
-      // If used inside a modal, close it after showing the thank-you screen
       if (onSuccess) {
         setTimeout(() => {
           onSuccess();
