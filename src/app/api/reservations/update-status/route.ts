@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { sendReservationEmail } from "@/lib/mail";
+import { updateReservationStatusInStore } from "@/lib/reservations-store";
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,16 +15,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 1. Fetch reservation from Firestore if not a local fallback ID
-    if (!id.startsWith("local_")) {
+    // 1. Update in-memory server store immediately
+    updateReservationStatusInStore(id, status);
+
+    // 2. Update status in Firestore & send email
+    try {
       const reservationRef = doc(db, "reservations", id);
       const snap = await getDoc(reservationRef);
 
       if (snap.exists()) {
         const data = snap.data();
-        await updateDoc(reservationRef, { status });
+        await setDoc(reservationRef, { status }, { merge: true });
 
-        // Send email to client
         if (data.email) {
           await sendReservationEmail({
             to: data.email,
@@ -32,9 +35,13 @@ export async function POST(req: NextRequest) {
             time: data.time || "",
             guests: data.guests || "",
             status,
-          });
+          }).catch((e) => console.warn("Email send error:", e));
         }
+      } else {
+        await setDoc(reservationRef, { status }, { merge: true });
       }
+    } catch (fsErr) {
+      console.warn("Firestore status update warning:", fsErr);
     }
 
     return NextResponse.json({ ok: true });

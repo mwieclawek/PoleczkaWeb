@@ -6,6 +6,7 @@ import {
   editTelegramMessage,
 } from "@/lib/telegram";
 import { sendReservationEmail } from "@/lib/mail";
+import { updateReservationStatusInStore } from "@/lib/reservations-store";
 
 export async function POST(req: NextRequest) {
   try {
@@ -35,7 +36,10 @@ export async function POST(req: NextRequest) {
       .replace("accept_", "")
       .replace("confirm_", "")
       .replace("reject_", "");
-    const newStatus = isAccept ? "confirmed" : "rejected";
+    const newStatus: "confirmed" | "rejected" = isAccept ? "confirmed" : "rejected";
+
+    // 1. Update in-memory server store
+    updateReservationStatusInStore(reservationId, newStatus);
 
     // 1. Fetch reservation details from Firestore
     const reservationRef = doc(db, "reservations", reservationId);

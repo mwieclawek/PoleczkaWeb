@@ -242,7 +242,18 @@ export default function AdminReservationsPage() {
     id: string,
     status: "confirmed" | "rejected"
   ) => {
-    // Call server API route to send confirmation/rejection email
+    // Optimistically update UI states immediately
+    setReservations((prev) =>
+      prev.map((r) => (r.id === id ? { ...r, status } : r))
+    );
+    setServerReservations((prev) =>
+      prev.map((r) => (r.id === id ? { ...r, status } : r))
+    );
+    if (activeModal?.id === id) {
+      setActiveModal(null);
+    }
+
+    // Call server API route to persist status change and send email
     fetch("/api/reservations/update-status", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -251,14 +262,12 @@ export default function AdminReservationsPage() {
 
     if (id.startsWith("local_")) {
       updateLocalStatus(id, status);
-      if (activeModal?.id === id) setActiveModal(null);
       return;
     }
     try {
       await updateDoc(doc(db, "reservations", id), { status });
-      if (activeModal?.id === id) setActiveModal(null);
     } catch (err) {
-      console.error("Failed to update reservation status in Firestore:", err);
+      console.warn("Firestore status update warning:", err);
     }
   };
 
