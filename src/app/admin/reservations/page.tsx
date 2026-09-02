@@ -145,14 +145,28 @@ export default function AdminReservationsPage() {
     }
   };
 
-  // --- Firestore real-time listener ---
+  const [serverReservations, setServerReservations] = useState<ReservationItem[]>([]);
+
+  // Fetch reservations from server API poller
+  const fetchServerReservations = async () => {
+    try {
+      const res = await fetch("/api/reservations/list");
+      if (res.ok) {
+        const data = await res.json();
+        if (data.ok && Array.isArray(data.reservations)) {
+          setServerReservations(data.reservations);
+        }
+      }
+    } catch {}
+  };
+
+  // --- Firestore real-time listener & API poller ---
   useEffect(() => {
     loadLocalReservations();
+    fetchServerReservations();
 
-    const q = query(
-      collection(db, "reservations"),
-      orderBy("createdAt", "desc")
-    );
+    // Query without orderBy to avoid requiring a Firestore composite index on production
+    const q = collection(db, "reservations");
 
     const unsubscribe = onSnapshot(
       q,
@@ -165,26 +179,31 @@ export default function AdminReservationsPage() {
         setReservations(items);
       },
       (error) => {
-        console.error("Firestore onSnapshot error:", error);
-        setFirebaseError(
-          "Baza Firebase nie jest skonfigurowana. Korzystasz z lokalnej bazy (localStorage)."
-        );
+        console.warn("Firestore onSnapshot warning:", error);
       }
     );
 
-    const localPoll = setInterval(() => loadLocalReservations(), 3000);
+    const apiPoll = setInterval(() => {
+      loadLocalReservations();
+      fetchServerReservations();
+    }, 3000);
 
     return () => {
       unsubscribe();
-      clearInterval(localPoll);
+      clearInterval(apiPoll);
     };
   }, []);
 
-  // Merge Firebase + localStorage reservations (deduplicate by id)
+  // Merge Firestore + server API + localStorage reservations (deduplicate by id)
   const allReservations = [
     ...reservations,
+    ...serverReservations.filter(
+      (sr) => !reservations.some((r) => r.id === sr.id)
+    ),
     ...localReservations.filter(
-      (lr) => !reservations.some((r) => r.id === lr.id)
+      (lr) =>
+        !reservations.some((r) => r.id === lr.id) &&
+        !serverReservations.some((sr) => sr.id === lr.id)
     ),
   ];
 
