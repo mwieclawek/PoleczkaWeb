@@ -44,7 +44,7 @@ export function ReservationModal() {
             transition={{ duration: 0.3, ease: "easeOut" }}
             className="fixed inset-x-4 top-[50%] z-[70] -translate-y-1/2 max-w-2xl mx-auto"
           >
-            <div className="bg-[#FFFDF6] rounded-3xl shadow-2xl shadow-[#960C3F]/10 border border-[#960C3F]/10 overflow-hidden max-h-[90vh] flex flex-col">
+            <div className="bg-[#FFFDF6] rounded-3xl shadow-2xl shadow-[#960C3F]/10 border border-[#960C3F]/10 max-h-[90vh] flex flex-col">
               {/* Header */}
               <div className="flex items-center justify-between px-8 pt-7 pb-5 border-b border-[#960C3F]/10 shrink-0">
                 <div>

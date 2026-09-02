@@ -164,7 +164,7 @@ export function ReservationForm({ onSuccess }: { onSuccess?: () => void }) {
         setTimeout(() => {
           onSuccess();
           setSubmittedData(null);
-        }, 3000);
+        }, 8000);
       }
     }
   };
@@ -364,7 +364,7 @@ export function ReservationForm({ onSuccess }: { onSuccess?: () => void }) {
                       <SelectTrigger className={cn("h-12 rounded-xl bg-background/50", errors.time && "border-destructive")}>
                         <SelectValue placeholder="Wybierz godzinę" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="z-[200]">
                         {TIME_SLOTS.map((slot) => (
                           <SelectItem key={slot} value={slot}>
                             {slot}
@@ -394,7 +394,7 @@ export function ReservationForm({ onSuccess }: { onSuccess?: () => void }) {
                     <SelectTrigger className={cn("h-12 rounded-xl bg-background/50", errors.guests && "border-destructive")}>
                       <SelectValue placeholder="Wybierz liczbę osób" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="z-[200]">
                       {GUEST_OPTIONS.map((option) => (
                         <SelectItem key={option} value={option}>
                           {option}

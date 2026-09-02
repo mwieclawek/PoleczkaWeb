@@ -56,12 +56,10 @@ export interface ReservationItem {
 export default function AdminReservationsPage() {
   const [reservations, setReservations] = useState<ReservationItem[]>([]);
   const [localReservations, setLocalReservations] = useState<ReservationItem[]>([]);
-  const [selectedDate, setSelectedDate] = useState<string>(
-    format(new Date(), "yyyy-MM-dd")
-  );
+  const [selectedDate, setSelectedDate] = useState<string>("");
   const [activeTab, setActiveTab] = useState<
     "pending" | "confirmed" | "rejected" | "all"
-  >("pending");
+  >("all");
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
   const [isAudioUnlocked, setIsAudioUnlocked] = useState<boolean>(false);
   const [activeModal, setActiveModal] = useState<ReservationItem | null>(null);
@@ -252,7 +250,9 @@ export default function AdminReservationsPage() {
     return matchesDate && matchesStatus;
   });
 
-  const pendingCount = allReservations.filter((r) => r.status === "pending").length;
+  const pendingCount = allReservations.filter(
+    (r) => r.status === "pending" && (!selectedDate || r.date === selectedDate)
+  ).length;
   const confirmedCount = allReservations.filter(
     (r) => r.status === "confirmed" && (!selectedDate || r.date === selectedDate)
   ).length;
@@ -327,6 +327,15 @@ export default function AdminReservationsPage() {
               onChange={(e) => setSelectedDate(e.target.value)}
               className="bg-transparent border-none text-sm h-8 w-36 p-0 focus-visible:ring-0 text-slate-100"
             />
+            {selectedDate && (
+              <button
+                onClick={() => setSelectedDate("")}
+                className="text-slate-400 hover:text-slate-200 transition-colors text-xs font-medium"
+                title="Pokaż wszystkie daty"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
           </div>
         </div>
       </header>
@@ -404,8 +413,12 @@ export default function AdminReservationsPage() {
         <div className="space-y-4">
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-semibold text-slate-200">
-              Lista rezerwacji na dzień:{" "}
-              <span className="text-amber-400">{selectedDate}</span>
+              {selectedDate ? (
+                <>Lista rezerwacji na dzień:{" "}
+                <span className="text-amber-400">{selectedDate}</span></>
+              ) : (
+                <>Wszystkie rezerwacje</>
+              )}
             </h2>
             <span className="text-xs text-slate-400">
               Łącznie: {filteredReservations.length}
