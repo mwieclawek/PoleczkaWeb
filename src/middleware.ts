@@ -31,36 +31,7 @@ export function middleware(request: NextRequest) {
     });
   }
 
-  // 2. Sprawdź, czy URL zawiera parametr zapytania: ?admin=poleczka
-  if (url.searchParams.get("admin") === "poleczka") {
-    url.searchParams.delete("admin");
-    const response = NextResponse.redirect(url);
-    response.cookies.set("dev_access", "true", {
-      path: "/",
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 60 * 60 * 24 * 30, // 30 dni dostępu
-      sameSite: "lax",
-    });
-    return response;
-  }
-
-  // 3. Sprawdź, czy użytkownik posiada ciasteczko dev_access
-  const hasDevAccess = request.cookies.get("dev_access")?.value === "true";
-
-  if (hasDevAccess) {
-    return NextResponse.next();
-  }
-
-  // 4. Bezwzględne przerwanie, jeśli jesteśmy już na /coming-soon
-  if (url.pathname.startsWith("/coming-soon")) {
-    return NextResponse.next();
-  }
-
-  // 5. Zastosuj rewrite na /coming-soon dla wszystkich innych stron
-  const comingSoonUrl = url.clone();
-  comingSoonUrl.pathname = "/coming-soon";
-  return NextResponse.rewrite(comingSoonUrl);
+  return NextResponse.next();
 }
 
 // Zdefiniuj dozwolone ścieżki (matcher), aby omijać pliki statyczne, obrazki, _next, API oraz Sanity Studio

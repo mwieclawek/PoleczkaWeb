@@ -111,19 +111,19 @@ export function Navbar() {
             exit={{ opacity: 0, height: 0 }}
             className="md:hidden bg-background border-b border-secondary/10 overflow-hidden"
           >
-            <nav className="flex flex-col px-8 py-8 gap-5">
+            <nav className="flex flex-col items-center text-center px-8 py-8 gap-5">
               {navLinks.map((item) => (
                 <button
                   key={item.name}
                   onClick={() => scrollTo(item.id)}
-                  className="text-left text-[11px] tracking-[0.25em] uppercase font-sans font-medium text-secondary/50 hover:text-secondary transition-colors"
+                  className="text-center text-[11px] tracking-[0.25em] uppercase font-sans font-medium text-secondary/50 hover:text-secondary transition-colors"
                 >
                   {item.name}
                 </button>
               ))}
               <button
                 onClick={() => scrollTo('reservation')}
-                className="text-[11px] tracking-[0.2em] uppercase font-sans font-semibold bg-primary text-primary-foreground px-5 py-3 hover:bg-primary/90 transition-colors text-left mt-2"
+                className="text-[11px] tracking-[0.2em] uppercase font-sans font-semibold bg-primary text-primary-foreground px-5 py-3 hover:bg-primary/90 transition-colors text-center mt-2 w-full"
               >
                 Rezerwacja
               </button>

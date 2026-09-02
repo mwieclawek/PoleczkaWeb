@@ -13,7 +13,6 @@ export interface PrincipleItem {
 export interface AboutData {
   subtitle?: string;
   heading?: string;
-  grandOpeningDate?: string;
   history?: string[];
   principles?: PrincipleItem[];
 }
@@ -21,7 +20,6 @@ export interface AboutData {
 export const defaultAboutData: Required<AboutData> = {
   subtitle: "O nas",
   heading: "Szacunek do produktu",
-  grandOpeningDate: "Lipiec 2026",
   history: [
     "Poleczka to miejsce stworzone z pasji do prawdziwego jedzenia. Nie idziemy na skróty. Wierzymy, że to, co najlepsze w polskiej kuchni, leży w naturze i rzemiośle.",
     "Nasz seler pieczemy przez długie godziny w masie solnej i kawie, by wydobyć z niego głębię smaku umami. Własnoręcznie zagniatamy ciasto na kluski śląskie i leniwe, a nasze sosy opierają się na głębokich, redukowanych bulionach i palonym maśle.",
@@ -55,8 +53,6 @@ export default function AboutClient({
   const [data, setData] = useState<Required<AboutData>>({
     subtitle: initialData?.subtitle || defaultAboutData.subtitle,
     heading: initialData?.heading || defaultAboutData.heading,
-    grandOpeningDate:
-      initialData?.grandOpeningDate || defaultAboutData.grandOpeningDate,
     history:
       initialData?.history && initialData.history.length > 0
         ? initialData.history
@@ -74,7 +70,6 @@ export default function AboutClient({
       .fetch<AboutData | null>(`*[_type == "about"][0]{
         subtitle,
         heading,
-        grandOpeningDate,
         history,
         principles
       }`)
@@ -83,8 +78,6 @@ export default function AboutClient({
           setData({
             subtitle: fetched.subtitle || defaultAboutData.subtitle,
             heading: fetched.heading || defaultAboutData.heading,
-            grandOpeningDate:
-              fetched.grandOpeningDate || defaultAboutData.grandOpeningDate,
             history:
               fetched.history && fetched.history.length > 0
                 ? fetched.history
@@ -140,13 +133,6 @@ export default function AboutClient({
             {data.heading}
           </h2>
           <Separator className="mx-auto mt-6 w-16 bg-[#D9A261]/40" />
-
-          {data.grandOpeningDate && (
-            <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-[#D9A261]/30 bg-[#D9A261]/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-[#960C3F] shadow-sm">
-              <span className="h-2 w-2 rounded-full bg-[#CA5254] animate-pulse" />
-              Data wielkiego otwarcia: {data.grandOpeningDate}
-            </div>
-          )}
         </motion.div>
 
         {/* Narrative */}

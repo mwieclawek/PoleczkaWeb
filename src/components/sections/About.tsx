@@ -7,7 +7,6 @@ export default async function About() {
     .fetch<AboutData | null>(`*[_type == "about"][0]{
       subtitle,
       heading,
-      grandOpeningDate,
       history,
       principles
     }`)

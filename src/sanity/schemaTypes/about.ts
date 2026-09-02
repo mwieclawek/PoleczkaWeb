@@ -18,12 +18,6 @@ export const aboutType = defineType({
       initialValue: 'Szacunek do produktu',
     }),
     defineField({
-      name: 'grandOpeningDate',
-      title: 'Data wielkiego otwarcia',
-      type: 'string',
-      initialValue: 'Lipiec 2026',
-    }),
-    defineField({
       name: 'history',
       title: 'Treść historii bistro (akapity)',
       type: 'array',

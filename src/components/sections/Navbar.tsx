@@ -94,16 +94,16 @@ export default function Navbar() {
               side="right"
               className="w-[300px] border-l-[#960C3F]/20 bg-[#FFFDF6]"
             >
-              <SheetTitle className="text-[#960C3F] font-heading font-bold text-2xl">
+              <SheetTitle className="text-[#960C3F] font-heading font-bold text-2xl text-center">
                 Nawigacja
               </SheetTitle>
-              <div className="mt-8 flex flex-col gap-6">
+              <div className="mt-8 flex flex-col items-center text-center gap-6">
                 {navLinks.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
                     onClick={() => setOpen(false)}
-                    className="text-lg font-semibold text-[#960C3F] transition-colors hover:text-[#CA5254]"
+                    className="text-lg font-semibold text-[#960C3F] transition-colors hover:text-[#CA5254] text-center"
                   >
                     {link.label}
                   </Link>
