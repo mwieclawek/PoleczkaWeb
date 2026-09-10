@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { format } from "date-fns";
 import { pl } from "date-fns/locale";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { analytics } from "@/lib/analytics";
 import { motion, AnimatePresence } from "framer-motion";
@@ -46,7 +46,7 @@ const reservationSchema = z.object({
   phone: z.string().min(9, "Podaj prawidłowy numer telefonu (co najmniej 9 cyfr)"),
   email: z.string().email("Podaj prawidłowy adres e-mail"),
   date: z.date({
-    required_error: "Wybierz datę rezerwacji",
+    message: "Wybierz datę rezerwacji",
   }),
   time: z.string().min(1, "Wybierz godzinę rezerwacji"),
   guests: z.string().min(1, "Wybierz liczbę osób"),
@@ -141,7 +141,7 @@ export function ReservationForm({ onSuccess }: { onSuccess?: () => void }) {
         setTimeout(() => reject(new Error("Firebase timeout")), 3000)
       );
       await Promise.race([
-        addDoc(collection(db, "reservations"), {
+        setDoc(doc(db, "reservations", reservationId), {
           ...docData,
           createdAt: serverTimestamp(),
         }),
@@ -335,7 +335,6 @@ export function ReservationForm({ onSuccess }: { onSuccess?: () => void }) {
                             d.setHours(0, 0, 0, 0);
                             return d < today;
                           }}
-                          initialFocus
                         />
                       </PopoverContent>
                     </Popover>

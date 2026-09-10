@@ -53,6 +53,45 @@ export interface ReservationItem {
   createdAt?: any;
 }
 
+function deduplicateReservations(items: ReservationItem[]): ReservationItem[] {
+  const map = new Map<string, ReservationItem>();
+
+  for (const item of items) {
+    if (!item || !item.name) continue;
+
+    const normName = item.name.trim().toLowerCase();
+    const normPhone = item.phone ? item.phone.trim() : "";
+    const key = `${normName}_${normPhone}_${item.date}_${item.time}`;
+
+    const existing = map.get(key);
+    if (!existing) {
+      map.set(key, item);
+    } else {
+      const finalStatus =
+        existing.status !== "pending"
+          ? existing.status
+          : item.status !== "pending"
+          ? item.status
+          : "pending";
+
+      const preferredId = existing.id.startsWith("res_")
+        ? existing.id
+        : item.id;
+
+      map.set(key, {
+        ...existing,
+        ...item,
+        id: preferredId,
+        status: finalStatus,
+      });
+    }
+  }
+
+  return Array.from(map.values()).sort((a, b) =>
+    (b.createdAt || b.date || "").localeCompare(a.createdAt || a.date || "")
+  );
+}
+
 export default function AdminReservationsPage() {
   const [reservations, setReservations] = useState<ReservationItem[]>([]);
   const [localReservations, setLocalReservations] = useState<ReservationItem[]>([]);
@@ -64,6 +103,7 @@ export default function AdminReservationsPage() {
   const [isAudioUnlocked, setIsAudioUnlocked] = useState<boolean>(false);
   const [activeModal, setActiveModal] = useState<ReservationItem | null>(null);
   const [firebaseError, setFirebaseError] = useState<string | null>(null);
+  const [serverReservations, setServerReservations] = useState<ReservationItem[]>([]);
 
   // Load localStorage reservations (fallback when Firebase not configured)
   const loadLocalReservations = () => {
@@ -145,8 +185,6 @@ export default function AdminReservationsPage() {
     }
   };
 
-  const [serverReservations, setServerReservations] = useState<ReservationItem[]>([]);
-
   // Fetch reservations from server API poller
   const fetchServerReservations = async () => {
     try {
@@ -194,18 +232,12 @@ export default function AdminReservationsPage() {
     };
   }, []);
 
-  // Merge Firestore + server API + localStorage reservations (deduplicate by id)
-  const allReservations = [
+  // Merge Firestore + server API + localStorage reservations (deduplicate by key/id)
+  const allReservations = deduplicateReservations([
     ...reservations,
-    ...serverReservations.filter(
-      (sr) => !reservations.some((r) => r.id === sr.id)
-    ),
-    ...localReservations.filter(
-      (lr) =>
-        !reservations.some((r) => r.id === lr.id) &&
-        !serverReservations.some((sr) => sr.id === lr.id)
-    ),
-  ];
+    ...serverReservations,
+    ...localReservations,
+  ]);
 
   // --- Chime loop when there are pending reservations ---
   useEffect(() => {
@@ -399,6 +431,7 @@ export default function AdminReservationsPage() {
                 activeClass:
                   "bg-emerald-500/10 border-emerald-500/50 text-emerald-400",
                 icon: CheckCircle,
+                ping: false,
               },
               {
                 key: "rejected",
@@ -406,6 +439,7 @@ export default function AdminReservationsPage() {
                 count: rejectedCount,
                 activeClass: "bg-rose-500/10 border-rose-500/50 text-rose-400",
                 icon: XCircle,
+                ping: false,
               },
               {
                 key: "all",
@@ -413,8 +447,9 @@ export default function AdminReservationsPage() {
                 count: allCount,
                 activeClass: "bg-blue-500/10 border-blue-500/50 text-blue-400",
                 icon: Filter,
+                ping: false,
               },
-            ] as const
+            ]
           ).map(({ key, label, count, activeClass, icon: Icon, ping }) => (
             <button
               key={key}
