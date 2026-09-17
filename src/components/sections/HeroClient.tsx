@@ -128,7 +128,7 @@ export default function HeroClient({
           initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="mb-8 text-sm font-medium uppercase tracking-[0.3em] text-[#D9A261]"
+          className="mb-8 text-sm font-medium uppercase tracking-[0.3em] text-[#960C3F]"
         >
           {data.tagline}
         </motion.p>
@@ -162,17 +162,39 @@ export default function HeroClient({
           initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.9 }}
-          className="flex flex-col items-center justify-center gap-4 sm:flex-row"
+          className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:flex-wrap"
         >
+          {/* Zamów online - najbardziej wyróżniony */}
+          <Link
+            href="/zamow-online"
+            className="inline-flex h-14 items-center justify-center gap-3 rounded-full bg-[#960C3F] px-10 md:px-14 lg:px-16 text-lg font-bold text-[#FFFDF6] shadow-[0_0_20px_rgba(150,12,63,0.4)] transition-all hover:scale-105 hover:bg-[#CA5254] hover:shadow-[0_0_30px_rgba(202,82,84,0.6)]"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+              />
+            </svg>
+            Zamów online
+          </Link>
+
           <Link
             href={data.ctaPrimaryHref}
-            className="inline-flex h-12 items-center justify-center rounded-full bg-[#CA5254] px-10 text-base font-semibold text-[#FFFDF6] shadow-lg shadow-[#CA5254]/20 transition-all hover:bg-[#960C3F] hover:shadow-xl hover:shadow-[#960C3F]/30"
+            className="inline-flex h-12 items-center justify-center rounded-full bg-[#CA5254] px-8 text-base font-semibold text-[#FFFDF6] shadow-lg shadow-[#CA5254]/20 transition-all hover:bg-[#960C3F] hover:shadow-xl hover:shadow-[#960C3F]/30"
           >
             {data.ctaPrimaryText}
           </Link>
           <button
             onClick={openModal}
-            className="inline-flex h-12 items-center justify-center rounded-full border border-[#960C3F]/20 px-10 text-base font-medium text-[#960C3F] transition-colors hover:bg-[#960C3F]/5"
+            className="inline-flex h-12 items-center justify-center rounded-full border border-[#960C3F]/20 px-8 text-base font-medium text-[#960C3F] transition-colors hover:bg-[#960C3F]/5"
           >
             {data.ctaSecondaryText}
           </button>

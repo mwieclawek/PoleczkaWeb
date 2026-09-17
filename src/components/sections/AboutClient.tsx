@@ -21,9 +21,10 @@ export const defaultAboutData: Required<AboutData> = {
   subtitle: "O nas",
   heading: "Szacunek do produktu",
   history: [
-    "Poleczka to miejsce stworzone z pasji do prawdziwego jedzenia. Nie idziemy na skróty. Wierzymy, że to, co najlepsze w polskiej kuchni, leży w naturze i rzemiośle.",
-    "Nasz seler pieczemy przez długie godziny w masie solnej i kawie, by wydobyć z niego głębię smaku umami. Własnoręcznie zagniatamy ciasto na kluski śląskie i leniwe, a nasze sosy opierają się na głębokich, redukowanych bulionach i palonym maśle.",
-    "W sercu wrocławskiego Śródmieścia, przy ulicy Jaracza, stworzyliśmy przestrzeń bez zadęcia. Z intymnym patio, na którym czas płynie wolniej. To nie jest po prostu restauracja. To nasza wizja polskiej gościnności — gdzie każdy talerz to efekt precyzji, wiedzy i szacunku do lokalnego produktu.",
+    "Bistro Poleczka to nasze spełnione marzenie. Jesteśmy trójką przyjaciół, którzy po prostu kochają dobrze zjeść i chcą się tą miłością z Wami dzielić.",
+    "Bez zadęcia. Bez sztywnych reguł i bez udawania, że to skomplikowane „fusion”.",
+    "Gotujemy z tego, co lokalne i sezonowe. Odświeżając polskie klasyki tak, jak lubimy najbardziej – z pomysłem i od serca.",
+    "Rozgośćcie się!"
   ],
   principles: [
     {
@@ -117,32 +118,35 @@ export default function AboutClient({
         </svg>
       </div>
 
-      <div className="mx-auto max-w-3xl px-6 lg:px-8">
-        {/* Section header */}
-        <motion.div
-          initial={false}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
-          className="text-center"
-        >
-          <span className="text-sm font-medium uppercase tracking-widest text-[#D9A261]">
-            {data.subtitle}
-          </span>
-          <h2 className="mt-3 font-heading text-3xl font-bold tracking-tight text-[#CA5254] md:text-5xl">
-            {data.heading}
-          </h2>
-          <Separator className="mx-auto mt-6 w-16 bg-[#D9A261]/40" />
-        </motion.div>
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="lg:grid lg:grid-cols-12 lg:gap-16 lg:items-start">
+          {/* Section header */}
+          <motion.div
+            initial={false}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+            className="text-center lg:text-left lg:col-span-4 lg:sticky lg:top-32"
+          >
+            <span className="text-sm font-medium uppercase tracking-widest text-[#D9A261]">
+              {data.subtitle}
+            </span>
+            <h2 className="mt-3 font-heading text-4xl font-bold tracking-tight text-[#CA5254] md:text-5xl lg:text-6xl">
+              {data.heading}
+            </h2>
+            <Separator className="mx-auto lg:mx-0 mt-6 w-16 bg-[#D9A261]/40" />
+          </motion.div>
 
-        {/* Narrative */}
-        <motion.div
-          initial={false}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="mt-16 space-y-8"
-        >
+          {/* Right column content */}
+          <div className="lg:col-span-8 mt-16 lg:mt-0">
+            {/* Narrative */}
+            <motion.div
+              initial={false}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="space-y-8"
+            >
           {data.history.map((paragraph, index) => (
             <p
               key={index}
@@ -153,28 +157,30 @@ export default function AboutClient({
           ))}
         </motion.div>
 
-        {/* Principles */}
-        <motion.div
-          initial={false}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="mt-20 grid gap-px bg-[#A6A6A6]/15 sm:grid-cols-2"
-        >
-          {data.principles.map((item) => (
-            <div
-              key={item.title}
-              className="bg-[#FFFDF6] p-8 transition-colors hover:bg-white/50"
+            {/* Principles */}
+            <motion.div
+              initial={false}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="mt-20 grid gap-px bg-[#A6A6A6]/15 sm:grid-cols-2"
             >
-              <h3 className="mb-3 font-heading text-lg font-bold text-[#CA5254]">
-                {item.title}
-              </h3>
-              <p className="text-sm leading-relaxed text-[#A6A6A6]">
-                {item.text}
-              </p>
-            </div>
-          ))}
-        </motion.div>
+              {data.principles.map((item) => (
+                <div
+                  key={item.title}
+                  className="bg-[#FFFDF6] p-8 transition-colors hover:bg-white/50"
+                >
+                  <h3 className="mb-3 font-heading text-lg font-bold text-[#CA5254]">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-[#A6A6A6]">
+                    {item.text}
+                  </p>
+                </div>
+              ))}
+            </motion.div>
+          </div>
+        </div>
       </div>
     </section>
   );
