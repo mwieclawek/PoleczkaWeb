@@ -6,16 +6,25 @@ import { ArrowLeft } from "lucide-react";
 
 export default function ZamowOnlinePage() {
   useEffect(() => {
-    // Inject GoOrder script once
-    const existingScript = document.querySelector(
-      'script[src="https://store.goorder.pl/goorder.js"]'
-    );
-    if (!existingScript) {
-      const script = document.createElement("script");
-      script.src = "https://store.goorder.pl/goorder.js";
-      script.async = true;
-      document.body.appendChild(script);
+    // Force re-execution of the script on every mount (for SPA navigation)
+    const scriptSrc = "https://store.goorder.pl/goorder.js";
+    const existingScript = document.querySelector(`script[src="${scriptSrc}"]`);
+    
+    if (existingScript) {
+      existingScript.remove();
     }
+    
+    const script = document.createElement("script");
+    script.src = scriptSrc;
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      // Clean up on unmount
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+    };
   }, []);
 
   return (
