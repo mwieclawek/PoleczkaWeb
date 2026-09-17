@@ -16,6 +16,7 @@ import { useReservationModal } from "@/components/ReservationModalContext";
 const navLinks = [
   { label: "O nas", href: "#about" },
   { label: "Menu", href: "#menu" },
+  { label: "Zamów online", href: "/zamow-online" },
   { label: "Kontakt", href: "#contact" },
 ];
 
