@@ -224,7 +224,7 @@ export default function AdminReservationsPage() {
     const apiPoll = setInterval(() => {
       loadLocalReservations();
       fetchServerReservations();
-    }, 3000);
+    }, 30000);
 
     return () => {
       unsubscribe();
