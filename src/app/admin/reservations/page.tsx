@@ -186,22 +186,39 @@ export default function AdminReservationsPage() {
   };
 
   // Fetch reservations from server API poller
-  const fetchServerReservations = async () => {
-    try {
-      const res = await fetch("/api/reservations/list");
-      if (res.ok) {
-        const data = await res.json();
-        if (data.ok && Array.isArray(data.reservations)) {
-          setServerReservations(data.reservations);
-        }
-      }
-    } catch {}
-  };
+  const apiPollRef = useRef<NodeJS.Timeout | null>(null);
 
   // --- Firestore real-time listener & API poller ---
   useEffect(() => {
-    loadLocalReservations();
-    fetchServerReservations();
+    let mounted = true;
+
+    const fetchServer = async () => {
+      try {
+        const res = await fetch("/api/reservations/list");
+        if (res.ok && mounted) {
+          const data = await res.json();
+          if (data.ok && Array.isArray(data.reservations)) {
+            setServerReservations(data.reservations);
+          }
+        }
+      } catch {}
+    };
+
+    const loadLocal = () => {
+      if (!mounted) return;
+      try {
+        const stored = JSON.parse(
+          localStorage.getItem("poleczka_reservations") || "[]"
+        ) as ReservationItem[];
+        setLocalReservations(stored);
+      } catch {
+        setLocalReservations([]);
+      }
+    };
+
+    // Initial load
+    loadLocal();
+    fetchServer();
 
     // Query without orderBy to avoid requiring a Firestore composite index on production
     const q = collection(db, "reservations");
@@ -209,6 +226,7 @@ export default function AdminReservationsPage() {
     const unsubscribe = onSnapshot(
       q,
       (snapshot) => {
+        if (!mounted) return;
         setFirebaseError(null);
         const items: ReservationItem[] = snapshot.docs.map((d) => ({
           id: d.id,
@@ -221,14 +239,23 @@ export default function AdminReservationsPage() {
       }
     );
 
-    const apiPoll = setInterval(() => {
-      loadLocalReservations();
-      fetchServerReservations();
-    }, 180000);
+    // Clear any previous interval before setting a new one (safety)
+    if (apiPollRef.current) {
+      clearInterval(apiPollRef.current);
+    }
+
+    apiPollRef.current = setInterval(() => {
+      loadLocal();
+      fetchServer();
+    }, 180000); // 3 minuty
 
     return () => {
+      mounted = false;
       unsubscribe();
-      clearInterval(apiPoll);
+      if (apiPollRef.current) {
+        clearInterval(apiPollRef.current);
+        apiPollRef.current = null;
+      }
     };
   }, []);
 
