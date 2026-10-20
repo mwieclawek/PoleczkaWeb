@@ -14,10 +14,11 @@ import {
 import { useReservationModal } from "@/components/ReservationModalContext";
 
 const navLinks = [
-  { label: "O nas", href: "#about" },
-  { label: "Menu", href: "#menu" },
+  { label: "O nas", href: "/#about" },
+  { label: "Menu", href: "/#menu" },
+  { label: "Oferta wigilijna", href: "/oferta-wigilijna", isFestive: true },
   { label: "Zamów online", href: "/zamow-online" },
-  { label: "Kontakt", href: "#contact" },
+  { label: "Kontakt", href: "/#contact" },
 ];
 
 export default function Navbar() {

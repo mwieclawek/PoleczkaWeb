@@ -199,6 +199,21 @@ export default function HeroClient({
             {data.ctaSecondaryText}
           </button>
         </motion.div>
+
+        {/* Link do oferty wigilijnej poniżej przycisków */}
+        <motion.div
+          initial={false}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1.1 }}
+          className="mt-6"
+        >
+          <Link
+            href="/oferta-wigilijna"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#960C3F] underline underline-offset-4 decoration-[#960C3F]/40 hover:text-[#CA5254] hover:decoration-[#CA5254] transition-colors"
+          >
+            Zobacz ofertę wigilijną 2026 &rarr;
+          </Link>
+        </motion.div>
       </div>
 
       {/* Scroll indicator */}

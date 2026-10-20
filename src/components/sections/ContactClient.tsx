@@ -32,8 +32,8 @@ export const defaultContactData: Required<ContactData> = {
   addressLabel: "ul. Stefana Jaracza 77B\n50-305 Wrocław",
   googleMapsUrl:
     "https://maps.google.com/?q=ul.+Stefana+Jaracza+77B,+50-305+Wrocław",
-  phone: "+48 71 123 45 67",
-  phoneClean: "+48711234567",
+  phone: "+48 71 880 87 08",
+  phoneClean: "+48718808708",
   email: "kontakt@bistropoleczka.pl",
   openingHours: [
     { days: "Poniedziałek", hours: "Nieczynne" },

@@ -61,9 +61,11 @@ function FacebookIcon({ className }: { className?: string }) {
 }
 
 const navLinks = [
-  { label: "O nas", href: "#about" },
-  { label: "Menu", href: "#menu" },
-  { label: "Kontakt", href: "#contact" },
+  { label: "O nas", href: "/#about" },
+  { label: "Menu", href: "/#menu" },
+  { label: "Oferta wigilijna 2026", href: "/oferta-wigilijna" },
+  { label: "Zamów online", href: "/zamow-online" },
+  { label: "Kontakt", href: "/#contact" },
 ];
 
 export default function FooterClient({

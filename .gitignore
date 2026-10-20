@@ -49,5 +49,6 @@ functions/node_modules/
 
 # source assets (originals kept locally)
 *.pdf
+!public/*.pdf
 *.bak
 Poleczka Logo*
