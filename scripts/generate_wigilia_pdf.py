@@ -260,13 +260,13 @@ def build_pdf():
         "1) Pierogi ruskie",
         "2) Pierogi z kapustą i grzybami",
         "3) Pierogi z kaszą gryczaną i wędzonym twarogiem",
-        "4) Karp smażony z maślanymi ziemniakami",
+        "4) Karp smażony",
         "5) Krokiety z kapustą i grzybami",
         "6) Krokiety z mięsem i kapustą",
         "7) Gołąbki z mięsem z sosem pomidorowym lub grzybowym",
         "8) Gołąbki vege z sosem pomidorowym lub grzybowym",
         "9) Ryba po grecku",
-        "10) Polędwiczka wieprzowa w sosie chrzanowym z kluskami śląskimi",
+        "10) Polędwiczka wieprzowa w sosie chrzanowym",
         "11) Polędwiczka wieprzowa w sosie z zielonego pieprzu",
         "12) Bigos"
     ]
