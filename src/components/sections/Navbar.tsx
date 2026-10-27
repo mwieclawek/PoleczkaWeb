@@ -55,6 +55,8 @@ export default function Navbar() {
           <img
             src="/logo.png"
             alt="Bistro Poleczka — Kuchnia Polska Wrocław, ul. Jaracza 77B"
+            width={160}
+            height={96}
             className="h-16 w-auto md:h-20 transition-transform duration-300 group-hover:scale-105"
           />
         </Link>

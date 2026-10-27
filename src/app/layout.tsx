@@ -99,8 +99,8 @@ const restaurantJsonLd = {
     },
   ],
   sameAs: [
-    "https://instagram.com/poleczka.wroclaw",
-    "https://facebook.com/poleczka.wroclaw",
+    "https://instagram.com/bistro.poleczka",
+    "https://www.facebook.com/profile.php?id=61591397017136",
   ],
 };
 

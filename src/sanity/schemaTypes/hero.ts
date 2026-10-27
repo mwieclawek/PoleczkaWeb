@@ -15,26 +15,27 @@ export const heroType = defineType({
       name: 'titleLine1',
       title: 'Tytuł - Pierwsza linijka (Kolor akcentowy rurowy/różowy)',
       type: 'string',
-      initialValue: 'Polska kuchnia.',
+      initialValue: 'Bistro Poleczka',
     }),
     defineField({
       name: 'titleLine2',
       title: 'Tytuł - Druga linijka (Kolor burgundowy)',
       type: 'string',
-      initialValue: 'Rzemiosło, tradycja,',
+      initialValue: 'Kuchnia Polska',
     }),
     defineField({
       name: 'titleLine3',
       title: 'Tytuł - Trzecia linijka (Kolor burgundowy)',
       type: 'string',
-      initialValue: 'nowoczesność.',
+      initialValue: '  ',
     }),
     defineField({
       name: 'subtitle',
       title: 'Podtytuł pod nagłówkiem',
       type: 'text',
       rows: 3,
-      initialValue: 'Autorskie spojrzenie na lokalne produkty. Proste składniki podniesione do rangi sztuki kulinarnej.',
+      initialValue:
+        'Chcemy, żebyście czuli się u nas swobodnie, zupełnie jak u starych znajomych. Rozgośćcie się! ',
     }),
     defineField({
       name: 'ctaPrimaryText',

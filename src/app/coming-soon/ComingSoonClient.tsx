@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import { Mail } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { client } from "@/sanity/client";
 
 export interface ComingSoonData {
   addressTag?: string;
@@ -17,12 +16,11 @@ export interface ComingSoonData {
 
 export const defaultComingSoonData: Required<ComingSoonData> = {
   addressTag: "Stefana Jaracza 77B Wrocław",
-  mainTitle: "Bistro Poleczka. Wkrótce otwarcie.",
-  description:
-    "Trwają ostatnie przygotowania. Do zobaczenia w sierpniu na obiadku!",
+  mainTitle: "Otwarcie 3 września!",
+  description: "Widzimy się na obiedzie!",
   email: "kontakt@bistropoleczka.pl",
-  instagramUrl: "https://instagram.com/poleczka.wroclaw",
-  facebookUrl: "https://facebook.com/poleczka.wroclaw",
+  instagramUrl: "https://instagram.com/bistro.poleczka",
+  facebookUrl: "https://www.facebook.com/profile.php?id=61591397017136",
 };
 
 function InstagramIcon({ className }: { className?: string }) {
@@ -66,7 +64,7 @@ export default function ComingSoonClient({
 }: {
   initialData: ComingSoonData | null;
 }) {
-  const [data, setData] = useState<Required<ComingSoonData>>({
+  const data: Required<ComingSoonData> = {
     addressTag: initialData?.addressTag || defaultComingSoonData.addressTag,
     mainTitle: initialData?.mainTitle || defaultComingSoonData.mainTitle,
     description: initialData?.description || defaultComingSoonData.description,
@@ -74,40 +72,7 @@ export default function ComingSoonClient({
     instagramUrl:
       initialData?.instagramUrl || defaultComingSoonData.instagramUrl,
     facebookUrl: initialData?.facebookUrl || defaultComingSoonData.facebookUrl,
-  });
-
-  useEffect(() => {
-    let isMounted = true;
-    client
-      .fetch<ComingSoonData | null>(`*[_type == "comingSoon"][0]{
-        addressTag,
-        mainTitle,
-        description,
-        email,
-        instagramUrl,
-        facebookUrl
-      }`)
-      .then((fetched) => {
-        if (isMounted && fetched) {
-          setData({
-            addressTag:
-              fetched.addressTag || defaultComingSoonData.addressTag,
-            mainTitle: fetched.mainTitle || defaultComingSoonData.mainTitle,
-            description:
-              fetched.description || defaultComingSoonData.description,
-            email: fetched.email || defaultComingSoonData.email,
-            instagramUrl:
-              fetched.instagramUrl || defaultComingSoonData.instagramUrl,
-            facebookUrl:
-              fetched.facebookUrl || defaultComingSoonData.facebookUrl,
-          });
-        }
-      })
-      .catch(() => {});
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  };
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-[#FFFDF6] text-[#960C3F] flex flex-col items-center justify-center px-6 py-16 selection:bg-[#CA5254] selection:text-[#FFFDF6]">
@@ -141,6 +106,8 @@ export default function ComingSoonClient({
           transition={{ duration: 0.6, delay: 0.1 }}
           src="/logo.png"
           alt="Poleczka — Bistro Kuchnia Polska"
+          width={293}
+          height={176}
           className="h-28 sm:h-36 md:h-44 w-auto mb-10 transition-transform duration-500 hover:scale-105"
         />
 

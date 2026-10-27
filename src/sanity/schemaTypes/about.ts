@@ -9,13 +9,13 @@ export const aboutType = defineType({
       name: 'subtitle',
       title: 'Podtytuł nad nagłówkiem',
       type: 'string',
-      initialValue: 'O nas',
+      initialValue: 'Kim jesteśmy',
     }),
     defineField({
       name: 'heading',
       title: 'Nagłówek sekcji',
       type: 'string',
-      initialValue: 'Szacunek do produktu',
+      initialValue: 'O nas',
     }),
     defineField({
       name: 'history',
@@ -23,9 +23,9 @@ export const aboutType = defineType({
       type: 'array',
       of: [{ type: 'text', rows: 4 }],
       initialValue: [
-        'Poleczka to miejsce stworzone z pasji do prawdziwego jedzenia. Nie idziemy na skróty. Wierzymy, że to, co najlepsze w polskiej kuchni, leży w naturze i rzemiośle.',
-        'Nasz seler pieczemy przez długie godziny w masie solnej i kawie, by wydobyć z niego głębię smaku umami. Własnoręcznie zagniatamy ciasto na kluski śląskie i leniwe, a nasze sosy opierają się na głębokich, redukowanych bulionach i palonym maśle.',
-        'W sercu wrocławskiego Śródmieścia, przy ulicy Jaracza, stworzyliśmy przestrzeń bez zadęcia. Z intymnym patio, na którym czas płynie wolniej. To nie jest po prostu restauracja. To nasza wizja polskiej gościnności — gdzie każdy talerz to efekt precyzji, wiedzy i szacunku do lokalnego produktu.',
+        'Bistro Poleczka to miejsce, które powstało z miłości do jedzenia i chęci dzielenia się nim z innymi. Tworzone przez trójkę przyjaciół, jest realizacją naszego wieloletniego marzenia o własnym miejscu, w którym będziemy mogli Was gościć. ',
+        'Sercem Bistro Poleczka jest autorskie ujęcie tradycyjnej kuchni polskiej, bazujące na lokalnych i sezonowych produktach. Zamiast sztywnych ram czy nowoczesnych haseł typu fusion, serwujemy własne spojrzenie na wyjątkowe kompozycje smakowe oraz świeże odsłony polskich klasyków. ',
+        'W środku czeka na Was luźna i niezwykle przyjazna atmosfera – dbamy o to, aby każdy z naszych gości czuł się u nas w pełni komfortowo i jak u siebie. Zapraszamy! ',
       ],
     }),
     defineField({
@@ -44,20 +44,19 @@ export const aboutType = defineType({
       ],
       initialValue: [
         {
-          title: 'Lokalne składniki',
-          text: 'Współpracujemy z dolnośląskimi rolnikami i dostawcami. Karp milicki, sery od lokalnych serowarów, sezonowe warzywa — każdy produkt ma swoją historię.',
-        },
-        {
-          title: 'Rzemieślnicze techniki',
-          text: 'Sous-vide, pieczenie w masie solnej, fermentacja, palenie masła. Tradycyjne smaki podane w bezkompromisowej, nowoczesnej formie.',
-        },
-        {
-          title: 'Patio na Jaracza',
-          text: 'W sezonie zapraszamy na zaciszne patio — kameralna przestrzeń w centrum Wrocławia, gdzie jedzenie na świeżym powietrzu nabiera innego wymiaru.',
+          title: 'Bistro Poleczka to nasze spełnione marzenie',
+          text: 'Jesteśmy trójką przyjaciół, którzy po prostu kochają dobrze zjeść i chcą się tą miłością z Wami dzielić.',
         },
         {
           title: 'Bez zadęcia',
-          text: 'Gotujemy z precyzją i wiedzą, ale serwujemy bez pretensji. Chcemy, żebyś czuł się jak u siebie — tyle że jedzenie jest lepsze.',
+          text: 'Bez sztywnych reguł i bez udawania, że to skomplikowane „fusion”.',
+        },
+        {
+          title: 'Gotujemy z tego, co lokalne i sezonowe',
+          text: 'Odświeżając polskie klasyki tak, jak lubimy najbardziej – z pomysłem i od serca.',
+        },
+        {
+          title: 'Rozgośćcie się!',
         },
       ],
     }),

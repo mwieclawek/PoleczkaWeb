@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
-import { MapPin, Clock, Phone, Mail } from "lucide-react";
+import { MapPin, Phone, Mail } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { client } from "@/sanity/client";
 
 export interface OpeningHourSlot {
   days: string;
@@ -28,8 +27,8 @@ export const defaultContactData: Required<ContactData> = {
   tagline: "Kontakt",
   title: "Odwiedź nas",
   subtitle:
-    "Bistro Poleczka znajdziesz na wrocławskim Śródmieściu (Ołbin), przy ul. Stefana Jaracza 77B – tuż obok Mostów Warszawskich, Parku Tołpy i spacerowych wałów nad Odrą. Zarezerwuj stolik telefonicznie lub mailowo.",
-  addressLabel: "ul. Stefana Jaracza 77B\n50-305 Wrocław (Śródmieście / Ołbin)",
+    "Znajdziesz nas w samym sercu Wrocławia. Zarezerwuj stolik telefonicznie lub mailowo.",
+  addressLabel: "ul. Stefana Jaracza 77B\n50-305 Wrocław",
   googleMapsUrl:
     "https://maps.google.com/?q=ul.+Stefana+Jaracza+77B,+50-305+Wrocław",
   phone: "+48 71 880 87 08",
@@ -44,25 +43,15 @@ export const defaultContactData: Required<ContactData> = {
     "W święta oraz dni szczególne godziny mogą ulec zmianie. Sprawdź nasze social media lub zadzwoń, by potwierdzić.",
 };
 
-function resolveContactSubtitle(subtitle?: string): string {
-  if (
-    !subtitle ||
-    subtitle.includes("Znajdziesz nas w samym sercu Wrocławia")
-  ) {
-    return defaultContactData.subtitle;
-  }
-  return subtitle;
-}
-
 export default function ContactClient({
   initialData,
 }: {
   initialData: ContactData | null;
 }) {
-  const [data, setData] = useState<Required<ContactData>>({
+  const data: Required<ContactData> = {
     tagline: initialData?.tagline || defaultContactData.tagline,
     title: initialData?.title || defaultContactData.title,
-    subtitle: resolveContactSubtitle(initialData?.subtitle),
+    subtitle: initialData?.subtitle || defaultContactData.subtitle,
     addressLabel: initialData?.addressLabel || defaultContactData.addressLabel,
     googleMapsUrl:
       initialData?.googleMapsUrl || defaultContactData.googleMapsUrl,
@@ -74,52 +63,7 @@ export default function ContactClient({
         ? initialData.openingHours
         : defaultContactData.openingHours,
     footerNote: initialData?.footerNote || defaultContactData.footerNote,
-  });
-
-  useEffect(() => {
-    let isMounted = true;
-    client
-      .fetch<ContactData | null>(`*[_type == "contact"][0]{
-        tagline,
-        title,
-        subtitle,
-        addressLabel,
-        googleMapsUrl,
-        phone,
-        phoneClean,
-        email,
-        openingHours[]{
-          days,
-          hours
-        },
-        footerNote
-      }`)
-      .then((fetched) => {
-        if (isMounted && fetched) {
-          setData({
-            tagline: fetched.tagline || defaultContactData.tagline,
-            title: fetched.title || defaultContactData.title,
-            subtitle: resolveContactSubtitle(fetched.subtitle),
-            addressLabel:
-              fetched.addressLabel || defaultContactData.addressLabel,
-            googleMapsUrl:
-              fetched.googleMapsUrl || defaultContactData.googleMapsUrl,
-            phone: fetched.phone || defaultContactData.phone,
-            phoneClean: fetched.phoneClean || defaultContactData.phoneClean,
-            email: fetched.email || defaultContactData.email,
-            openingHours:
-              fetched.openingHours && fetched.openingHours.length > 0
-                ? fetched.openingHours
-                : defaultContactData.openingHours,
-            footerNote: fetched.footerNote || defaultContactData.footerNote,
-          });
-        }
-      })
-      .catch(() => {});
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  };
 
   const contactDetails = [
     {

@@ -1,11 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Mail, Phone } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { client } from "@/sanity/client";
 
 export interface SiteSettingsData {
   footerDescription?: string;
@@ -16,20 +15,12 @@ export interface SiteSettingsData {
 }
 
 export const defaultSiteSettings: Required<SiteSettingsData> = {
-  footerDescription:
-    "Autorska kuchnia polska we Wrocławiu (Śródmieście / Ołbin, ul. Stefana Jaracza 77B). Tuż obok Mostów Warszawskich i Parku Tołpy.",
+  footerDescription: "Bistro Poleczka kuchnia polska",
   contactEmail: "kontakt@bistropoleczka.pl",
-  instagramUrl: "https://instagram.com/poleczka.wroclaw",
-  facebookUrl: "https://facebook.com/poleczka.wroclaw",
+  instagramUrl: "https://instagram.com/bistro.poleczka",
+  facebookUrl: "https://www.facebook.com/profile.php?id=61591397017136",
   copyrightText: "Bistro Poleczka. Wszystkie prawa zastrzeżone.",
 };
-
-function resolveFooterDescription(desc?: string): string {
-  if (!desc || desc.trim().toLowerCase() === "bistro poleczka kuchnia polska") {
-    return defaultSiteSettings.footerDescription;
-  }
-  return desc;
-}
 
 function InstagramIcon({ className }: { className?: string }) {
   return (
@@ -80,48 +71,16 @@ export default function FooterClient({
 }: {
   initialData: SiteSettingsData | null;
 }) {
-  const [data, setData] = useState<Required<SiteSettingsData>>({
-    footerDescription: resolveFooterDescription(initialData?.footerDescription),
+  const data: Required<SiteSettingsData> = {
+    footerDescription:
+      initialData?.footerDescription || defaultSiteSettings.footerDescription,
     contactEmail: initialData?.contactEmail || defaultSiteSettings.contactEmail,
     instagramUrl:
       initialData?.instagramUrl || defaultSiteSettings.instagramUrl,
     facebookUrl: initialData?.facebookUrl || defaultSiteSettings.facebookUrl,
     copyrightText:
       initialData?.copyrightText || defaultSiteSettings.copyrightText,
-  });
-
-  useEffect(() => {
-    let isMounted = true;
-    client
-      .fetch<SiteSettingsData | null>(`*[_type == "siteSettings"][0]{
-        footerDescription,
-        contactEmail,
-        instagramUrl,
-        facebookUrl,
-        copyrightText
-      }`)
-      .then((fetched) => {
-        if (isMounted && fetched) {
-          setData({
-            footerDescription: resolveFooterDescription(
-              fetched.footerDescription
-            ),
-            contactEmail:
-              fetched.contactEmail || defaultSiteSettings.contactEmail,
-            instagramUrl:
-              fetched.instagramUrl || defaultSiteSettings.instagramUrl,
-            facebookUrl:
-              fetched.facebookUrl || defaultSiteSettings.facebookUrl,
-            copyrightText:
-              fetched.copyrightText || defaultSiteSettings.copyrightText,
-          });
-        }
-      })
-      .catch(() => { });
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  };
 
   const socialLinks = [
     {
@@ -151,6 +110,8 @@ export default function FooterClient({
               <img
                 src="/logo.png"
                 alt="Bistro Poleczka — Kuchnia Polska Wrocław"
+                width={160}
+                height={96}
                 className="h-14 w-auto md:h-16 brightness-0 invert transition-opacity hover:opacity-80"
               />
             </Link>

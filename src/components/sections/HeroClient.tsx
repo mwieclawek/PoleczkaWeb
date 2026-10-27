@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowDown } from "lucide-react";
-import { client } from "@/sanity/client";
 import { useReservationModal } from "@/components/ReservationModalContext";
 
 export interface HeroData {
@@ -21,11 +20,11 @@ export interface HeroData {
 
 export const defaultHeroData: Required<HeroData> = {
   tagline: "Wrocław · ul. Jaracza 77B",
-  titleLine1: "Polska kuchnia.",
-  titleLine2: "Rzemiosło, tradycja,",
-  titleLine3: "nowoczesność.",
+  titleLine1: "Bistro Poleczka",
+  titleLine2: "Kuchnia Polska",
+  titleLine3: "  ",
   subtitle:
-    "Autorskie spojrzenie na lokalne produkty. Proste składniki podniesione do rangi sztuki kulinarnej.",
+    "Chcemy, żebyście czuli się u nas swobodnie, zupełnie jak u starych znajomych. Rozgośćcie się! ",
   ctaPrimaryText: "Zobacz menu",
   ctaPrimaryHref: "#menu",
   ctaSecondaryText: "Zarezerwuj stolik",
@@ -37,59 +36,22 @@ export default function HeroClient({
 }: {
   initialData: HeroData | null;
 }) {
-  const [data, setData] = useState<Required<HeroData>>({
-    tagline: initialData?.tagline || defaultHeroData.tagline,
-    titleLine1: initialData?.titleLine1 || defaultHeroData.titleLine1,
-    titleLine2: initialData?.titleLine2 || defaultHeroData.titleLine2,
-    titleLine3: initialData?.titleLine3 || defaultHeroData.titleLine3,
-    subtitle: initialData?.subtitle || defaultHeroData.subtitle,
-    ctaPrimaryText: initialData?.ctaPrimaryText || defaultHeroData.ctaPrimaryText,
-    ctaPrimaryHref: initialData?.ctaPrimaryHref || defaultHeroData.ctaPrimaryHref,
+  const data: Required<HeroData> = {
+    tagline: initialData?.tagline ?? defaultHeroData.tagline,
+    titleLine1: initialData?.titleLine1 ?? defaultHeroData.titleLine1,
+    titleLine2: initialData?.titleLine2 ?? defaultHeroData.titleLine2,
+    titleLine3: initialData?.titleLine3 ?? defaultHeroData.titleLine3,
+    subtitle: initialData?.subtitle ?? defaultHeroData.subtitle,
+    ctaPrimaryText:
+      initialData?.ctaPrimaryText ?? defaultHeroData.ctaPrimaryText,
+    ctaPrimaryHref:
+      initialData?.ctaPrimaryHref ?? defaultHeroData.ctaPrimaryHref,
     ctaSecondaryText:
-      initialData?.ctaSecondaryText || defaultHeroData.ctaSecondaryText,
+      initialData?.ctaSecondaryText ?? defaultHeroData.ctaSecondaryText,
     ctaSecondaryHref:
-      initialData?.ctaSecondaryHref || defaultHeroData.ctaSecondaryHref,
-  });
+      initialData?.ctaSecondaryHref ?? defaultHeroData.ctaSecondaryHref,
+  };
   const { openModal } = useReservationModal();
-
-  useEffect(() => {
-    let isMounted = true;
-    client
-      .fetch<HeroData | null>(`*[_type == "hero"][0]{
-        tagline,
-        titleLine1,
-        titleLine2,
-        titleLine3,
-        subtitle,
-        ctaPrimaryText,
-        ctaPrimaryHref,
-        ctaSecondaryText,
-        ctaSecondaryHref
-      }`)
-      .then((fetched) => {
-        if (isMounted && fetched) {
-          setData({
-            tagline: fetched.tagline || defaultHeroData.tagline,
-            titleLine1: fetched.titleLine1 || defaultHeroData.titleLine1,
-            titleLine2: fetched.titleLine2 || defaultHeroData.titleLine2,
-            titleLine3: fetched.titleLine3 || defaultHeroData.titleLine3,
-            subtitle: fetched.subtitle || defaultHeroData.subtitle,
-            ctaPrimaryText:
-              fetched.ctaPrimaryText || defaultHeroData.ctaPrimaryText,
-            ctaPrimaryHref:
-              fetched.ctaPrimaryHref || defaultHeroData.ctaPrimaryHref,
-            ctaSecondaryText:
-              fetched.ctaSecondaryText || defaultHeroData.ctaSecondaryText,
-            ctaSecondaryHref:
-              fetched.ctaSecondaryHref || defaultHeroData.ctaSecondaryHref,
-          });
-        }
-      })
-      .catch(() => {});
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   return (
     <section

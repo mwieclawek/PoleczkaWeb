@@ -1,70 +1,54 @@
-# 🤝 Przewodnik dla Współtwórców i Programistów (Contributing Guide) — Bistro Poleczka
+# Przewodnik dla Programistów (Contributing Guide) — Bistro Poleczka
 
-Dziękujemy za chęć rozwijania aplikacji internetowej **Bistro Poleczka**! Aby utrzymać najwyższą jakość kodu, czystość architektury i bezawaryjność na produkcji w Firebase App Hosting, prosimy o przestrzeganie poniższych zasad.
-
----
-
-## 🌿 1. Przepływ Pracy z Gałęziami (Branching Workflow)
-
-* **Gałąź produkcyjna (`main`):** Jest bezpośrednio podłączona pod automatyczne wdrożenia w Google Firebase App Hosting. Każdy push do `main` wyzwala budowanie nowej wersji live.
-* **Gałęzie funkcjonalne (`feat/*`, `fix/*`, `chore/*`):** Nowe sekcje lub poprawki twórz na osobnych gałęziach wywodzących się z `main`:
-  ```bash
-  git checkout -b feat/nowa-sekcja-galerii
-  ```
+Dokument opisuje zasady pracy z kodem źródłowym aplikacji internetowej **Bistro Poleczka** oraz proces wdrażania zmian na produkcję w Google Firebase App Hosting.
 
 ---
 
-## 🛑 2. Złota Zasada `package-lock.json` i Firebase
+## 1. Przepływ pracy z gałęziami (Git)
 
-Google Firebase App Hosting buduje projekt przy użyciu rygorystycznej komendy `npm ci`. Oznacza to, że:
-
-1. **Nigdy nie modyfikuj `package.json` ręcznie bez uruchomienia `npm install`.**
-2. **Zawsze dodawaj do commita zarówno `package.json`, jak i `package-lock.json`.**  
-   Pliki te muszą być ze sobą idealnie zsynchronizowane w 100%.
-3. Jeśli instalujesz nową bibliotekę (np. `@radix-ui/react-dialog`), używaj flagi zapisu:
-   ```bash
-   npm install @radix-ui/react-dialog
-   ```
+- **Gałąź produkcyjna (`main`):** Jest podłączona do automatycznych wdrożeń w Firebase App Hosting. Każdy push na `main` uruchamia budowanie nowej wersji produkcyjnej.
+- **Gałęzie robocze (`feat/*`, `fix/*`, `chore/*`):** Nowe funkcje i poprawki należy rozwijać na osobnych gałęziach tworzonych z `main`.
 
 ---
 
-## 🎨 3. Standardy Wyglądu i Animacji (UI & Styling)
+## 2. Synchronizacja `package.json` i `package-lock.json`
 
-* **Design System (Tailwind CSS v4):** Korzystamy wyłącznie z predefiniowanych zmiennych i kolorów markowych bistro zdefiniowanych w `globals.css` oraz palecie:
-  * `#FFFDF6` — Ciepły krem (Tło)
-  * `#960C3F` — Burgund / Wine (Nagłówki, główny akcent)
-  * `#CA5254` — Róż (CTA, cennik)
-  * `#D9A261` — Złoto (Separatory, detale)
-* **Animacje (`framer-motion`):** Każda nowa sekcja powinna wejść płynnie na ekran przy scrollowaniu (`whileInView`, `viewport: { once: true }`). Unikaj zbyt agresywnych lub odwracających uwagę animacji — design ma być elegancki i prestiżowy.
+Firebase App Hosting buduje projekt przy użyciu komendy `npm ci`. Oznacza to, że:
+
+1. Nie należy edytować `package.json` ręcznie bez uruchomienia `npm install`.
+2. Do commita należy zawsze dołączać zarówno `package.json`, jak i `package-lock.json`.
 
 ---
 
-## 🧱 4. Dodawanie Nowych Schematów w Sanity CMS
+## 3. Standardy UI i SEO
 
-Jeśli tworzysz nową sekcję na stronie (np. *Galeria Wnętrz* lub *Opinie Gości*) i chcesz, by była edytowalna w CMS:
-
-1. Utwórz nowy plik schematu w `src/sanity/schemaTypes/galeria.ts`.
-2. Zarejestruj schemat w pliku `src/sanity/schemaTypes/index.ts`:
-   ```ts
-   import { galeriaType } from './galeria'
-   export const schema: { types: SchemaTypeDefinition[] } = {
-     types: [aboutType, heroType, menuType, contactType, comingSoonType, siteSettingsType, galeriaType],
-   }
-   ```
-3. Zastosuj architekturę hybrydową (`Server Component` z `client.fetch(...)` + fallback do bezpiecznych danych domyślnych w `Client Component`). Dzięki temu strona nigdy nie wysypie się błędem `null/undefined`.
+- **Kolorystyka (Tailwind CSS v4):**
+  - `#FFFDF6` — ciepły krem (tło)
+  - `#960C3F` — głęboki burgund (nagłówki, główny akcent)
+  - `#CA5254` — róż (przyciski CTA, cennik)
+  - `#D9A261` — złoto (separatory, detale)
+- **Renderowanie treści dla SEO:**
+  - Zawartość zakładek (np. kategorie w karcie dań lub warianty pakietów) powinna być obecna w drzewie HTML od razu przy renderowaniu serwerowym (SSR) i przełączana klasami CSS (`block` / `hidden`), aby roboty wyszukiwarek widziały pełną treść strony.
+  - Każda publiczna podstrona dodawana do `src/app/sitemap.ts` musi eksportować własny obiekt `metadata` z poprawnym adresem kanonicznym (`alternates.canonical`).
+  - Znaczniki `<img>` muszą posiadać jawnie zdefiniowane atrybuty `width` i `height` w celu uniknięcia przesunięć układu strony (CLS).
 
 ---
 
-## 🧪 5. Weryfikacja Przed Commitem
+## 4. Zarządzanie schematami Sanity CMS
 
-Przed wysłaniem zmian na GitHuba upewnij się, że projekt przechodzi pełną weryfikację kompilatora:
+W przypadku dodawania nowej sekcji edytowalnej w CMS:
+
+1. Utwórz plik schematu w `src/sanity/schemaTypes/`.
+2. Zarejestruj schemat w `src/sanity/schemaTypes/index.ts`.
+3. Pobieraj dane po stronie serwera w komponencie serwerowym (`client.fetch` z opcją `{ next: { revalidate: 60 } }`) i przekazuj je jako `initialData` do komponentu klienckiego. Nie wykonuj duplikujących zapytań do Sanity wewnątrz `useEffect` w przeglądarce.
+
+---
+
+## 5. Weryfikacja przed wdrożeniem
+
+Przed wysłaniem zmian do repozytorium sprawdź poprawność projektu:
 
 ```bash
-# 1. Sprawdzenie linterem
 npm run lint
-
-# 2. Pełny build produkcyjny (sprawdza typy TS i schematy Sanity)
 npx next build
 ```
-
-Jeśli `npx next build` zakończy się sukcesem (`Compiled successfully`), Twoje zmiany są gotowe do zacommitowania!

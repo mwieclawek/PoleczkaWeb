@@ -1,159 +1,99 @@
-# 🍷 Bistro Poleczka — Nowoczesna Kuchnia Polska we Wrocławiu
+# Bistro Poleczka — Strona Internetowa i System Rezerwacji
 
-[![Next.js](https://img.shields.io/badge/Next.js-16.2-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?style=for-the-badge&logo=tailwindcss)](https://tailwindcss.com/)
-[![Sanity CMS](https://img.shields.io/badge/Sanity_CMS-v3-F03E2F?style=for-the-badge&logo=sanity)](https://www.sanity.io/)
-[![Firebase App Hosting](https://img.shields.io/badge/Firebase_App_Hosting-Cloud-FFCA28?style=for-the-badge&logo=firebase)](https://firebase.google.com/)
-[![Framer Motion](https://img.shields.io/badge/Framer_Motion-12.x-black?style=for-the-badge&logo=framer)](https://www.framer.com/motion/)
-
-> **Poleczka** to nowoczesna restauracja kuchni polskiej we Wrocławiu przy ul. Stefana Jaracza 77B. Łączymy szacunek do tradycyjnych, lokalnych składników z nowoczesnymi technikami kulinarnymi (sous-vide, pieczenie w masie solnej, fermentacja).
-
-Niniejsze repozytorium zawiera kod źródłowy oficjalnej aplikacji internetowej bistro, zintegrowany z systemem zarządzania treścią **Sanity CMS**, wyposażony w interaktywne animacje oraz mechanizm ochrony dostępu *"Coming Soon"*.
+Oficjalna aplikacja internetowa restauracji **Bistro Poleczka** we Wrocławiu (ul. Stefana Jaracza 77B, Śródmieście / Ołbin). Projekt obejmuje stronę główną z kartą dań zarządzaną przez Sanity CMS, podstronę zamówień online (GoOrder), ofertę spotkań wigilijnych oraz system rezerwacji stolików z powiadomieniami na Telegramie i panelem administracyjnym.
 
 ---
 
-## 🎨 System Wizualny i Branding (Design System)
+## Stos technologiczny
 
-Aplikacja została zaprojektowana zgodnie z księgą znaku i kolorystyką **Bistro Poleczka**, zastępując standardowe szablony unikalną, ekskluzywną paletą barw:
+- **Framework:** Next.js 16 (App Router, TypeScript)
+- **Style i UI:** Tailwind CSS v4, Framer Motion
+- **CMS:** Sanity Studio v3 (`/studio`) z odświeżaniem ISR (`revalidate: 60`)
+- **Baza danych rezerwacji:** Firebase Firestore
+- **Powiadomienia:** Telegram Bot API oraz Nodemailer (SMTP)
+- **Hosting:** Google Firebase App Hosting
 
-| Rola w systemie | Kolor | Kod HEX | Zastosowanie |
+---
+
+## Struktura projektu i kluczowe ścieżki
+
+- `/` — Strona główna (`Hero`, `O nas`, `Menu`, `Zamów online`, `Kontakt`)
+- `/oferta-wigilijna` — Oferta spotkań wigilijnych dla firm i rodzin wraz z plikiem PDF do pobrania (`/oferta-wigilia-2026.pdf`); ścieżka `/wigilia` przekierowuje na nią stałym przekierowaniem HTTP 308
+- `/zamow-online` — Formularz zamówień online z dostawą i odbiorem osobistym (widget GoOrder)
+- `/admin/reservations` oraz `/panel/reservations` — Panel zarządzania rezerwacjami (chroniony przez HTTP Basic Auth)
+- `/studio` — Panel administracyjny Sanity CMS
+- `/sitemap.xml` oraz `/robots.txt` — Automatycznie generowana mapa strony i reguły indeksacji
+
+---
+
+## System wizualny
+
+Kolorystyka aplikacji:
+
+| Rola | Kolor | Kod HEX | Zastosowanie |
 | :--- | :--- | :--- | :--- |
-| **Główne Tło** | Ciepły Krem | `#FFFDF6` | Tło całej strony, karty, modale, czystość i przytulność |
-| **Akcent Główny / Tekst** | Głęboki Burgund / Wine | `#960C3F` | Nagłówki, logotyp, kontrastowy tekst, sekcja stopki |
-| **Akcent Wyróżniający** | Róż / Rose Pink | `#CA5254` | Przyciski CTA, ceny w menu, znaczniki aktywne |
-| **Akcent Dopełniający** | Złoto / Drewno | `#D9A261` | Separatory, etykiety sezonowe, obramowania, dekoracje |
+| Tło główne | Ciepły krem | `#FFFDF6` | Tło strony, kart i okien modalnych |
+| Kolor główny | Głęboki burgund | `#960C3F` | Nagłówki, logotyp, przyciski, stopka |
+| Akcent wyróżniający | Róż | `#CA5254` | Aktywne zakładki, ceny, elementy wyróżnione |
+| Akcent dopełniający | Złoto | `#D9A261` | Separatory, podtytuły, drobne detale |
 
-### ✒️ Typografia
-* **Nagłówki (`--font-heading`):** [`Poiret One`](https://fonts.google.com/specimen/Poiret+One) — elegancki, geometryczny font nadający prestiżowy charakter bistro.
-* **Tekst główny (`--font-sans`):** [`Open Sans`](https://fonts.google.com/specimen/Open+Sans) — czytelny font bezszeryfowy do opisów dań, historii i nawigacji.
+Typografia:
+- Nagłówki (`--font-heading`): `Poiret One`
+- Tekst główny (`--font-sans`): `Open Sans`
 
 ---
 
-## 🍽️ System Rezerwacji Miejsc i Integracja z Telegramem
+## System rezerwacji i integracja z Telegramem
 
-Aplikacja zawiera dedykowany system rezerwacji z powiadomieniami w czasie rzeczywistym, botem na Telegramie oraz panelem dla obsługi na tablecie.
-
-### 🤖 Instrukcja Skonfigurowania Bota Telegram & Webhooka
-
-1. **Utworzenie Bota w Telegramie (@BotFather):**
-   * Otwórz Telegram i wyszukaj użytkownika `@BotFather`.
-   * Wyślij komendę `/newbot` i postępuj zgodnie z instrukcjami (podaj nazwę oraz username bota, np. `PoleczkaReservationBot`).
-   * `@BotFather` wygeneruje **API Token** (np. `123456789:ABCdefGHI...`). Zapisz go w pliku `.env` jako `TELEGRAM_BOT_TOKEN`.
-
-2. **Pozyskanie `TELEGRAM_CHAT_ID` dla grupy obsługi:**
-   * Utwórz grupę na Telegramie dla pracowników restauracji / obsługi.
-   * Dodaj utworzonego bota do grupy.
-   * Dodaj bota `@raw_data_bot` lub `@userinfobot` do grupy, aby odczytać ID grupy (zazwyczaj zaczyna się od `-100...`). Zapisz go w pliku `.env` jako `TELEGRAM_CHAT_ID`.
-
-3. **Ustawienie Webhooka Telegrama (Dla API Route App Router):**
-   * Ustaw webhook wywołując w przeglądarce lub terminalu URL:
+1. **Konfiguracja bota Telegram:**
+   - Utwórz bota przez `@BotFather` i zapisz token w zmiennej `TELEGRAM_BOT_TOKEN`.
+   - Dodaj bota do grupy obsługi i zapisz identyfikator czatu w `TELEGRAM_CHAT_ID`.
+   - Skonfiguruj webhook wskazujący na endpoint aplikacji:
      ```http
      https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook?url=https://bistropoleczka.pl/api/telegram-webhook
      ```
-   * Odpowiedź z Telegrama powinna potwierdzić: `{"ok":true,"result":true,"description":"Webhook was set"}`.
-   * Przyciski pod wiadomością **✅ Akceptuj** i **❌ Odrzuć** automatycznie zmieniają status w bazie danych, aktualizują treść wiadomości na Telegramie i wysyłają e-mail do klienta!
+   - Przyciski pod powiadomieniem w Telegramie pozwalają od razu zaakceptować lub odrzucić rezerwację, co aktualizuje status w Firestore i wysyła wiadomość e-mail do gościa.
 
-4. **Zabezpieczenie & Dostęp do Panelu (Basic Auth):**
-   * Dostęp pod adresem: `/panel/reservations` lub `/admin/reservations`.
-   - Ścieżki `/panel/*` oraz `/admin/*` są chronione przez **HTTP Basic Auth**:
-     - Użytkownik: `admin`
-     - Hasło: zdefiniowane w pliku `.env.local` jako `ADMIN_PASSWORD` (domyślnie: `BistroMPM26!`).
+2. **Dostęp do panelu rezerwacji (`/admin/reservations`):**
+   - Ścieżki `/admin/*` oraz `/panel/*` są zabezpieczone przez HTTP Basic Auth (`src/middleware.ts`).
+   - Login: `admin`, hasło: wartość zmiennej `ADMIN_PASSWORD` z pliku `.env.local`.
 
-5. **Powiadomienia E-mail (Gmail SMTP / Nodemailer):**
-   - Po zmianie statusu rezerwacji (w panelu lub z poziomu Telegrama) system automatycznie wysyła e-mail do klienta z potwierdzeniem lub uprzejmą odmową.
-   - Wymagane zmienne środowiskowe w `.env.local`:
-     - `GMAIL_USER="kontakt@bistropoleczka.pl"`
-     - `GMAIL_APP_PASSWORD="xxxx xxxx xxxx xxxx"` (Hasło do aplikacji wygenerowane w ustawieniach konta Google).
+3. **Powiadomienia e-mail (SMTP):**
+   - Po zmianie statusu rezerwacji system wysyła potwierdzenie lub informację o braku wolnych miejsc.
+   - Wymagane zmienne: `GMAIL_USER` oraz `GMAIL_APP_PASSWORD`.
 
 ---
 
-## 🏗️ Architektura i Hybrydowy System CMS
+## Architektura pobierania danych z Sanity CMS
 
-Aplikacja wykorzystuje architekturę hybrydową Next.js App Router (`Server + Client Components`):
-
-```
-┌────────────────────────────────────────────────────────┐
-│                   Sanity Studio (CMS)                  │
-│       Edycja dań, cen, historii, godzin otwarcia      │
-└───────────────────────────┬────────────────────────────┘
-                            ▼ (Fetch przez @/sanity/client)
-┌────────────────────────────────────────────────────────┐
-│             Server Component (np. MenuSection)         │
-│     Pobiera aktualny dokument z bazy (lub zwraca null) │
-└───────────────────────────┬────────────────────────────┘
-                            ▼ (Przekazuje jako initialData)
-┌────────────────────────────────────────────────────────┐
-│             Client Component (np. MenuSectionClient)   │
-│  Zarządza animacjami Framer Motion i stanem zakładek. │
-│  Posiada wbudowane dane domyślne (fallback defaults)   │
-└───────────────────────────┬────────────────────────────┘
-                            ▼
-┌────────────────────────────────────────────────────────┐
-│              System Rezerwacji & Firestore             │
-│        Formularz, Telegram Bot & Panel Tabletu         │
-└────────────────────────────────────────────────────────┘
-```
+Sekcje treści (`Hero`, `About`, `MenuSection`, `Contact`, `Footer`) są podzielone na:
+- **Komponenty serwerowe (`src/components/sections/*.tsx`)** — pobierają dane z Sanity CMS po stronie serwera z wykorzystaniem ISR (`revalidate: 60`) i przekazują je jako `initialData`.
+- **Komponenty klienckie (`src/components/sections/*Client.tsx`)** — odpowiadają za interakcje oraz animacje i posiadają pełne dane zapasowe (`default...Data`) zsynchronizowane z aktualną zawartością bazy Sanity. Wszystkie kategorie menu oraz pakiety wigilijne są renderowane w drzewie DOM od razu podczas SSR, a przełączanie zakładek odbywa się za pomocą klas CSS (`block` / `hidden`), co zapewnia pełną indeksację karty dań przez wyszukiwarki.
 
 ---
 
-## 🛡️ Mechanizm "Coming Soon" (`src/middleware.ts`)
+## Uruchomienie lokalne
 
-Aplikacja jest chroniona przed niepowołanym dostępem w okresie przed otwarciem restauracji, przy jednoczesnym zachowaniu wygody dla programistów i redaktorów:
-
-* **Dla zwykłych odwiedzających:** Każde wejście pod dowolny adres (np. `https://bistropoleczka.pl/`) zostaje po stronie serwera dyskretnie przepisywane (`NextResponse.rewrite`) na widok `/coming-soon`. Pasek adresu URL pozostaje czysty.
-* **Dla programistów i zespołu (Odblokowanie):** Aby wejść na pełną stronę lub do panelu CMS / Admina, wystarczy dopisać do adresu parametr `?admin=poleczka`:
-  👉 **`https://bistropoleczka.pl/?admin=poleczka`** (lub lokalnie: `http://localhost:3000/?admin=poleczka` / `http://localhost:3000/admin/reservations?admin=poleczka`)
-
----
-
-## 📊 Analityka i Nagrania Sesji (GA4 & Microsoft Clarity)
-
-Aplikacja ma wbudowaną integrację z **Google Analytics 4** (ruch, zdarzenia rezerwacji) oraz **Microsoft Clarity** (heatmaps, nagrania sesji).
-
-### 🛠️ Gdzie wkleić identyfikatory:
-W pliku `.env.local` uzupełnij:
-* **Google Analytics 4 (`NEXT_PUBLIC_GA_ID`):**
-  Pobierz **Identyfikator strumienia danych** (format: `G-XXXXXXXXXX`) z panelu *Google Analytics -> Administracja -> Strumienie danych*.
-* **Microsoft Clarity (`NEXT_PUBLIC_CLARITY_ID`):**
-  Pobierz **Project ID** (format np.: `xxxxxxxxxx`) z panelu *Microsoft Clarity -> Settings -> Overview*.
-
-Skrypty analityczne ładują się asynchronicznie (oparte o `@next/third-parties` oraz `next/script` ze strategią `afterInteractive`), dzięki czemu nie wpływają na wskaźniki wydajności (Core Web Vitals).
+1. **Wymagania:** Node.js `20.x` lub nowszy, `npm`.
+2. **Instalacja zależności:**
+   ```bash
+   npm install
+   ```
+3. **Zmienne środowiskowe:**
+   Skopiuj `.env.example` do `.env.local` i uzupełnij wymagane klucze (Sanity, Firebase, Telegram, SMTP, GA4/Clarity).
+4. **Serwer deweloperski:**
+   ```bash
+   npm run dev
+   ```
+   - Strona główna: `http://localhost:3000`
+   - Panel rezerwacji: `http://localhost:3000/admin/reservations`
+   - Sanity Studio: `http://localhost:3000/studio`
 
 ---
 
+## Kontakt
 
-## 🚀 Uruchomienie Projektu Lokalnie
-
-### 1. Wymagania wstępne
-* **Node.js** w wersji `20.x` lub nowszej (`24.x` zalecane)
-* **npm** / **pnpm** / **yarn**
-
-### 2. Instalacja zależności
-
-```bash
-git clone https://github.com/mwieclawek/PoleczkaWeb.git
-cd PoleczkaWeb
-git checkout feature/reservation-system
-npm install
-```
-
-### 3. Konfiguracja zmiennych środowiskowych (`.env.local`)
-Skopiuj wzorzec z `.env.example` do `.env.local` i uzupełnij klucze.
-
-### 4. Uruchomienie serwera deweloperskiego
-
-```bash
-npm run dev
-```
-
-* 🌐 **Aplikacja (Strona Główna / Rezerwacja):** [http://localhost:3000](http://localhost:3000)
-* 📱 **Panel Tabletu (Rezerwacje):** [http://localhost:3000/admin/reservations](http://localhost:3000/admin/reservations)
-* ✏️ **Panel CMS (Sanity Studio):** [http://localhost:3000/studio](http://localhost:3000/studio)
-
----
-
-## 📄 Licencja & Kontakt
-Wszelkie prawa zastrzeżone &copy; 2026 **Bistro Poleczka**.  
-Lokalizacja: **ul. Stefana Jaracza 77B, 50-305 Wrocław**  
+**Bistro Poleczka**  
+ul. Stefana Jaracza 77B, 50-305 Wrocław  
+Tel.: +48 71 880 87 08  
 E-mail: `kontakt@bistropoleczka.pl`

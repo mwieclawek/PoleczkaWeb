@@ -1,89 +1,54 @@
-# 📖 Instrukcja Obsługi Panelu Zarządzania Treścią (Sanity CMS) — Bistro Poleczka
+# Instrukcja Obsługi Panelu Zarządzania Treścią (Sanity CMS) — Bistro Poleczka
 
-Witaj! Ten podręcznik został stworzony dla zespołu **Bistro Poleczka** (menedżerów, kelnerów oraz osób odpowiedzialnych za marketing i social media). Dowiesz się z niego, jak w prosty sposób — bez konieczności znania się na programowaniu — modyfikować menu, zmieniać ceny, aktualizować godziny otwarcia czy publikować komunikaty na stronie internetowej.
-
----
-
-## 🔑 1. Jak wejść do panelu CMS?
-
-Panel zarządzania jest wbudowany bezpośrednio w naszą stronę internetową.
-
-1. Otwórz przeglądarkę internetową (Chrome, Safari, Firefox lub Edge).
-2. Wejdź pod adres panelu:
-   👉 **`https://bistropoleczka.pl/studio`**  
-   *(lub podczas pracy lokalnej na komputerze: `http://localhost:3000/studio`)*
-3. Jeśli strona wyświeta ekran *"Wkrótce otwarcie"*, wejdź najpierw na adres z odblokowaniem:  
-   👉 **`https://bistropoleczka.pl/?admin=poleczka`**
-4. Zaloguj się swoim kontem Google (lub e-mailem przypisanym do projektu Sanity).
+Podręcznik dla zespołu **Bistro Poleczka** opisujący sposób edycji karty dań, cen, godzin otwarcia oraz tekstów na stronie internetowej.
 
 ---
 
-## 🥗 2. Jak edytować Kartę Dań (Menu)?
+## 1. Logowanie do panelu CMS
 
-To najczęściej wykonywana operacja przy zmianie pór roku lub wprowadzaniu nowych dań do karty.
+Panel zarządzania treścią znajduje się pod adresem:
+- Produkcyjnie: `https://bistropoleczka.pl/studio`
+- Lokalnie: `http://localhost:3000/studio`
 
-1. W lewej kolumnie panelu kliknij zakładkę **`Sekcja "Menu" (Karta dań na stronie)`**.
-2. Kliknij w jedyny dostępny dokument (np. *Menu Letnie*).
-3. Możesz tu zmienić:
-   * **Tag sezonowy:** np. `Sezon: Jesień 2026`
-   * **Tytuł sekcji:** np. `Menu Jesienne`
-   * **Opis sekcji:** krótki tekst o tym, z jakich składników w tym sezonie korzystamy.
-4. **Zarządzanie kategoriami i daniami:**
-   * Przewiń do sekcji **`Kategorie w menu`**.
-   * Kliknij w wybraną kategorię (np. *Przystawki* lub *Dania główne*).
-   * W polu **`Pozycje w tej kategorii`** zobaczysz listę dań.
-   * **Aby dodać nowe danie:** Kliknij przycisk `Add item` (Dodaj pozycję) na dole listy.
-   * Wpisz **Nazwę dania** (np. *Pierogi z gęsiną*), **Opis składników** oraz **Cenę w zł** (jako samą liczbę, np. `46`).
-   * Jeśli danie jest naszym hitem, zaznacz pole **`Wyróżnij jako "Klasyk Poleczki"`** — na stronie otrzyma ono elegancki czerwony pasek z lewej strony i złotą odznakę!
-5. **Zapisywanie zmian:**  
-   Po zakończeniu edycji kliknij zielony przycisk **`Publish`** (Publikuj) w prawym dolnym lub górnym rogu ekranu. Zmiany natychmiast pojawią się na stronie!
+Zaloguj się za pomocą konta Google lub adresu e-mail uprawnionego w projekcie Sanity.
 
 ---
 
-## ⏰ 3. Jak zmienić Godziny Otwarcia lub Kontakt?
+## 2. Edycja karty dań (Menu)
 
-Jeśli w okresie świątecznym lub długiego weekendu zmieniają się godziny otwarcia restauracji:
-
-1. W lewej kolumnie panelu kliknij **`Sekcja "Kontakt" i Godziny Otwarcia`**.
-2. Kliknij w dokument *Odwiedź nas*.
-3. Przewiń do sekcji **`Godziny otwarcia`**.
-4. Możesz tu edytować istniejące przedziały (np. zmienić *Sobota – Niedziela* z `13:00 – 22:00` na `12:00 – 23:00`).
-5. Możesz też zmienić **Uwagę pod godzinami otwarcia** (np. wpisać informację o rezerwacjach na Sylwestra).
-6. Kliknij zielony przycisk **`Publish`**.
-
----
-
-## ℹ️ 4. Jak zaktualizować sekcję "O nas" (Nasza Historia)?
-
-1. Kliknij w lewym menu **`Sekcja "O nas" (Filozofia, historia i filary kuchni)`**.
-2. Możesz edytować:
-   * **Datę otwarcia** (np. *Sierpień 2026*)
-   * **Akapity historii bistro:** Kliknij w wybrany akapit, aby zmienić treść, lub dodaj nowy akapit przyciskiem `Add item`.
-   * **Filary filozofii (4 kafle):** Możesz edytować tytuły i opisy takich haseł jak *Lokalne składniki* czy *Rzemieślnicze techniki*.
-3. Kliknij zielony przycisk **`Publish`**.
+1. W lewej kolumnie panelu wybierz **Sekcja "Menu" (Karta dań na stronie)**.
+2. Otwórz dokument menu (np. *Menu Jesienne*).
+3. Dostępne pola główne:
+   - **Tag sezonowy:** np. `Sezon: Jesień 2026`
+   - **Tytuł sekcji:** np. `Menu Jesienne`
+   - **Opis sekcji:** opcjonalny krótki wstęp pod tytułem
+   - **Notatka pod kartą menu:** tekst wyświetlany na dole sekcji menu
+4. **Kategorie i pozycje w menu:**
+   - W sekcji **Kategorie w menu** wybierz odpowiednią zakładkę (*Dania mniejsze*, *Zupy*, *Dania główne*, *Desery*, *Dla dzieci*).
+   - Aby dodać nowe danie, kliknij `Add item` na dole listy pozycji.
+   - Uzupełnij **Nazwę dania**, **Opis składników** oraz **Cenę w zł** (jako liczbę, np. `39`).
+   - Zaznaczenie opcji **Wyróżnij jako "Klasyk Poleczki"** dodaje przy daniu pionowy akcent i oznaczenie na karcie.
+5. Po wprowadzeniu zmian kliknij przycisk **Publish** w prawym dolnym rogu. Strona odświeża dane z CMS automatycznie w ciągu 60 sekund.
 
 ---
 
-## 🚀 5. Jak edytować stronę "Coming Soon" (Wkrótce otwarcie)?
+## 3. Zmiana godzin otwarcia i danych kontaktowych
 
-W okresie przed wielkim otwarciem to właśnie ten ekran widzą wszyscy goście wchodzący na naszą domenę.
-
-1. W lewym menu wybierz **`Strona "Coming Soon" (Zaślepka wkrótce otwarcie)`**.
-2. Możesz edytować:
-   * **Etykietę z adresem:** np. `Stefana Jaracza 77B Wrocław`
-   * **Główny tytuł:** np. `Bistro Poleczka. Wkrótce otwarcie.`
-   * **Tekst powitalny pod linijką:** np. `Trwają ostatnie przygotowania. Do zobaczenia w sierpniu na obiadku!`
-3. Kliknij **`Publish`**.
+1. W lewej kolumnie wybierz **Sekcja "Kontakt" i Godziny Otwarcia**.
+2. W sekcji **Godziny otwarcia** możesz zmodyfikować przedziały godzinowe dla poszczególnych dni tygodnia.
+3. W polu **Uwaga pod godzinami otwarcia** możesz zamieścić informację o zmianach godzin w święta lub dni ustawowo wolne.
+4. Kliknij **Publish**, aby zapisać zmiany.
 
 ---
 
-## ❓ Najczęściej Zadawane Pytania (FAQ)
+## 4. Edycja sekcji "Hero", "O nas" oraz stopki
 
-### Czy mogę zepsuć stronę w panelu CMS?
-Nie! Nasz system został zaprojektowany z tzw. *fallbackiem domyślnym*. Jeśli usuniesz jakieś pole lub zostawisz je puste, strona automatycznie użyje domyślnych, bezpiecznych treści zdefiniowanych w kodzie aplikacji. Nie ma ryzyka, że strona przestanie działać.
+- **Sekcja "Hero":** pozwala zmienić nagłówek główny, podtytuł powitalny oraz teksty przycisków na górze strony.
+- **Sekcja "O nas":** pozwala edytować nagłówek, akapity opisujące historię bistro oraz kafelki z głównymi wartościami lokalu.
+- **Ustawienia Strony (Stopka i Linki):** pozwalają zaktualizować krótki opis w stopce, adres e-mail oraz linki do profili na Instagramie i Facebooku.
 
-### Dlaczego po kliknięciu "Publish" zmiana nie jest natychmiast widoczna na moim telefonie?
-Przeglądarki internetowe często zapisują strony w pamięci podręcznej (cache). Odśwież stronę kilka razy lub kliknij `Ctrl + Shift + R` (na komputerze) / wyczyść pamięć podręczną w telefonie, a zobaczysz najnowszą wersję.
+---
 
-### Jak odzyskać poprzednią wersję tekstu, jeśli popełniłem błąd?
-W prawym górnym rogu panelu Sanity znajduje się ikona zegara (**History** / Historia zmian). Możesz tam podejrzeć poprzednie wersje każdego dokumentu i przywrócić je jednym kliknięciem (`Restore`).
+## 5. Przywracanie wcześniejszych wersji
+
+W prawym górnym rogu edytowanego dokumentu w Sanity Studio znajduje się historia zmian (**History**), która umożliwia podgląd poprzednich wersji oraz przywrócenie wcześniejszej publikacji (`Restore`).

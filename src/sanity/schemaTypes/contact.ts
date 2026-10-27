@@ -22,7 +22,8 @@ export const contactType = defineType({
       title: 'Opis pod tytułem',
       type: 'text',
       rows: 2,
-      initialValue: 'Znajdziesz nas w samym sercu Wrocławia. Zarezerwuj stolik telefonicznie lub mailowo.',
+      initialValue:
+        'Znajdziesz nas w samym sercu Wrocławia. Zarezerwuj stolik telefonicznie lub mailowo.',
     }),
     defineField({
       name: 'addressLabel',
@@ -34,19 +35,20 @@ export const contactType = defineType({
       name: 'googleMapsUrl',
       title: 'Link do Google Maps',
       type: 'string',
-      initialValue: 'https://maps.google.com/?q=ul.+Stefana+Jaracza+77B,+50-305+Wrocław',
+      initialValue:
+        'https://maps.google.com/?q=ul.+Stefana+Jaracza+77B,+50-305+Wrocław',
     }),
     defineField({
       name: 'phone',
       title: 'Numer telefonu',
       type: 'string',
-      initialValue: '+48 71 123 45 67',
+      initialValue: '+48 71 880 87 08',
     }),
     defineField({
       name: 'phoneClean',
-      title: 'Numer telefonu do linku (np. +48711234567 bez spacji)',
+      title: 'Numer telefonu do linku (np. +48718808708 bez spacji)',
       type: 'string',
-      initialValue: '+48711234567',
+      initialValue: '+48718808708',
     }),
     defineField({
       name: 'email',
@@ -70,7 +72,7 @@ export const contactType = defineType({
             }),
             defineField({
               name: 'hours',
-              title: 'Godziny (np. Nieczynne lub 13:00 – 21:30)',
+              title: 'Godziny (np. Nieczynne lub 12:00 – 21:30)',
               type: 'string',
             }),
           ],
@@ -78,8 +80,8 @@ export const contactType = defineType({
       ],
       initialValue: [
         { days: 'Poniedziałek', hours: 'Nieczynne' },
-        { days: 'Wtorek – Piątek', hours: '13:00 – 21:30' },
-        { days: 'Sobota – Niedziela', hours: '13:00 – 22:00' },
+        { days: 'Wtorek – Piątek', hours: '12:00 – 21:30' },
+        { days: 'Sobota – Niedziela', hours: '12:00 – 21:30' },
       ],
     }),
     defineField({
@@ -87,7 +89,8 @@ export const contactType = defineType({
       title: 'Uwaga pod godzinami otwarcia',
       type: 'text',
       rows: 2,
-      initialValue: 'W święta oraz dni szczególne godziny mogą ulec zmianie. Sprawdź nasze social media lub zadzwoń, by potwierdzić.',
+      initialValue:
+        'W święta oraz dni szczególne godziny mogą ulec zmianie. Sprawdź nasze social media lub zadzwoń, by potwierdzić.',
     }),
   ],
 })

@@ -1,13 +1,12 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import { Separator } from "@/components/ui/separator";
-import { client } from "@/sanity/client";
 
 export interface PrincipleItem {
   title: string;
-  text: string;
+  text?: string;
 }
 
 export interface AboutData {
@@ -18,30 +17,28 @@ export interface AboutData {
 }
 
 export const defaultAboutData: Required<AboutData> = {
-  subtitle: "O nas",
-  heading: "Szacunek do produktu",
+  subtitle: "Kim jesteśmy",
+  heading: "O nas",
   history: [
-    "Bistro Poleczka to nasze spełnione marzenie. Jesteśmy trójką przyjaciół, którzy po prostu kochają dobrze zjeść i chcą się tą miłością z Wami dzielić.",
-    "Bez zadęcia. Bez sztywnych reguł i bez udawania, że to skomplikowane „fusion”.",
-    "Gotujemy z tego, co lokalne i sezonowe. Odświeżając polskie klasyki tak, jak lubimy najbardziej – z pomysłem i od serca.",
-    "Rozgośćcie się!"
+    "Bistro Poleczka to miejsce, które powstało z miłości do jedzenia i chęci dzielenia się nim z innymi. Tworzone przez trójkę przyjaciół, jest realizacją naszego wieloletniego marzenia o własnym miejscu, w którym będziemy mogli Was gościć. ",
+    "Sercem Bistro Poleczka jest autorskie ujęcie tradycyjnej kuchni polskiej, bazujące na lokalnych i sezonowych produktach. Zamiast sztywnych ram czy nowoczesnych haseł typu fusion, serwujemy własne spojrzenie na wyjątkowe kompozycje smakowe oraz świeże odsłony polskich klasyków. ",
+    "W środku czeka na Was luźna i niezwykle przyjazna atmosfera – dbamy o to, aby każdy z naszych gości czuł się u nas w pełni komfortowo i jak u siebie. Zapraszamy! ",
   ],
   principles: [
     {
-      title: "Lokalne składniki",
-      text: "Współpracujemy z dolnośląskimi rolnikami i dostawcami. Karp milicki, sery od lokalnych serowarów, sezonowe warzywa — każdy produkt ma swoją historię.",
-    },
-    {
-      title: "Rzemieślnicze techniki",
-      text: "Sous-vide, pieczenie w masie solnej, fermentacja, palenie masła. Tradycyjne smaki podane w bezkompromisowej, nowoczesnej formie.",
-    },
-    {
-      title: "Patio na Jaracza",
-      text: "W sezonie zapraszamy na zaciszne patio przy ul. Jaracza 77B (Wrocław – Ołbin / Śródmieście, tuż obok Mostów Warszawskich i wałów nad Odrą) — kameralna przestrzeń, gdzie jedzenie na świeżym powietrzu nabiera innego wymiaru.",
+      title: "Bistro Poleczka to nasze spełnione marzenie",
+      text: "Jesteśmy trójką przyjaciół, którzy po prostu kochają dobrze zjeść i chcą się tą miłością z Wami dzielić.",
     },
     {
       title: "Bez zadęcia",
-      text: "Gotujemy z precyzją i wiedzą, ale serwujemy bez pretensji. Chcemy, żebyś czuł się jak u siebie — tyle że jedzenie jest lepsze.",
+      text: "Bez sztywnych reguł i bez udawania, że to skomplikowane „fusion”.",
+    },
+    {
+      title: "Gotujemy z tego, co lokalne i sezonowe",
+      text: "Odświeżając polskie klasyki tak, jak lubimy najbardziej – z pomysłem i od serca.",
+    },
+    {
+      title: "Rozgośćcie się!",
     },
   ],
 };
@@ -51,7 +48,7 @@ export default function AboutClient({
 }: {
   initialData: AboutData | null;
 }) {
-  const [data, setData] = useState<Required<AboutData>>({
+  const data: Required<AboutData> = {
     subtitle: initialData?.subtitle || defaultAboutData.subtitle,
     heading: initialData?.heading || defaultAboutData.heading,
     history:
@@ -62,41 +59,7 @@ export default function AboutClient({
       initialData?.principles && initialData.principles.length > 0
         ? initialData.principles
         : defaultAboutData.principles,
-  });
-
-  // Client-side fetch to ensure fresh preview updates from Sanity Studio when active
-  useEffect(() => {
-    let isMounted = true;
-    client
-      .fetch<AboutData | null>(`*[_type == "about"][0]{
-        subtitle,
-        heading,
-        history,
-        principles
-      }`)
-      .then((fetched) => {
-        if (isMounted && fetched) {
-          setData({
-            subtitle: fetched.subtitle || defaultAboutData.subtitle,
-            heading: fetched.heading || defaultAboutData.heading,
-            history:
-              fetched.history && fetched.history.length > 0
-                ? fetched.history
-                : defaultAboutData.history,
-            principles:
-              fetched.principles && fetched.principles.length > 0
-                ? fetched.principles
-                : defaultAboutData.principles,
-          });
-        }
-      })
-      .catch(() => {
-        // Fallback or ignore
-      });
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  };
 
   return (
     <section
@@ -147,15 +110,15 @@ export default function AboutClient({
               transition={{ duration: 0.6, delay: 0.2 }}
               className="space-y-8"
             >
-          {data.history.map((paragraph, index) => (
-            <p
-              key={index}
-              className="text-lg leading-relaxed text-[#960C3F]/80 md:text-xl"
-            >
-              {paragraph}
-            </p>
-          ))}
-        </motion.div>
+              {data.history.map((paragraph, index) => (
+                <p
+                  key={index}
+                  className="text-lg leading-relaxed text-[#960C3F]/80 md:text-xl"
+                >
+                  {paragraph}
+                </p>
+              ))}
+            </motion.div>
 
             {/* Principles */}
             <motion.div
@@ -173,9 +136,11 @@ export default function AboutClient({
                   <h3 className="mb-3 font-heading text-lg font-bold text-[#CA5254]">
                     {item.title}
                   </h3>
-                  <p className="text-sm leading-relaxed text-[#A6A6A6]">
-                    {item.text}
-                  </p>
+                  {item.text && (
+                    <p className="text-sm leading-relaxed text-[#A6A6A6]">
+                      {item.text}
+                    </p>
+                  )}
                 </div>
               ))}
             </motion.div>

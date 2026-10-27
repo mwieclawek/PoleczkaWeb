@@ -6,7 +6,14 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/admin/", "/panel/", "/studio/", "/api/"],
+        disallow: [
+          "/admin/",
+          "/panel/",
+          "/studio/",
+          "/api/",
+          "/coming-soon",
+          "/wigilia",
+        ],
       },
     ],
     sitemap: "https://bistropoleczka.pl/sitemap.xml",

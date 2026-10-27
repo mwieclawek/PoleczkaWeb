@@ -10,8 +10,7 @@ export const siteSettingsType = defineType({
       title: 'Opis bistro w stopce',
       type: 'text',
       rows: 3,
-      initialValue:
-        'Nowoczesna kuchnia polska we Wrocławiu. Tradycyjne składniki, nowoczesne techniki — miejsce, gdzie klasyka spotyka się z finezją.',
+      initialValue: 'Bistro Poleczka kuchnia polska',
     }),
     defineField({
       name: 'contactEmail',
@@ -23,13 +22,13 @@ export const siteSettingsType = defineType({
       name: 'instagramUrl',
       title: 'Link do Instagrama',
       type: 'string',
-      initialValue: 'https://instagram.com/poleczka.wroclaw',
+      initialValue: 'https://instagram.com/bistro.poleczka',
     }),
     defineField({
       name: 'facebookUrl',
       title: 'Link do Facebooka',
       type: 'string',
-      initialValue: 'https://facebook.com/poleczka.wroclaw',
+      initialValue: 'https://www.facebook.com/profile.php?id=61591397017136',
     }),
     defineField({
       name: 'copyrightText',

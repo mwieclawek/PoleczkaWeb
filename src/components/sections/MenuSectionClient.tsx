@@ -3,14 +3,13 @@
 import React, { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { Separator } from "@/components/ui/separator";
-import { client } from "@/sanity/client";
 import { trackEvent } from "@/lib/analytics";
 
 export interface MenuItemData {
   id?: string;
   name: string;
   description: string;
-  price: number;
+  price?: number;
   highlighted?: boolean;
 }
 
@@ -33,7 +32,7 @@ const fadeInUp = {
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.5, delay: i * 0.08, ease: "easeOut" },
+    transition: { duration: 0.5, delay: i * 0.08, ease: "easeOut" as const },
   }),
 };
 
@@ -72,68 +71,80 @@ function MenuItem({
           {item.description}
         </p>
       </div>
-      <span className="shrink-0 text-lg font-bold tabular-nums text-[#CA5254]">
-        {item.price}&nbsp;zł
-      </span>
+      {item.price != null && (
+        <span className="shrink-0 text-lg font-bold tabular-nums text-[#CA5254]">
+          {item.price}&nbsp;zł
+        </span>
+      )}
     </motion.div>
   );
 }
 
 export const defaultMenuSectionData: Required<MenuSectionData> = {
-  seasonTag: "Sezon: Lato 2026",
-  title: "Menu Letnie",
-  description:
-    "Korzystamy z pełni polskiego lata. W tej karcie znajdziecie botwinkę, młody bób, fasolkę szparagową i owoce jagodowe z lokalnych zbiorów. Pracujemy z naturą, dlatego nasze menu zmienia się wraz z porami roku.",
+  seasonTag: "Sezon: Jesień 2026",
+  title: "Menu Jesienne",
+  description: "   ",
   footerNote:
-    "Z każdym chłodniejszym dniem przygotowujemy się do nowych zbiorów. Menu jesienne już wkrótce.",
+    "Z każdym chłodniejszym dniem przygotowujemy się do menu zimowego.",
   categories: [
     {
       key: "przystawki",
-      label: "Przystawki",
+      label: "Dania mniejsze",
       items: [
         {
-          id: "1",
-          name: "Seler pieczony w soli i kawie / Café de Paris",
-          description:
-            "Stek z korzenia selera pieczony przez długie godziny w masie solnej i kawie | gorący sos Café de Paris z anchois i kaparami",
-          price: 39,
+          id: "624faafe3995bfaaf24941f98b132c2d",
+          name: "Trio degustacyjne Poleczki",
+          description: "PYRA Z GZIKIEM / KASZANKA NA CHAŁCE / TATAR",
+          price: 90,
           highlighted: true,
         },
         {
-          id: "2",
-          name: "Kiełbasa śląska duszona w cydrze",
+          id: "9da56313ac23a67caf58931070a38bc5",
+          name: "Trio Pajd",
           description:
-            "Rzemieślnicza kiełbasa duszona w cydrze ze Wzgórz Trzebnickich | świeże pieczywo | aromatyczny sos z redukcji",
-          price: 28,
-        },
-        {
-          id: "3",
-          name: "Krem z wędzonego twarogu z botwinką",
-          description:
-            "Aksamitny krem z twarogu wędzonego | smażona botwinka i buraczki z patelni | świeże zioła | rzemieślnicze pieczywo",
-          price: 26,
-        },
-        {
-          id: "4",
-          name: "Gofr ziemniaczany z wędzonym karpiem",
-          description:
-            "Chrupiący gofr z tartych ziemniaków | wędzony karp milicki z Doliny Baryczy | autorski majonez koperkowy i grzybowy",
-          price: 36,
+            "PÓŁ PAJDY ZE SMALCEM / PÓŁ PAJDY Z PASZTETEM / PÓŁ PAJDY Z WEGE SMALCEM",
+          price: 33,
           highlighted: true,
         },
         {
-          id: "5",
-          name: "Pasztet z karmelizowaną cebulą",
+          id: "118a975bc390b9d0044db6901663a898",
+          name: "Pyra z gzikiem, z borowikiem",
           description:
-            "Domowy pasztet mięsny | słodko-kwaśna karmelizowana cebula | chrupiące pikle | olej szczypiorkowy | świeże pieczywo",
+            "ZIEMNIAK W MUNDURKU / GZIK / BOROWIK Z CEBULKĄ SMAŻONY NA MAŚLE / OLEJ SZCZYPIORKOWY",
+          price: 27,
+          highlighted: false,
+        },
+        {
+          id: "19d211ce71e3",
+          name: "Kaszanka na chałce",
+          description:
+            "KASZANKA SMAŻONA Z CEBULĄ / GRILOWANA CHAŁKA / SALSA Z ZIELONEGO JABŁKA / BOCZEK",
           price: 32,
+          highlighted: false,
         },
         {
-          id: "6",
-          name: "Smalec i masło ziołowe z pieczywem",
+          id: "d7ccdf0b7b05",
+          name: "Tatar z antrykotu",
           description:
-            "Domowy smalec ze skwarkami | krem z wędzonego twarogu | rzemieślnicze masło z solą morską i ziołami | świeże pieczywo",
-          price: 24,
+            "SIEKANY ANTRYKOT WOŁOWY / SZALOTKA / KAPARY / MUSZTARDA DIJON / GRZYB SHIMEJI / MAJONEZ PIETRUSZKOWY / PIECZYWO",
+          price: 52,
+          highlighted: false,
+        },
+        {
+          id: "5e318c1be11adaf40f02ff921ba2629d",
+          name: "Pajda z pasztetem",
+          description:
+            "DOMOWY PASZTET / KARMELIZOWANA CEBULA / JEŻYNA / OLEJ KOPERKOWY / PIECZYWO",
+          price: 25,
+          highlighted: true,
+        },
+        {
+          id: "14af2e9f41afd5f0c2765d239af56d6c",
+          name: "Pajda ze smalcem lub wege smalcem",
+          description:
+            "DOMOWY SMALEC ZE SKWARKAMI I JABŁKIEM / KARMELIZOWANA CEBULA / OGÓREK KISZONY / PIECZYWO",
+          price: 18,
+          highlighted: false,
         },
       ],
     },
@@ -142,26 +153,27 @@ export const defaultMenuSectionData: Required<MenuSectionData> = {
       label: "Zupy",
       items: [
         {
-          id: "7",
-          name: "Domowy rosół na kaczce",
+          id: "c32b2dba6507b98fc7cc4357d388cb95",
+          name: "Rosół z trzech mięs",
           description:
-            "Esencjonalny bulion na korpusach z kaczki i palonych warzywach | makaron z naleśnika razowego (graham) | świeży olej szczypiorkowy",
-          price: 24,
+            "BULION Z WOŁOWINY, KURY I KACZKI / MAKARON Z NALEŚNIKA RAZOWEGO / OLEJ SZCZYPIORKOWY / PIETRUSZKA",
+          price: 25,
+          highlighted: false,
         },
         {
-          id: "8",
-          name: "Letnia botwinka z zielonymi kluskami",
+          id: "6344eb5cf9f10034d56af8e41699b566",
+          name: "Grzybowa",
           description:
-            "Tradycyjna letnia zupa z młodych buraków | zielone kluski lane ze szpinakiem | koperek | kwaśna śmietana",
-          price: 26,
+            "ZUPA GRZYBOWA NA BULIONIE Z TRZECH MIĘS / KWAŚNA ŚMIETANA / KOPER",
+          price: 28,
+          highlighted: false,
         },
         {
-          id: "9",
-          name: "Krem z pieczonego selera",
-          description:
-            "Aksamitna zupa z pieczonego selera i ziemniaków | kawior z pstrąga | mikroliście rzodkiewki",
-          price: 29,
-          highlighted: true,
+          id: "2aa6c789cf6a",
+          name: "Zupa dnia",
+          description: "ZAPYTAJ OBSŁUGĘ - ZAWSZE WEGE",
+          price: 22,
+          highlighted: false,
         },
       ],
     },
@@ -170,55 +182,52 @@ export const defaultMenuSectionData: Required<MenuSectionData> = {
       label: "Dania główne",
       items: [
         {
-          id: "10",
-          name: "Pierś z kaczki z sosem porzeczkowym",
+          id: "750657e927c750ada791d8f7d6683d4f",
+          name: "Kremowe kaszotto grzybowe",
           description:
-            "Kaczka sous-vide obsmażana na chrupiąco | sos winno-porzeczkowy z jeżynami | jedwabiste puree z kalafiora | piklowana cebulka",
-          price: 68,
-          highlighted: true,
-        },
-        {
-          id: "11",
-          name: "Kluski śląskie z polikami wieprzowymi",
-          description:
-            "Ręcznie formowane kluski śląskie z mączystych ziemniaków | rwane poliki wieprzowe w ciemnym, esencjonalnym sosie | chrupiące pikle",
-          price: 49,
-          highlighted: true,
-        },
-        {
-          id: "12",
-          name: "Kluski śląskie z sosem grzybowym",
-          description:
-            "Ręcznie formowane kluski śląskie | głęboki sos leśny z podgrzybków | chrupka ziołowa z czerstwego chleba lub marynowany akcent",
-          price: 44,
-        },
-        {
-          id: "13",
-          name: "Klasyczny schabowy na smalcu",
-          description:
-            "Złocisty kotlet schabowy smażony na smalcu z panko | jedwabiste maślane puree ziemniaczane | mizeria z ogórków gruntowych",
-          price: 46,
-        },
-        {
-          id: "14",
-          name: "Leniwe z fasolką szparagową",
-          description:
-            "Domowe kluski z twarogu półtłustego | letnia fasolka szparagowa | chrupka ziołowa | złote palone masło",
+            "KASZA GRYCZANA / GRZYBY LEŚNE / ŚMIETANKA / DYNIA / SER KOZI",
           price: 39,
+          highlighted: false,
         },
         {
-          id: "15",
-          name: "Młode ziemniaki z bobem i jajem",
+          id: "2c82aa858672c7310078f6306f3f8e8a",
+          name: "Kotlet schabowy",
           description:
-            "Ziemniaki z wody w mundurkach | bób podsmażany na maśle i szalotce | jajo sadzone | kruszony wędzony twaróg | świeże zioła",
-          price: 36,
+            "SCHAB MARYNOWANY W MLEKU I CEBULI / ZIEMNIACZANE PUREE Z CHRZANEM / KARMELIZOWANA CEBULA",
+          price: 39,
+          highlighted: true,
         },
         {
-          id: "16",
-          name: "Ziemniaki w mundurkach z puree i kaszą",
+          id: "c65a658dc5d3e38e5fa2460bb2aae59f",
+          name: "Korzenne policzki wołowe",
           description:
-            "Wegetariańska kompozycja: młode ziemniaki w mundurkach | jedwabiste puree ziemniaczane | kasza gryczana | surówki i domowe kiszonki",
-          price: 36,
+            "POLICZKI WOŁOWE W PRZYPRAWACH KORZENNYCH / PUREE ZIEMNIACZANE / WARZYWA KORZENNE / DEMI GLACE",
+          price: 72,
+          highlighted: true,
+        },
+        {
+          id: "efb82f79238c69b898be88f09591a5ba",
+          name: "Kluski śląskie z polędwiczką",
+          description:
+            "KLUSKI ŚLĄSKIE / POLĘDWICZKA WIEPRZOWA / SOS CHRZANOWY / ŻURAWINA / SZCZYPIOR",
+          price: 39,
+          highlighted: false,
+        },
+        {
+          id: "4d18140241f1aca4873e87b69a1b08b6",
+          name: "Gołąbki z mięsem, pęczakiem i grzybami",
+          description:
+            "KAPUSTA WŁOSKA / KASZA JĘCZMIENNA / KARKÓWKA WIEPRZOWA / GRZYBY LEŚNE - DOSTĘPNE RÓWNIEŻ WEGE",
+          price: 46,
+          highlighted: false,
+        },
+        {
+          id: "56453407fef39df80dc6894a1874faca",
+          name: "Sałatka z pieczonymi warzywami",
+          description:
+            "SOS Z PIECZONEJ PAPRYKI / MIESZANKA SAŁATY RZYMSKIEJ I CYKORII / GRILOWANE WARZYWA / SER KOZI",
+          price: 38,
+          highlighted: false,
         },
       ],
     },
@@ -227,60 +236,20 @@ export const defaultMenuSectionData: Required<MenuSectionData> = {
       label: "Desery",
       items: [
         {
-          id: "17",
-          name: "Sezonowe owoce pod maślaną kruszonką",
+          id: "4dcda354da73776f07c7187cd87f5497",
+          name: "Rustykalne kluski dyniowe z serem",
           description:
-            "Gorące owoce jagodowe prosto z sadu | chrupiąca maślana kruszonka | domowa puszysta bita śmietana z prawdziwą wanilią",
-          price: 29,
+            "KLUSKI DYNIOWE Z TWAROGIEM PODSMAŻANE NA MAŚLE / KREM CYTRYNOWY / JOGURT / KRUSZONA BEZA",
+          price: 30,
+          highlighted: false,
         },
         {
-          id: "18",
-          name: "Leniwe na słodko z palonym masłem",
+          id: "994644852d5b95f8dd423866ebc77e61",
+          name: "Tost francuski",
           description:
-            "Klasyczne kluski twarogowe | palone masło ze złotą bułką tartą | redukowany sos jeżynowy | kwaśna śmietana",
-          price: 26,
-        },
-      ],
-    },
-    {
-      key: "napoje",
-      label: "Napoje & Spritz",
-      items: [
-        {
-          id: "19",
-          name: "Porzeczka Hugo Spritz",
-          description:
-            "Autorski spritz na bazie prosecco, syropu z czarnej porzeczki, mięty i limonki",
-          price: 32,
-          highlighted: true,
-        },
-        {
-          id: "20",
-          name: "Lawenda & Ogórek Spritz",
-          description:
-            "Odświeżające koktajle spritz do wyboru: aromatyczny Lawenda Spritz lub wytrawny Spritz Ogórkowy",
-          price: 32,
-        },
-        {
-          id: "21",
-          name: "Wyselekcjonowane wina & Piwa rzemieślnicze",
-          description:
-            "Piwo lane i butelkowe z lokalnych browarów | Wina białe (Chardonnay, Vinho Verde) i czerwone (Cabernet, Musaco)",
-          price: 22,
-        },
-        {
-          id: "22",
-          name: "Lemoniady rzemieślnicze & Napoje",
-          description:
-            "Soki sezonowe (zapytaj obsługę) | Lipton | Mio Mio | Woda gazowana lub niegazowana",
-          price: 16,
-        },
-        {
-          id: "23",
-          name: "Kawa z lokalnej palarni & Herbata liściasta",
-          description:
-            "Kawa (Czarna / Biała / Espresso / Cappuccino) | Herbata (Czarna / Zielona / Owocowa / Ziołowa w czajniczku)",
-          price: 14,
+            "CHAŁKA W JAJKU I MLEKU SMAŻONA NA MAŚLE / LODY WANILIOWE / MALINY W CUKRZE",
+          price: 33,
+          highlighted: false,
         },
       ],
     },
@@ -289,29 +258,22 @@ export const defaultMenuSectionData: Required<MenuSectionData> = {
       label: "Dla dzieci",
       items: [
         {
-          id: "24",
+          id: "57c65cf744129320512c344e195e8aba",
+          name: "Rosołek",
+          description: "ROSÓŁ / MAKARON ZWIERZĄTKA",
+          highlighted: false,
+        },
+        {
+          id: "9ae2b75de3872d9923b589325dd3d350",
           name: "Zupa pomidorowa",
-          description: "Klasyka domowego obiadu | drobny makaron",
-          price: 16,
+          description: "ZUPA POMIDOROWA / MAKARON ZWIERZĄTKA",
+          highlighted: false,
         },
         {
-          id: "25",
-          name: "Mały rosół z kluseczkami",
-          description: "Klarowny bulion | drobne kluseczki lane",
-          price: 16,
-        },
-        {
-          id: "26",
-          name: "Mini schabowy z puree",
-          description:
-            "Mniejsza porcja naszego schabowego | jedwabiste puree ziemniaczane",
-          price: 24,
-        },
-        {
-          id: "27",
-          name: "Leniwe na słodko z masłem i cukrem",
-          description: "Domowe kluski twarogowe | rozpuszczone masło | cukier puder",
-          price: 19,
+          id: "d76469748034fd81832cf4fb6a5eb044",
+          name: "Nuggetsy z frytkami",
+          description: "DOMOWE NUGGETSY / DOMOWE FRYTKI / KETCHUP",
+          highlighted: false,
         },
       ],
     },
@@ -323,56 +285,16 @@ export default function MenuSectionClient({
 }: {
   initialData: MenuSectionData | null;
 }) {
-  const [data, setData] = useState<Required<MenuSectionData>>({
-    seasonTag: initialData?.seasonTag || defaultMenuSectionData.seasonTag,
-    title: initialData?.title || defaultMenuSectionData.title,
-    description: initialData?.description || defaultMenuSectionData.description,
-    footerNote: initialData?.footerNote || defaultMenuSectionData.footerNote,
+  const data: Required<MenuSectionData> = {
+    seasonTag: initialData?.seasonTag ?? defaultMenuSectionData.seasonTag,
+    title: initialData?.title ?? defaultMenuSectionData.title,
+    description: initialData?.description ?? defaultMenuSectionData.description,
+    footerNote: initialData?.footerNote ?? defaultMenuSectionData.footerNote,
     categories:
       initialData?.categories && initialData.categories.length > 0
         ? initialData.categories
         : defaultMenuSectionData.categories,
-  });
-
-  useEffect(() => {
-    let isMounted = true;
-    client
-      .fetch<MenuSectionData | null>(`*[_type == "menuSection"][0]{
-        seasonTag,
-        title,
-        description,
-        footerNote,
-        categories[]{
-          key,
-          label,
-          items[]{
-            name,
-            description,
-            price,
-            highlighted
-          }
-        }
-      }`)
-      .then((fetched) => {
-        if (isMounted && fetched) {
-          setData({
-            seasonTag: fetched.seasonTag || defaultMenuSectionData.seasonTag,
-            title: fetched.title || defaultMenuSectionData.title,
-            description:
-              fetched.description || defaultMenuSectionData.description,
-            footerNote: fetched.footerNote || defaultMenuSectionData.footerNote,
-            categories:
-              fetched.categories && fetched.categories.length > 0
-                ? fetched.categories
-                : defaultMenuSectionData.categories,
-          });
-        }
-      })
-      .catch(() => {});
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  };
 
   const sectionRef = useRef<HTMLElement | null>(null);
   const hasTrackedView = useRef(false);
@@ -381,7 +303,8 @@ export default function MenuSectionClient({
     const el = sectionRef.current;
     if (!el || hasTrackedView.current) return;
 
-    if (typeof window === "undefined" || !("IntersectionObserver" in window)) return;
+    if (typeof window === "undefined" || !("IntersectionObserver" in window))
+      return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -423,7 +346,11 @@ export default function MenuSectionClient({
     : activeCategories[0]?.key || activeCategories[0]?.label || "przystawki";
 
   return (
-    <section id="menu" ref={sectionRef} className="relative bg-[#FFFDF6] py-28 md:py-40">
+    <section
+      id="menu"
+      ref={sectionRef}
+      className="relative bg-[#FFFDF6] py-28 md:py-40"
+    >
       <div className="mx-auto max-w-4xl px-6 lg:px-8">
         {/* Header */}
         <motion.div
@@ -439,9 +366,11 @@ export default function MenuSectionClient({
           <h2 className="mt-3 font-heading text-3xl font-bold tracking-tight text-[#960C3F] md:text-5xl">
             {data.title}
           </h2>
-          <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-[#960C3F]/60">
-            {data.description}
-          </p>
+          {data.description && data.description.trim() && (
+            <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-[#960C3F]/60">
+              {data.description}
+            </p>
+          )}
           <Separator className="mx-auto mt-8 w-16 bg-[#D9A261]/40" />
         </motion.div>
 
