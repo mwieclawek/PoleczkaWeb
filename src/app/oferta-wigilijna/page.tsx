@@ -4,14 +4,22 @@ import Footer from "@/components/sections/Footer";
 import OfertaWigilijnaClient from "@/components/sections/OfertaWigilijnaClient";
 
 export const metadata: Metadata = {
-  title: "Oferta Wigilijna 2026 | Bistro Poleczka — Wrocław",
+  title:
+    "Wigilie firmowe i spotkania świąteczne Wrocław — Oferta Wigilijna 2026 | Bistro Poleczka",
   description:
-    "Autorskie menu wigilijne dla firm, przyjaciół i rodzin. Tradycyjne smaki, polskie klasyki i kameralna atmosfera w Bistro Poleczka przy ul. Jaracza 77B we Wrocławiu.",
+    "Zorganizuj spotkanie wigilijne lub wigilię firmową we Wrocławiu (Śródmieście / Ołbin, ul. Jaracza 77B). Dwa pakiety menu (160 zł i 200 zł/os.), tradycyjne potrawy i możliwość wynajmu na wyłączność.",
+  alternates: {
+    canonical: "https://bistropoleczka.pl/oferta-wigilijna",
+  },
   openGraph: {
-    title: "Oferta Wigilijna 2026 | Bistro Poleczka — Wrocław",
+    title:
+      "Wigilie firmowe i spotkania świąteczne Wrocław — Oferta Wigilijna 2026 | Bistro Poleczka",
     description:
-      "Spotkania wigilijne we Wrocławiu. Pakiety 160 zł i 200 zł/os. Tradycyjna kuchnia polska w nowoczesnym wydaniu.",
+      "Spotkania wigilijne dla firm i rodzin we Wrocławiu (ul. Jaracza 77B, Ołbin / Śródmieście). Pakiety 160 zł i 200 zł/os. Sprawdź pełne menu świąteczne.",
     url: "https://bistropoleczka.pl/oferta-wigilijna",
+    siteName: "Bistro Poleczka",
+    locale: "pl_PL",
+    type: "website",
   },
 };
 

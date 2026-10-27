@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Mail } from "lucide-react";
+import { Mail, Phone } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { client } from "@/sanity/client";
 
@@ -17,12 +17,19 @@ export interface SiteSettingsData {
 
 export const defaultSiteSettings: Required<SiteSettingsData> = {
   footerDescription:
-    "Nowoczesna kuchnia polska we Wrocławiu. Tradycyjne składniki, nowoczesne techniki — miejsce, gdzie klasyka spotyka się z finezją.",
+    "Autorska kuchnia polska we Wrocławiu (Śródmieście / Ołbin, ul. Stefana Jaracza 77B). Tuż obok Mostów Warszawskich i Parku Tołpy.",
   contactEmail: "kontakt@bistropoleczka.pl",
   instagramUrl: "https://instagram.com/poleczka.wroclaw",
   facebookUrl: "https://facebook.com/poleczka.wroclaw",
   copyrightText: "Bistro Poleczka. Wszystkie prawa zastrzeżone.",
 };
+
+function resolveFooterDescription(desc?: string): string {
+  if (!desc || desc.trim().toLowerCase() === "bistro poleczka kuchnia polska") {
+    return defaultSiteSettings.footerDescription;
+  }
+  return desc;
+}
 
 function InstagramIcon({ className }: { className?: string }) {
   return (
@@ -74,8 +81,7 @@ export default function FooterClient({
   initialData: SiteSettingsData | null;
 }) {
   const [data, setData] = useState<Required<SiteSettingsData>>({
-    footerDescription:
-      initialData?.footerDescription || defaultSiteSettings.footerDescription,
+    footerDescription: resolveFooterDescription(initialData?.footerDescription),
     contactEmail: initialData?.contactEmail || defaultSiteSettings.contactEmail,
     instagramUrl:
       initialData?.instagramUrl || defaultSiteSettings.instagramUrl,
@@ -97,9 +103,9 @@ export default function FooterClient({
       .then((fetched) => {
         if (isMounted && fetched) {
           setData({
-            footerDescription:
-              fetched.footerDescription ||
-              defaultSiteSettings.footerDescription,
+            footerDescription: resolveFooterDescription(
+              fetched.footerDescription
+            ),
             contactEmail:
               fetched.contactEmail || defaultSiteSettings.contactEmail,
             instagramUrl:
@@ -111,7 +117,7 @@ export default function FooterClient({
           });
         }
       })
-      .catch(() => {});
+      .catch(() => { });
     return () => {
       isMounted = false;
     };
@@ -144,7 +150,7 @@ export default function FooterClient({
             <Link href="/" className="inline-block">
               <img
                 src="/logo.png"
-                alt="Poleczka — Bistro Kuchnia Polska"
+                alt="Bistro Poleczka — Kuchnia Polska Wrocław"
                 className="h-14 w-auto md:h-16 brightness-0 invert transition-opacity hover:opacity-80"
               />
             </Link>
@@ -190,15 +196,27 @@ export default function FooterClient({
             <p className="text-sm text-[#FFFDF6]/70 leading-relaxed">
               ul. Stefana Jaracza 77B
               <br />
-              50-305 Wrocław
+              50-305 Wrocław (Śródmieście / Ołbin)
             </p>
-            <a
-              href={`mailto:${data.contactEmail}`}
-              className="mt-3 inline-flex items-center gap-2 text-sm text-[#FFFDF6]/80 hover:text-[#CA5254] transition-colors"
-            >
-              <Mail className="h-4 w-4 text-[#D9A261]" />
-              <span>{data.contactEmail}</span>
-            </a>
+            <p className="mt-1.5 text-xs text-[#FFFDF6]/55 leading-relaxed">
+              Okolice Mostów Warszawskich, Parku Tołpy i wałów nad Odrą (pogranicze Nadodrza i Zacisza)
+            </p>
+            <div className="mt-3 flex flex-col items-start gap-2">
+              <a
+                href="tel:+48718808708"
+                className="inline-flex items-center gap-2 text-sm text-[#FFFDF6]/80 hover:text-[#CA5254] transition-colors"
+              >
+                <Phone className="h-4 w-4 text-[#D9A261]" />
+                <span>+48 71 880 87 08</span>
+              </a>
+              <a
+                href={`mailto:${data.contactEmail}`}
+                className="inline-flex items-center gap-2 text-sm text-[#FFFDF6]/80 hover:text-[#CA5254] transition-colors"
+              >
+                <Mail className="h-4 w-4 text-[#D9A261]" />
+                <span>{data.contactEmail}</span>
+              </a>
+            </div>
 
             <Separator className="my-6 bg-[#FFFDF6]/10" />
 

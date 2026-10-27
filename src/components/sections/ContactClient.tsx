@@ -28,8 +28,8 @@ export const defaultContactData: Required<ContactData> = {
   tagline: "Kontakt",
   title: "Odwiedź nas",
   subtitle:
-    "Znajdziesz nas w samym sercu Wrocławia. Zarezerwuj stolik telefonicznie lub mailowo.",
-  addressLabel: "ul. Stefana Jaracza 77B\n50-305 Wrocław",
+    "Bistro Poleczka znajdziesz na wrocławskim Śródmieściu (Ołbin), przy ul. Stefana Jaracza 77B – tuż obok Mostów Warszawskich, Parku Tołpy i spacerowych wałów nad Odrą. Zarezerwuj stolik telefonicznie lub mailowo.",
+  addressLabel: "ul. Stefana Jaracza 77B\n50-305 Wrocław (Śródmieście / Ołbin)",
   googleMapsUrl:
     "https://maps.google.com/?q=ul.+Stefana+Jaracza+77B,+50-305+Wrocław",
   phone: "+48 71 880 87 08",
@@ -37,12 +37,22 @@ export const defaultContactData: Required<ContactData> = {
   email: "kontakt@bistropoleczka.pl",
   openingHours: [
     { days: "Poniedziałek", hours: "Nieczynne" },
-    { days: "Wtorek – Piątek", hours: "13:00 – 21:30" },
-    { days: "Sobota – Niedziela", hours: "13:00 – 22:00" },
+    { days: "Wtorek – Piątek", hours: "12:00 – 21:30" },
+    { days: "Sobota – Niedziela", hours: "12:00 – 21:30" },
   ],
   footerNote:
     "W święta oraz dni szczególne godziny mogą ulec zmianie. Sprawdź nasze social media lub zadzwoń, by potwierdzić.",
 };
+
+function resolveContactSubtitle(subtitle?: string): string {
+  if (
+    !subtitle ||
+    subtitle.includes("Znajdziesz nas w samym sercu Wrocławia")
+  ) {
+    return defaultContactData.subtitle;
+  }
+  return subtitle;
+}
 
 export default function ContactClient({
   initialData,
@@ -52,7 +62,7 @@ export default function ContactClient({
   const [data, setData] = useState<Required<ContactData>>({
     tagline: initialData?.tagline || defaultContactData.tagline,
     title: initialData?.title || defaultContactData.title,
-    subtitle: initialData?.subtitle || defaultContactData.subtitle,
+    subtitle: resolveContactSubtitle(initialData?.subtitle),
     addressLabel: initialData?.addressLabel || defaultContactData.addressLabel,
     googleMapsUrl:
       initialData?.googleMapsUrl || defaultContactData.googleMapsUrl,
@@ -89,7 +99,7 @@ export default function ContactClient({
           setData({
             tagline: fetched.tagline || defaultContactData.tagline,
             title: fetched.title || defaultContactData.title,
-            subtitle: fetched.subtitle || defaultContactData.subtitle,
+            subtitle: resolveContactSubtitle(fetched.subtitle),
             addressLabel:
               fetched.addressLabel || defaultContactData.addressLabel,
             googleMapsUrl:
@@ -167,7 +177,7 @@ export default function ContactClient({
           <h2 className="mt-3 font-heading text-3xl font-bold tracking-tight text-[#CA5254] md:text-5xl">
             {data.title}
           </h2>
-          <p className="mt-4 text-[#A6A6A6]">{data.subtitle}</p>
+          <p className="mt-4 text-[#A6A6A6] leading-relaxed">{data.subtitle}</p>
           <Separator className="mx-auto mt-6 w-16 bg-[#D9A261]/40" />
         </motion.div>
 
@@ -207,6 +217,9 @@ export default function ContactClient({
                 </li>
               ))}
             </ul>
+            <p className="mt-6 text-xs leading-relaxed text-[#A6A6A6]">
+              Lokalizacja: Wrocław – Ołbin / Śródmieście (pogranicze Nadodrza i Zacisza), w sąsiedztwie Mostów Warszawskich, Parku Stanisława Tołpy oraz wałów nad Odrą.
+            </p>
           </motion.div>
 
           {/* Opening hours */}
@@ -251,13 +264,14 @@ export default function ContactClient({
 
         {/* Interactive Google Map on the bottom */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={false}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.8, delay: 0.3 }}
           className="mt-16 overflow-hidden rounded-3xl border border-[#960C3F]/15 shadow-2xl bg-[#FFFDF6]"
         >
           <iframe
+            title="Mapa dojazdu do Bistro Poleczka — ul. Stefana Jaracza 77B, Wrocław (Ołbin / Śródmieście)"
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d749.7661774770557!2d17.05717557505761!3d51.12819280088703!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470fe993eb819151%3A0xf33797cb88f8c434!2sBistro%20Poleczka!5e1!3m2!1spl!2spl!4v1783777536513!5m2!1spl!2spl"
             width="100%"
             height="450"

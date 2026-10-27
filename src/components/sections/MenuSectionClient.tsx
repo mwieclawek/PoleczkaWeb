@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { client } from "@/sanity/client";
 import { trackEvent } from "@/lib/analytics";
@@ -49,7 +48,7 @@ function MenuItem({
     <motion.div
       custom={index}
       variants={fadeInUp}
-      initial="hidden"
+      initial={false}
       whileInView="visible"
       viewport={{ once: true, margin: "-50px" }}
       className={`flex items-baseline justify-between gap-4 py-7 ${
@@ -60,9 +59,9 @@ function MenuItem({
     >
       <div className="flex-1">
         <div className="flex items-center gap-3">
-          <h3 className="font-heading text-xl font-bold text-[#960C3F]">
+          <h4 className="font-heading text-xl font-bold text-[#960C3F]">
             {item.name}
-          </h3>
+          </h4>
           {item.highlighted && (
             <span className="inline-block rounded-full bg-[#D9A261]/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-[#CA5254]">
               Klasyk Poleczki
@@ -413,6 +412,16 @@ export default function MenuSectionClient({
       ? data.categories
       : defaultMenuSectionData.categories;
 
+  const [activeTab, setActiveTab] = useState<string>(
+    activeCategories[0]?.key || activeCategories[0]?.label || "przystawki"
+  );
+
+  const resolvedActiveTab = activeCategories.some(
+    (cat) => (cat.key || cat.label) === activeTab
+  )
+    ? activeTab
+    : activeCategories[0]?.key || activeCategories[0]?.label || "przystawki";
+
   return (
     <section id="menu" ref={sectionRef} className="relative bg-[#FFFDF6] py-28 md:py-40">
       <div className="mx-auto max-w-4xl px-6 lg:px-8">
@@ -436,44 +445,69 @@ export default function MenuSectionClient({
           <Separator className="mx-auto mt-8 w-16 bg-[#D9A261]/40" />
         </motion.div>
 
-        {/* Tabs */}
+        {/* Tabs — all categories remain in DOM for SEO indexing */}
         {activeCategories && activeCategories.length > 0 && (
-          <Tabs defaultValue={activeCategories[0].key || "przystawki"} className="mt-16">
-            <TabsList className="mx-auto flex flex-nowrap md:flex-wrap overflow-x-auto md:overflow-visible scrollbar-none [::-webkit-scrollbar]:hidden snap-x snap-mandatory justify-start md:justify-center gap-1.5 p-2 w-full max-w-2xl h-auto bg-[#A6A6A6]/10 rounded-2xl">
-              {activeCategories.map((cat) => (
-                <TabsTrigger
-                  key={cat.key || cat.label}
-                  value={cat.key || "przystawki"}
-                  className="shrink-0 snap-center text-xs sm:text-sm text-[#960C3F] data-[state=active]:bg-[#CA5254] data-[state=active]:text-[#FFFDF6] data-[state=active]:font-bold data-[state=active]:shadow-md transition-all px-4 py-2.5 rounded-xl"
-                >
-                  {cat.label}
-                </TabsTrigger>
-              ))}
-            </TabsList>
+          <div className="mt-16">
+            <div
+              role="tablist"
+              aria-label="Kategorie karty dań"
+              className="mx-auto flex flex-nowrap md:flex-wrap overflow-x-auto md:overflow-visible scrollbar-none [::-webkit-scrollbar]:hidden snap-x snap-mandatory justify-start md:justify-center gap-1.5 p-2 w-full max-w-2xl h-auto bg-[#A6A6A6]/10 rounded-2xl"
+            >
+              {activeCategories.map((cat) => {
+                const catKey = cat.key || cat.label;
+                const isActive = resolvedActiveTab === catKey;
+                return (
+                  <button
+                    key={catKey}
+                    type="button"
+                    role="tab"
+                    id={`menu-tab-${catKey}`}
+                    aria-selected={isActive}
+                    aria-controls={`menu-panel-${catKey}`}
+                    data-state={isActive ? "active" : "inactive"}
+                    onClick={() => setActiveTab(catKey)}
+                    className={`shrink-0 snap-center text-xs sm:text-sm transition-all px-4 py-2.5 rounded-xl cursor-pointer ${
+                      isActive
+                        ? "bg-[#CA5254] text-[#FFFDF6] font-bold shadow-md"
+                        : "text-[#960C3F] hover:text-[#CA5254]"
+                    }`}
+                  >
+                    {cat.label}
+                  </button>
+                );
+              })}
+            </div>
 
-            {activeCategories.map((cat) => (
-              <TabsContent
-                key={cat.key || cat.label}
-                value={cat.key || "przystawki"}
-                className="mt-12"
-              >
-                <div className="divide-y divide-[#A6A6A6]/15">
-                  {cat.items?.map((item, i) => (
-                    <MenuItem
-                      key={item.name + i}
-                      item={{ ...item, id: String(i) }}
-                      index={i}
-                    />
-                  ))}
+            {activeCategories.map((cat) => {
+              const catKey = cat.key || cat.label;
+              const isActive = resolvedActiveTab === catKey;
+              return (
+                <div
+                  key={catKey}
+                  id={`menu-panel-${catKey}`}
+                  role="tabpanel"
+                  aria-labelledby={`menu-tab-${catKey}`}
+                  className={isActive ? "mt-12 block" : "mt-12 hidden"}
+                >
+                  <h3 className="sr-only">{cat.label}</h3>
+                  <div className="divide-y divide-[#A6A6A6]/15">
+                    {cat.items?.map((item, i) => (
+                      <MenuItem
+                        key={item.name + i}
+                        item={{ ...item, id: String(i) }}
+                        index={i}
+                      />
+                    ))}
+                  </div>
                 </div>
-              </TabsContent>
-            ))}
-          </Tabs>
+              );
+            })}
+          </div>
         )}
 
         {/* Seasonal teaser */}
         <motion.p
-          initial={{ opacity: 0 }}
+          initial={false}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.3 }}

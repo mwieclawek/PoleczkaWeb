@@ -251,8 +251,6 @@ const packages: PackageData[] = [
 export default function OfertaWigilijnaClient() {
   const [activePkg, setActivePkg] = useState<PackageId>("standard");
 
-  const current = packages.find((p) => p.id === activePkg) || packages[0];
-
   return (
     <div className="min-h-screen bg-[#FFFDF6] text-[#2D151E]">
       {/* Top accent bar */}
@@ -262,15 +260,19 @@ export default function OfertaWigilijnaClient() {
       <section className="relative overflow-hidden pt-28 pb-16 md:pt-36 md:pb-24 border-b border-[#960C3F]/10 bg-gradient-to-b from-[#960C3F]/[0.04] via-transparent to-[#FFFDF6]">
         <div className="mx-auto max-w-7xl px-6 lg:px-8 text-center relative z-10">
           <div className="inline-block rounded-full bg-[#960C3F]/10 border border-[#960C3F]/20 px-4 py-1.5 text-xs md:text-sm font-semibold text-[#960C3F] uppercase tracking-wider mb-6">
-            Bistro Poleczka · Oferta Świąteczna
+            Bistro Poleczka · Wrocław (ul. Jaracza 77B) · Oferta Świąteczna
           </div>
 
           <h1 className="font-heading text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-[#960C3F] mb-6 leading-[1.08]">
             Spotkania Wigilijne <span className="text-[#CA5254]">2026</span>
+            <span className="sr-only">
+              {" "}
+              — Wigilie firmowe i spotkania świąteczne we Wrocławiu
+            </span>
           </h1>
 
           <p className="max-w-4xl mx-auto text-lg sm:text-xl md:text-2xl text-[#960C3F]/80 leading-relaxed mb-6 font-light">
-            Świętuj Boże Narodzenie w Bistro Poleczka. Przygotowaliśmy dwa warianty menu wigilijnego z tradycyjnymi potrawami przygotowywanymi od serca z lokalnych i sezonowych składników.
+            Zorganizuj wigilię firmową lub uroczyste spotkanie świąteczne we Wrocławiu (Śródmieście / Ołbin, ul. Stefana Jaracza 77B). Przygotowaliśmy dwa warianty menu wigilijnego z tradycyjnymi potrawami przygotowywanymi od serca z lokalnych i sezonowych składników.
           </p>
 
           <p className="text-sm md:text-base font-semibold text-[#960C3F] mb-10 bg-[#960C3F]/5 inline-block px-6 py-2.5 rounded-full border border-[#960C3F]/15">
@@ -316,22 +318,31 @@ export default function OfertaWigilijnaClient() {
         </div>
 
         {/* Tab selection - Full width grid across max-w-7xl */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mb-12">
+        <div
+          role="tablist"
+          aria-label="Pakiety wigilijne"
+          className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mb-12"
+        >
           {packages.map((pkg) => {
             const isSelected = activePkg === pkg.id;
             return (
               <button
                 key={pkg.id}
+                type="button"
+                role="tab"
+                id={`wigilia-tab-${pkg.id}`}
+                aria-selected={isSelected}
+                aria-controls={`wigilia-panel-${pkg.id}`}
                 onClick={() => setActivePkg(pkg.id)}
-                className={`text-left p-6 sm:p-8 rounded-3xl border-2 transition-all ${
+                className={`text-left p-6 sm:p-8 rounded-3xl border-2 transition-all cursor-pointer ${
                   isSelected
                     ? "bg-white border-[#960C3F] shadow-xl shadow-[#960C3F]/10 ring-2 ring-[#960C3F]/20"
                     : "bg-white/60 border-[#960C3F]/15 hover:border-[#960C3F]/40 hover:bg-white"
                 }`}
               >
-                <h3 className="text-2xl sm:text-3xl font-heading font-bold text-[#960C3F]">
+                <span className="block text-2xl sm:text-3xl font-heading font-bold text-[#960C3F]">
                   {pkg.name}
-                </h3>
+                </span>
                 <div className="mt-4 flex flex-wrap items-baseline justify-between gap-3 pt-3 border-t border-[#960C3F]/10">
                   <div className="flex items-baseline gap-1.5">
                     <span className="text-3xl sm:text-4xl font-extrabold text-[#960C3F]">
@@ -351,115 +362,126 @@ export default function OfertaWigilijnaClient() {
           })}
         </div>
 
-        {/* Selected Package Details - Expansive and Full Width */}
-        <motion.div
-          key={current.id}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-          className="w-full bg-white rounded-3xl border border-[#960C3F]/15 shadow-xl shadow-[#960C3F]/5 p-6 sm:p-10 lg:p-14"
-        >
-          {/* Header of Active Package */}
-          <div className="border-b border-[#960C3F]/10 pb-6 mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <h3 className="text-2xl sm:text-4xl font-heading font-bold text-[#960C3F]">
-                {current.name}
-              </h3>
-            </div>
-
-            <div className="flex items-center gap-4 bg-[#FFFDF6] px-5 py-3 rounded-2xl border border-[#960C3F]/10 shrink-0">
-              <div className="flex items-baseline gap-1.5">
-                <span className="text-3xl sm:text-4xl font-extrabold text-[#960C3F]">
-                  {current.price} zł
-                </span>
-                <span className="text-xs sm:text-sm text-[#960C3F]/60">/ os.</span>
-              </div>
-              <span className="text-slate-300">|</span>
-              <span className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#960C3F]">
-                <Clock className="w-4 h-4 text-[#D9A261]" />
-                Czas: {current.duration}
-              </span>
-            </div>
-          </div>
-
-          {/* Categories Grid - Generous width */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
-            {current.categories.map((cat, idx) => (
-              <div
-                key={idx}
-                className="rounded-2xl border border-[#960C3F]/10 bg-[#FFFDF6]/60 p-6 md:p-7 transition-all hover:border-[#960C3F]/25 hover:bg-[#FFFDF6]"
-              >
-                <div className="flex items-start justify-between gap-3 mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2.5 rounded-xl bg-[#960C3F]/10 text-[#960C3F]">
-                      {cat.icon}
-                    </div>
-                    <div>
-                      <h4 className="text-xl md:text-2xl font-heading font-bold text-[#960C3F]">
-                        {cat.title}
-                      </h4>
-                      <p className="text-xs sm:text-sm font-medium text-[#CA5254] mt-0.5">
-                        {cat.rule}
-                      </p>
-                    </div>
-                  </div>
-                  <span
-                    className={`text-[11px] uppercase font-bold px-2.5 py-1 rounded-full shrink-0 ${
-                      cat.servingType === "jednoporcjowo"
-                        ? "bg-[#960C3F]/10 text-[#960C3F]"
-                        : "bg-[#D9A261]/20 text-[#8F6229]"
-                    }`}
-                  >
-                    {cat.servingType}
-                  </span>
+        {/* All Packages Rendered in DOM for SEO — Inactive Hidden via CSS */}
+        {packages.map((pkg) => {
+          const isActive = activePkg === pkg.id;
+          return (
+            <div
+              key={pkg.id}
+              id={`wigilia-panel-${pkg.id}`}
+              role="tabpanel"
+              aria-labelledby={`wigilia-tab-${pkg.id}`}
+              className={
+                isActive
+                  ? "w-full bg-white rounded-3xl border border-[#960C3F]/15 shadow-xl shadow-[#960C3F]/5 p-6 sm:p-10 lg:p-14 block"
+                  : "w-full bg-white rounded-3xl border border-[#960C3F]/15 shadow-xl shadow-[#960C3F]/5 p-6 sm:p-10 lg:p-14 hidden"
+              }
+            >
+              {/* Header of Package */}
+              <div className="border-b border-[#960C3F]/10 pb-6 mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <h3 className="text-2xl sm:text-4xl font-heading font-bold text-[#960C3F]">
+                    {pkg.name}
+                  </h3>
                 </div>
 
-                <ul className="mt-4 space-y-2.5 border-t border-[#960C3F]/10 pt-4">
-                  {cat.items.map((item, itemIdx) => (
-                    <li
-                      key={itemIdx}
-                      className="text-sm text-[#2D151E] flex items-start gap-2.5 leading-snug"
-                    >
-                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#CA5254] mt-2 shrink-0" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
+                <div className="flex items-center gap-4 bg-[#FFFDF6] px-5 py-3 rounded-2xl border border-[#960C3F]/10 shrink-0">
+                  <div className="flex items-baseline gap-1.5">
+                    <span className="text-3xl sm:text-4xl font-extrabold text-[#960C3F]">
+                      {pkg.price} zł
+                    </span>
+                    <span className="text-xs sm:text-sm text-[#960C3F]/60">
+                      / os.
+                    </span>
+                  </div>
+                  <span className="text-slate-300">|</span>
+                  <span className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#960C3F]">
+                    <Clock className="w-4 h-4 text-[#D9A261]" />
+                    Czas: {pkg.duration}
+                  </span>
+                </div>
               </div>
-            ))}
-          </div>
 
-          {/* Bottom Card Actions */}
-          <div className="mt-12 pt-6 border-t border-[#960C3F]/10 flex flex-col sm:flex-row items-center justify-between gap-6">
-            <div className="text-sm text-[#960C3F]/75 text-center sm:text-left">
-              W celu zapytania o ten pakiet lub rezerwacji prosimy o kontakt mailowy:{" "}
-              <a
-                href={`mailto:kontakt@bistropoleczka.pl?subject=Zapytanie%20o%20pakiet%20wigilijny:%20${encodeURIComponent(current.name)}`}
-                className="font-bold text-[#960C3F] underline ml-1"
-              >
-                kontakt@bistropoleczka.pl
-              </a>
-            </div>
+              {/* Categories Grid - Generous width */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+                {pkg.categories.map((cat, idx) => (
+                  <div
+                    key={idx}
+                    className="rounded-2xl border border-[#960C3F]/10 bg-[#FFFDF6]/60 p-6 md:p-7 transition-all hover:border-[#960C3F]/25 hover:bg-[#FFFDF6]"
+                  >
+                    <div className="flex items-start justify-between gap-3 mb-3">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2.5 rounded-xl bg-[#960C3F]/10 text-[#960C3F]">
+                          {cat.icon}
+                        </div>
+                        <div>
+                          <h4 className="text-xl md:text-2xl font-heading font-bold text-[#960C3F]">
+                            {cat.title}
+                          </h4>
+                          <p className="text-xs sm:text-sm font-medium text-[#CA5254] mt-0.5">
+                            {cat.rule}
+                          </p>
+                        </div>
+                      </div>
+                      <span
+                        className={`text-[11px] uppercase font-bold px-2.5 py-1 rounded-full shrink-0 ${
+                          cat.servingType === "jednoporcjowo"
+                            ? "bg-[#960C3F]/10 text-[#960C3F]"
+                            : "bg-[#D9A261]/20 text-[#8F6229]"
+                        }`}
+                      >
+                        {cat.servingType}
+                      </span>
+                    </div>
 
-            <div className="flex flex-wrap items-center justify-center gap-3 w-full sm:w-auto">
-              <a
-                href={`mailto:kontakt@bistropoleczka.pl?subject=Zapytanie%20o%20pakiet%20wigilijny:%20${encodeURIComponent(current.name)}`}
-                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 rounded-full bg-[#960C3F] px-7 py-3.5 text-sm font-semibold text-[#FFFDF6] hover:bg-[#CA5254] transition-all shadow-md shadow-[#960C3F]/20 whitespace-nowrap"
-              >
-                <Mail className="w-4 h-4 text-[#D9A261]" />
-                Wyślij zapytanie mailowe
-              </a>
-              <a
-                href="/oferta-wigilia-2026.pdf"
-                download="Oferta_Wigilia_2026_Bistro_Poleczka.pdf"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full border border-[#960C3F]/20 text-sm font-semibold text-[#960C3F] hover:bg-[#960C3F]/5 transition-colors whitespace-nowrap"
-              >
-                <Download className="w-4 h-4 text-[#D9A261]" />
-                Pobierz ofertę
-              </a>
+                    <ul className="mt-4 space-y-2.5 border-t border-[#960C3F]/10 pt-4">
+                      {cat.items.map((item, itemIdx) => (
+                        <li
+                          key={itemIdx}
+                          className="text-sm text-[#2D151E] flex items-start gap-2.5 leading-snug"
+                        >
+                          <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#CA5254] mt-2 shrink-0" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+
+              {/* Bottom Card Actions */}
+              <div className="mt-12 pt-6 border-t border-[#960C3F]/10 flex flex-col sm:flex-row items-center justify-between gap-6">
+                <div className="text-sm text-[#960C3F]/75 text-center sm:text-left">
+                  W celu zapytania o ten pakiet lub rezerwacji prosimy o kontakt mailowy:{" "}
+                  <a
+                    href={`mailto:kontakt@bistropoleczka.pl?subject=Zapytanie%20o%20pakiet%20wigilijny:%20${encodeURIComponent(pkg.name)}`}
+                    className="font-bold text-[#960C3F] underline ml-1"
+                  >
+                    kontakt@bistropoleczka.pl
+                  </a>
+                </div>
+
+                <div className="flex flex-wrap items-center justify-center gap-3 w-full sm:w-auto">
+                  <a
+                    href={`mailto:kontakt@bistropoleczka.pl?subject=Zapytanie%20o%20pakiet%20wigilijny:%20${encodeURIComponent(pkg.name)}`}
+                    className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 rounded-full bg-[#960C3F] px-7 py-3.5 text-sm font-semibold text-[#FFFDF6] hover:bg-[#CA5254] transition-all shadow-md shadow-[#960C3F]/20 whitespace-nowrap"
+                  >
+                    <Mail className="w-4 h-4 text-[#D9A261]" />
+                    Wyślij zapytanie mailowe
+                  </a>
+                  <a
+                    href="/oferta-wigilia-2026.pdf"
+                    download="Oferta_Wigilia_2026_Bistro_Poleczka.pdf"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full border border-[#960C3F]/20 text-sm font-semibold text-[#960C3F] hover:bg-[#960C3F]/5 transition-colors whitespace-nowrap"
+                  >
+                    <Download className="w-4 h-4 text-[#D9A261]" />
+                    Pobierz ofertę
+                  </a>
+                </div>
+              </div>
             </div>
-          </div>
-        </motion.div>
+          );
+        })}
       </section>
 
       {/* Organization Info - 2 cards without alcohol */}

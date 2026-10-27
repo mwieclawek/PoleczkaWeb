@@ -37,7 +37,7 @@ export const defaultAboutData: Required<AboutData> = {
     },
     {
       title: "Patio na Jaracza",
-      text: "W sezonie zapraszamy na zaciszne patio — kameralna przestrzeń w centrum Wrocławia, gdzie jedzenie na świeżym powietrzu nabiera innego wymiaru.",
+      text: "W sezonie zapraszamy na zaciszne patio przy ul. Jaracza 77B (Wrocław – Ołbin / Śródmieście, tuż obok Mostów Warszawskich i wałów nad Odrą) — kameralna przestrzeń, gdzie jedzenie na świeżym powietrzu nabiera innego wymiaru.",
     },
     {
       title: "Bez zadęcia",

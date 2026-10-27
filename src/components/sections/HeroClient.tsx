@@ -143,8 +143,17 @@ export default function HeroClient({
           {data.titleLine1}
           <br />
           <span className="text-[#960C3F]">{data.titleLine2}</span>
-          <br />
-          <span className="text-[#960C3F]">{data.titleLine3}</span>
+          {data.titleLine3 && data.titleLine3.trim() ? (
+            <>
+              <br />
+              <span className="text-[#960C3F]">{data.titleLine3}</span>
+            </>
+          ) : (
+            <span className="sr-only">
+              {" "}
+              — Wrocław (Śródmieście / Ołbin), ul. Stefana Jaracza 77B
+            </span>
+          )}
         </motion.h1>
 
         {/* Subtitle */}

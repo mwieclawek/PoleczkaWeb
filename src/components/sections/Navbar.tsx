@@ -46,27 +46,33 @@ export default function Navbar() {
       {/* Top accent bar */}
       <div className="absolute top-0 left-0 right-0 h-1.5 bg-[#960C3F] shadow-sm" />
 
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 pt-1 lg:px-8">
+      <nav
+        aria-label="Nawigacja główna"
+        className="mx-auto flex max-w-7xl items-center justify-between px-6 pt-1 lg:px-8"
+      >
         {/* Logo */}
         <Link href="/" className="group flex items-center">
           <img
             src="/logo.png"
-            alt="Poleczka — Bistro Kuchnia Polska"
+            alt="Bistro Poleczka — Kuchnia Polska Wrocław, ul. Jaracza 77B"
             className="h-16 w-auto md:h-20 transition-transform duration-300 group-hover:scale-105"
           />
         </Link>
 
         {/* Desktop nav */}
         <div className="hidden items-center gap-8 md:flex">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="relative text-base font-semibold tracking-wide transition-colors after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:transition-all hover:after:w-full text-[#960C3F] hover:text-[#CA5254] after:bg-[#960C3F]"
-            >
-              {link.label}
-            </Link>
-          ))}
+          <ul className="flex items-center gap-8">
+            {navLinks.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  className="relative text-base font-semibold tracking-wide transition-colors after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:transition-all hover:after:w-full text-[#960C3F] hover:text-[#CA5254] after:bg-[#960C3F]"
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
 
           {/* Reservation button */}
           <button
@@ -100,16 +106,19 @@ export default function Navbar() {
                 Nawigacja
               </SheetTitle>
               <div className="mt-8 flex flex-col items-center text-center gap-6">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setOpen(false)}
-                    className="text-lg font-semibold text-[#960C3F] transition-colors hover:text-[#CA5254] text-center"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
+                <ul className="flex flex-col items-center text-center gap-6 w-full">
+                  {navLinks.map((link) => (
+                    <li key={link.href}>
+                      <Link
+                        href={link.href}
+                        onClick={() => setOpen(false)}
+                        className="text-lg font-semibold text-[#960C3F] transition-colors hover:text-[#CA5254] text-center"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
 
                 {/* Mobile reservation button */}
                 <button
