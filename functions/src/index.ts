@@ -1,3 +1,12 @@
+/**
+ * UWAGA ARCHITEKTONICZNA:
+ * Aktywna obsługa powiadomień produkcyjnych (Resend e-mail, Zadarma SMS oraz Telegram)
+ * działa obecnie w jednym źródle prawdy w aplikacji Next.js na Firebase App Hosting
+ * (`src/lib/reservation-notifications.ts`, wywoływanej przez `/api/reservations/notify-telegram`,
+ * `/api/reservations/update-status` oraz `/api/telegram-webhook`).
+ * Poniższe funkcje w `functions/` pozostają pomocniczo i nie powinny być równolegle
+ * włączane na tym samym webhooku, aby nie dublować wysyłki powiadomień.
+ */
 import { onDocumentCreated } from "firebase-functions/v2/firestore";
 import { onRequest } from "firebase-functions/v2/https";
 import * as logger from "firebase-functions/logger";

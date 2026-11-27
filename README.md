@@ -10,7 +10,7 @@ Oficjalna aplikacja internetowa restauracji **Bistro Poleczka** we Wrocławiu (u
 - **Style i UI:** Tailwind CSS v4, Framer Motion
 - **CMS:** Sanity Studio v3 (`/studio`) z odświeżaniem ISR (`revalidate: 60`)
 - **Baza danych rezerwacji:** Firebase Firestore
-- **Powiadomienia:** Telegram Bot API oraz Nodemailer (SMTP)
+- **Powiadomienia:** Telegram Bot API, Resend (E-mail) oraz Zadarma API v1 (SMS)
 - **Hosting:** Google Firebase App Hosting
 
 ---
@@ -58,9 +58,10 @@ Typografia:
    - Ścieżki `/admin/*` oraz `/panel/*` są zabezpieczone przez HTTP Basic Auth (`src/middleware.ts`).
    - Login: `admin`, hasło: wartość zmiennej `ADMIN_PASSWORD` z pliku `.env.local`.
 
-3. **Powiadomienia e-mail (SMTP):**
-   - Po zmianie statusu rezerwacji system wysyła potwierdzenie lub informację o braku wolnych miejsc.
-   - Wymagane zmienne: `GMAIL_USER` oraz `GMAIL_APP_PASSWORD`.
+3. **Powiadomienia e-mail (Resend) i SMS (Zadarma):**
+   - Po wysłaniu formularza (status `pending`) gość otrzymuje e-mail z podsumowaniem zgłoszenia (bez SMS).
+   - Po potwierdzeniu lub odrzuceniu rezerwacji (z panelu lub Telegrama) system wysyła zarówno e-mail przez Resend, jak i krótki SMS (GSM-7 <= 160 znaków) przez Zadarma API v1.
+   - Wymagane zmienne: `RESEND_API_KEY`, `MAIL_FROM`, `MAIL_REPLY_TO`, `VENUE_PHONE`, `SMS_ENABLED`, `ZADARMA_API_KEY`, `ZADARMA_API_SECRET` (opcjonalnie `ZADARMA_SMS_SENDER_ID`).
 
 ---
 

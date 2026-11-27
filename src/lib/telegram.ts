@@ -13,16 +13,36 @@ export interface TelegramReservationPayload {
   notes?: string;
 }
 
+const FALLBACK_TELEGRAM_BOT_TOKEN =
+  "8897914854:AAGLEcpl1MRBmfIjEk8zZcg7TLl7Ll3o31o";
+const FALLBACK_TELEGRAM_CHAT_ID = "1098063047";
+
+/**
+ * Escapes HTML entities for Telegram Bot API `parse_mode: "HTML"`.
+ */
+export function escapeTelegramHtml(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+function getBotToken(): string {
+  return process.env.TELEGRAM_BOT_TOKEN || FALLBACK_TELEGRAM_BOT_TOKEN;
+}
+
+function getChatId(): string {
+  return process.env.TELEGRAM_CHAT_ID || FALLBACK_TELEGRAM_CHAT_ID;
+}
+
 /**
  * Send reservation notification to Telegram chat with Inline Keyboard buttons.
  */
 export async function sendTelegramNotification(
   payload: TelegramReservationPayload
 ): Promise<boolean> {
-  const botToken =
-    process.env.TELEGRAM_BOT_TOKEN ||
-    "8897914854:AAGLEcpl1MRBmfIjEk8zZcg7TLl7Ll3o31o";
-  const chatId = process.env.TELEGRAM_CHAT_ID || "1098063047";
+  const botToken = getBotToken();
+  const chatId = getChatId();
 
   if (!botToken || !chatId) {
     console.warn(
@@ -31,17 +51,20 @@ export async function sendTelegramNotification(
     return false;
   }
 
-  const messageText = `
-🍷 *NOWA REZERWACJA — BISTRO POLECZKA*
+  const notesText =
+    payload.notes && payload.notes.trim() ? payload.notes.trim() : "Brak";
 
-👤 *Imię i Nazwisko:* ${payload.name}
-📞 *Telefon:* ${payload.phone}
-✉️ *E-mail:* ${payload.email}
-📅 *Data:* ${payload.date}
-⏰ *Godzina:* ${payload.time}
-👥 *Liczba osób:* ${payload.guests}
-📝 *Uwagi:* ${payload.notes && payload.notes.trim() ? payload.notes : "Brak"}
-  `.trim();
+  const messageText = [
+    "🍷 <b>NOWA REZERWACJA — BISTRO POLECZKA</b>",
+    "",
+    `👤 <b>Imię i Nazwisko:</b> ${escapeTelegramHtml(payload.name || "-")}`,
+    `📞 <b>Telefon:</b> ${escapeTelegramHtml(payload.phone || "-")}`,
+    `✉️ <b>E-mail:</b> ${escapeTelegramHtml(payload.email || "-")}`,
+    `📅 <b>Data:</b> ${escapeTelegramHtml(payload.date || "-")}`,
+    `⏰ <b>Godzina:</b> ${escapeTelegramHtml(payload.time || "-")}`,
+    `👥 <b>Liczba osób:</b> ${escapeTelegramHtml(payload.guests || "-")}`,
+    `📝 <b>Uwagi:</b> ${escapeTelegramHtml(notesText)}`,
+  ].join("\n");
 
   const inlineKeyboard = {
     inline_keyboard: [
@@ -67,7 +90,7 @@ export async function sendTelegramNotification(
         body: JSON.stringify({
           chat_id: chatId,
           text: messageText,
-          parse_mode: "Markdown",
+          parse_mode: "HTML",
           reply_markup: inlineKeyboard,
         }),
       }
@@ -92,20 +115,26 @@ export async function answerTelegramCallbackQuery(
   callbackQueryId: string,
   text: string
 ): Promise<boolean> {
-  const botToken =
-    process.env.TELEGRAM_BOT_TOKEN ||
-    "8897914854:AAGLEcpl1MRBmfIjEk8zZcg7TLl7Ll3o31o";
+  const botToken = getBotToken();
   if (!botToken) return false;
 
   try {
-    await fetch(`https://api.telegram.org/bot${botToken}/answerCallbackQuery`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        callback_query_id: callbackQueryId,
-        text,
-      }),
-    });
+    const res = await fetch(
+      `https://api.telegram.org/bot${botToken}/answerCallbackQuery`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          callback_query_id: callbackQueryId,
+          text,
+        }),
+      }
+    );
+    if (!res.ok) {
+      const errText = await res.text();
+      console.error("Telegram answerCallbackQuery API error:", errText);
+      return false;
+    }
     return true;
   } catch (err) {
     console.error("Telegram answerCallbackQuery error:", err);
@@ -114,29 +143,36 @@ export async function answerTelegramCallbackQuery(
 }
 
 /**
- * Edit existing Telegram message text and remove inline keyboard.
+ * Edit existing Telegram message text (HTML) and remove inline keyboard.
  */
 export async function editTelegramMessage(
   chatId: string | number,
   messageId: number,
-  text: string
+  htmlText: string
 ): Promise<boolean> {
-  const botToken =
-    process.env.TELEGRAM_BOT_TOKEN ||
-    "8897914854:AAGLEcpl1MRBmfIjEk8zZcg7TLl7Ll3o31o";
+  const botToken = getBotToken();
   if (!botToken) return false;
 
   try {
-    await fetch(`https://api.telegram.org/bot${botToken}/editMessageText`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chat_id: chatId,
-        message_id: messageId,
-        text,
-        parse_mode: "Markdown",
-      }),
-    });
+    const res = await fetch(
+      `https://api.telegram.org/bot${botToken}/editMessageText`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: chatId,
+          message_id: messageId,
+          text: htmlText,
+          parse_mode: "HTML",
+          reply_markup: { inline_keyboard: [] },
+        }),
+      }
+    );
+    if (!res.ok) {
+      const errText = await res.text();
+      console.error("Telegram editMessageText API error:", errText);
+      return false;
+    }
     return true;
   } catch (err) {
     console.error("Telegram editMessageText error:", err);

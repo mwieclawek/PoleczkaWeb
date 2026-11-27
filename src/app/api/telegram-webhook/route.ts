@@ -1,91 +1,97 @@
 import { NextRequest, NextResponse } from "next/server";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { processReservationStatusChange } from "@/lib/reservation-notifications";
 import {
   answerTelegramCallbackQuery,
   editTelegramMessage,
+  escapeTelegramHtml,
 } from "@/lib/telegram";
-import { sendReservationEmail } from "@/lib/mail";
-import { updateReservationStatusInStore } from "@/lib/reservations-store";
+
+interface TelegramWebhookBody {
+  callback_query?: {
+    id?: string;
+    data?: string;
+    message?: {
+      message_id?: number;
+      text?: string;
+      chat?: {
+        id?: string | number;
+      };
+    };
+  };
+}
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
+    const body = (await req.json()) as TelegramWebhookBody;
 
-    // Check if this is a Telegram callback query (button click)
-    const callbackQuery = body.callback_query;
+    const callbackQuery = body?.callback_query;
     if (!callbackQuery) {
       return NextResponse.json({ ok: true, message: "Not a callback query" });
     }
 
-    const callbackData: string = callbackQuery.data || "";
-    const callbackQueryId = callbackQuery.id;
+    const callbackData = callbackQuery.data || "";
+    const callbackQueryId = callbackQuery.id || "";
     const message = callbackQuery.message;
     const chatId = message?.chat?.id;
     const messageId = message?.message_id;
     const originalText = message?.text || "";
 
-    const isAccept = callbackData.startsWith("accept_") || callbackData.startsWith("confirm_");
-    const isReject = callbackData.startsWith("reject_");
+    let newStatus: "confirmed" | "rejected" | null = null;
+    let reservationId = "";
 
-    if (!isAccept && !isReject) {
+    if (callbackData.startsWith("accept_")) {
+      newStatus = "confirmed";
+      reservationId = callbackData.slice("accept_".length);
+    } else if (callbackData.startsWith("confirm_")) {
+      newStatus = "confirmed";
+      reservationId = callbackData.slice("confirm_".length);
+    } else if (callbackData.startsWith("reject_")) {
+      newStatus = "rejected";
+      reservationId = callbackData.slice("reject_".length);
+    }
+
+    if (!newStatus || !reservationId) {
       return NextResponse.json({ ok: true, message: "Ignored callback data" });
     }
 
-    const reservationId = callbackData
-      .replace("accept_", "")
-      .replace("confirm_", "")
-      .replace("reject_", "");
-    const newStatus: "confirmed" | "rejected" = isAccept ? "confirmed" : "rejected";
+    const result = await processReservationStatusChange({
+      id: reservationId,
+      status: newStatus,
+      source: "telegram_webhook",
+    });
 
-    // 1. Update in-memory server store
-    updateReservationStatusInStore(reservationId, newStatus);
-
-    // 1. Fetch reservation details from Firestore
-    const reservationRef = doc(db, "reservations", reservationId);
-    const reservationSnap = await getDoc(reservationRef);
-
-    if (reservationSnap.exists()) {
-      const data = reservationSnap.data();
-
-      // 2. Update status in Firestore
-      await updateDoc(reservationRef, { status: newStatus });
-
-      // 3. Send email to client
-      if (data.email) {
-        await sendReservationEmail({
-          to: data.email,
-          name: data.name || "Szanowny Kliencie",
-          date: data.date || "",
-          time: data.time || "",
-          guests: data.guests || "",
-          status: newStatus,
-        });
-      }
-    }
-
-    // 4. Answer Telegram callback query
-    const alertMessage = isAccept
+    const alertMessage = result.skippedDuplicate
+      ? "ℹ️ Status tej rezerwacji był już wcześniej zapisany."
+      : newStatus === "confirmed"
       ? "✅ Rezerwacja została zaakceptowana!"
       : "❌ Rezerwacja została odrzucona.";
 
-    await answerTelegramCallbackQuery(callbackQueryId, alertMessage);
-
-    // 5. Edit Telegram message to show final status and remove buttons
-    if (chatId && messageId) {
-      const statusBadge = isAccept
-        ? "\n\n✅ *STATUS: ZAAKCEPTOWANO PRZEZ OPERATORA*"
-        : "\n\n❌ *STATUS: ODRZUCONO PRZEZ OPERATORA*";
-
-      const updatedText = originalText + statusBadge;
-      await editTelegramMessage(chatId, messageId, updatedText);
+    if (callbackQueryId) {
+      await answerTelegramCallbackQuery(callbackQueryId, alertMessage);
     }
 
-    return NextResponse.json({ ok: true });
-  } catch (error: any) {
+    if (chatId && messageId) {
+      const escapedOriginal = escapeTelegramHtml(originalText);
+      const statusBadge =
+        newStatus === "confirmed"
+          ? "\n\n✅ <b>STATUS: ZAAKCEPTOWANO PRZEZ OPERATORA</b>"
+          : "\n\n❌ <b>STATUS: ODRZUCONO PRZEZ OPERATORA</b>";
+
+      const updatedHtml = originalText.includes("STATUS:")
+        ? escapedOriginal
+        : `${escapedOriginal}${statusBadge}`;
+
+      await editTelegramMessage(chatId, messageId, updatedHtml);
+    }
+
+    return NextResponse.json(result);
+  } catch (error: unknown) {
     console.error("Telegram webhook error:", error);
     return NextResponse.json(
-      { ok: false, error: error?.message || "Internal Error" },
+      {
+        ok: false,
+        error: error instanceof Error ? error.message : "Internal Error",
+      },
       { status: 500 }
     );
   }

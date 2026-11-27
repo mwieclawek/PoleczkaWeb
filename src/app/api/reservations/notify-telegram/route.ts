@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { sendTelegramNotification } from "@/lib/telegram";
-import { saveReservationToStore } from "@/lib/reservations-store";
+import { processNewReservation } from "@/lib/reservation-notifications";
 
 export async function POST(req: NextRequest) {
   try {
-    const payload = await req.json();
+    const payload = (await req.json()) as Record<string, unknown> | null;
 
     if (!payload || !payload.id || !payload.name) {
       return NextResponse.json(
@@ -13,31 +12,28 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 1. Send Telegram Notification (uses robust botToken & chatId with fallbacks)
-    const telegramSuccess = await sendTelegramNotification(payload);
+    const result = await processNewReservation({
+      id: String(payload.id),
+      name: String(payload.name),
+      phone: String(payload.phone || ""),
+      email: String(payload.email || ""),
+      date: String(payload.date || ""),
+      time: String(payload.time || ""),
+      guests: String(payload.guests || ""),
+      notes: typeof payload.notes === "string" ? payload.notes : "",
+    });
 
-    // 2. Persist to server store and Firestore
-    try {
-      saveReservationToStore({
-        id: String(payload.id),
-        name: payload.name,
-        phone: payload.phone,
-        email: payload.email,
-        date: payload.date,
-        time: payload.time,
-        guests: payload.guests,
-        notes: payload.notes || "",
-        status: payload.status || "pending",
-      });
-    } catch (fsErr) {
-      console.warn("Server-side persistence warning:", fsErr);
-    }
-
-    return NextResponse.json({ ok: true, telegram: telegramSuccess });
-  } catch (err: any) {
-    console.error("Telegram notification API error:", err);
+    return NextResponse.json({
+      ...result,
+      telegram: result.telegramSent,
+    });
+  } catch (err: unknown) {
+    console.error("Telegram & notification API error:", err);
     return NextResponse.json(
-      { ok: false, error: err?.message || "Internal Server Error" },
+      {
+        ok: false,
+        error: err instanceof Error ? err.message : "Internal Server Error",
+      },
       { status: 500 }
     );
   }

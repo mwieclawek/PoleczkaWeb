@@ -5,9 +5,13 @@ export async function GET() {
   try {
     const reservations = await getAllReservationsFromStore();
     return NextResponse.json({ ok: true, reservations });
-  } catch (error: any) {
+  } catch (error: unknown) {
     return NextResponse.json(
-      { ok: false, error: error?.message || "Failed to fetch reservations" },
+      {
+        ok: false,
+        error:
+          error instanceof Error ? error.message : "Failed to fetch reservations",
+      },
       { status: 500 }
     );
   }

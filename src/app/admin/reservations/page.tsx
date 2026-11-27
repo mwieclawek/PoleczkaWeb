@@ -3,14 +3,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
   collection,
-  query,
   onSnapshot,
   doc,
   updateDoc,
-  orderBy,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { format } from "date-fns";
 import {
   Bell,
   CheckCircle,
@@ -40,6 +37,8 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 
+type FirestoreTimestampLike = string | { toDate?: () => Date };
+
 export interface ReservationItem {
   id: string;
   name: string;
@@ -50,7 +49,20 @@ export interface ReservationItem {
   guests: string;
   notes?: string;
   status: "pending" | "confirmed" | "rejected";
-  createdAt?: any;
+  createdAt?: FirestoreTimestampLike;
+}
+
+function getSortKey(item: ReservationItem): string {
+  const raw = item.createdAt;
+  if (typeof raw === "string") return raw;
+  if (raw && typeof raw === "object" && typeof raw.toDate === "function") {
+    try {
+      return raw.toDate().toISOString();
+    } catch {
+      // Fallback to date
+    }
+  }
+  return item.date || "";
 }
 
 function deduplicateReservations(items: ReservationItem[]): ReservationItem[] {
@@ -88,7 +100,7 @@ function deduplicateReservations(items: ReservationItem[]): ReservationItem[] {
   }
 
   return Array.from(map.values()).sort((a, b) =>
-    (b.createdAt || b.date || "").localeCompare(a.createdAt || a.date || "")
+    getSortKey(b).localeCompare(getSortKey(a))
   );
 }
 
@@ -101,21 +113,8 @@ export default function AdminReservationsPage() {
   >("all");
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
   const [isAudioUnlocked, setIsAudioUnlocked] = useState<boolean>(false);
-  const [activeModal, setActiveModal] = useState<ReservationItem | null>(null);
   const [firebaseError, setFirebaseError] = useState<string | null>(null);
   const [serverReservations, setServerReservations] = useState<ReservationItem[]>([]);
-
-  // Load localStorage reservations (fallback when Firebase not configured)
-  const loadLocalReservations = () => {
-    try {
-      const stored = JSON.parse(
-        localStorage.getItem("poleczka_reservations") || "[]"
-      ) as ReservationItem[];
-      setLocalReservations(stored);
-    } catch {
-      setLocalReservations([]);
-    }
-  };
 
   // Update status in localStorage
   const updateLocalStatus = (id: string, status: "confirmed" | "rejected") => {
@@ -136,7 +135,11 @@ export default function AdminReservationsPage() {
   const playChime = () => {
     try {
       if (!audioCtxRef.current) {
-        const Ctx = window.AudioContext || (window as any).webkitAudioContext;
+        const win = window as Window & {
+          webkitAudioContext?: typeof AudioContext;
+        };
+        const Ctx = window.AudioContext || win.webkitAudioContext;
+        if (!Ctx) return;
         audioCtxRef.current = new Ctx();
       }
       if (audioCtxRef.current.state === "suspended") {
@@ -174,7 +177,14 @@ export default function AdminReservationsPage() {
 
   const unlockAudio = () => {
     try {
-      const Ctx = window.AudioContext || (window as any).webkitAudioContext;
+      const win = window as Window & {
+        webkitAudioContext?: typeof AudioContext;
+      };
+      const Ctx = window.AudioContext || win.webkitAudioContext;
+      if (!Ctx) {
+        setIsAudioUnlocked(true);
+        return;
+      }
       audioCtxRef.current = new Ctx();
       audioCtxRef.current.resume().then(() => {
         setIsAudioUnlocked(true);
@@ -290,17 +300,17 @@ export default function AdminReservationsPage() {
     };
   }, [allReservations, soundEnabled, isAudioUnlocked]);
 
-  // Show modal for first pending reservation across both sources
-  useEffect(() => {
-    const pending = allReservations.filter((r) => r.status === "pending");
-    setActiveModal(pending.length > 0 ? pending[0] : null);
-  }, [reservations, localReservations]);
+  // Derive active pending modal from merged reservations (no cascading setState in useEffect)
+  const activeModal =
+    allReservations.find((r) => r.status === "pending") ?? null;
 
-  // --- Update reservation status (Firestore or localStorage fallback + Email API) ---
+  // --- Update reservation status (server API single source of truth + Firestore fallback) ---
   const updateReservationStatus = async (
     id: string,
     status: "confirmed" | "rejected"
   ) => {
+    const targetItem = allReservations.find((r) => r.id === id);
+
     // Optimistically update UI states immediately
     setReservations((prev) =>
       prev.map((r) => (r.id === id ? { ...r, status } : r))
@@ -308,25 +318,29 @@ export default function AdminReservationsPage() {
     setServerReservations((prev) =>
       prev.map((r) => (r.id === id ? { ...r, status } : r))
     );
-    if (activeModal?.id === id) {
-      setActiveModal(null);
-    }
-
-    // Call server API route to persist status change and send email
-    fetch("/api/reservations/update-status", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, status }),
-    }).catch((err) => console.error("API update status error:", err));
-
     if (id.startsWith("local_")) {
       updateLocalStatus(id, status);
-      return;
     }
+
+    // Call server API route first (persists status & dispatches Resend email + Zadarma SMS)
+    let apiSucceeded = false;
     try {
-      await updateDoc(doc(db, "reservations", id), { status });
+      const res = await fetch("/api/reservations/update-status", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, status, reservation: targetItem }),
+      });
+      apiSucceeded = res.ok;
     } catch (err) {
-      console.warn("Firestore status update warning:", err);
+      console.error("API update status error:", err);
+    }
+
+    if (!apiSucceeded && !id.startsWith("local_")) {
+      try {
+        await updateDoc(doc(db, "reservations", id), { status });
+      } catch (err) {
+        console.warn("Firestore status update warning:", err);
+      }
     }
   };
 
@@ -476,7 +490,7 @@ export default function AdminReservationsPage() {
                 icon: Filter,
                 ping: false,
               },
-            ]
+            ] as const
           ).map(({ key, label, count, activeClass, icon: Icon, ping }) => (
             <button
               key={key}
@@ -587,7 +601,7 @@ export default function AdminReservationsPage() {
                       {item.notes && (
                         <div className="flex items-start gap-2 text-slate-400 text-xs pt-1 border-t border-slate-800 mt-1">
                           <FileText className="w-3.5 h-3.5 text-slate-500 shrink-0 mt-0.5" />
-                          <span className="italic">"{item.notes}"</span>
+                          <span className="italic">&ldquo;{item.notes}&rdquo;</span>
                         </div>
                       )}
                     </div>
@@ -671,7 +685,7 @@ export default function AdminReservationsPage() {
                 <div className="pt-1">
                   <span className="text-slate-400 text-xs block mb-1">Uwagi:</span>
                   <p className="text-xs italic bg-slate-900 p-2 rounded border border-slate-800">
-                    "{activeModal.notes}"
+                    &ldquo;{activeModal.notes}&rdquo;
                   </p>
                 </div>
               )}

@@ -42,9 +42,15 @@ import {
 import { cn } from "@/lib/utils";
 
 const reservationSchema = z.object({
-  name: z.string().min(2, "Imię i nazwisko musi mieć co najmniej 2 znaki"),
-  phone: z.string().min(9, "Podaj prawidłowy numer telefonu (co najmniej 9 cyfr)"),
-  email: z.string().email("Podaj prawidłowy adres e-mail"),
+  name: z.string().trim().min(2, "Imię i nazwisko musi mieć co najmniej 2 znaki"),
+  phone: z
+    .string()
+    .trim()
+    .refine((val) => {
+      const digits = val.replace(/[\s\-–—().+/]/g, "");
+      return /^\d+$/.test(digits) && digits.length >= 9 && digits.length <= 15;
+    }, "Podaj prawidłowy numer telefonu (9–15 cyfr)"),
+  email: z.string().trim().email("Podaj prawidłowy adres e-mail"),
   date: z.date({
     message: "Wybierz datę rezerwacji",
   }),
@@ -54,6 +60,34 @@ const reservationSchema = z.object({
 });
 
 export type ReservationFormValues = z.infer<typeof reservationSchema>;
+
+function createReservationId(): string {
+  return `res_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+}
+
+function saveReservationToLocalStorage(docData: Record<string, unknown>): string {
+  const id =
+    typeof docData.id === "string" && docData.id
+      ? docData.id
+      : `local_${Date.now()}`;
+  try {
+    const raw = localStorage.getItem("poleczka_reservations") || "[]";
+    const parsed: unknown = JSON.parse(raw);
+    const existing = Array.isArray(parsed)
+      ? (parsed as Array<Record<string, unknown>>)
+      : [];
+    const newEntry: Record<string, unknown> = {
+      ...docData,
+      id,
+      createdAt: new Date().toISOString(),
+    };
+    existing.unshift(newEntry);
+    localStorage.setItem("poleczka_reservations", JSON.stringify(existing));
+  } catch {
+    // localStorage not available (SSR guard)
+  }
+  return id;
+}
 
 const TIME_SLOTS = [
   "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
@@ -90,25 +124,6 @@ export function ReservationForm({ onSuccess }: { onSuccess?: () => void }) {
     },
   });
 
-  const saveToLocalStorage = (docData: Record<string, any>): string => {
-    const id = `local_${Date.now()}`;
-    try {
-      const existing: any[] = JSON.parse(
-        localStorage.getItem("poleczka_reservations") || "[]"
-      );
-      const newEntry = {
-        ...docData,
-        id,
-        createdAt: new Date().toISOString(),
-      };
-      existing.unshift(newEntry);
-      localStorage.setItem("poleczka_reservations", JSON.stringify(existing));
-    } catch {
-      // localStorage not available (SSR guard)
-    }
-    return id;
-  };
-
   const onSubmit = async (data: ReservationFormValues) => {
     setIsSubmitting(true);
     setErrorMessage(null);
@@ -116,52 +131,79 @@ export function ReservationForm({ onSuccess }: { onSuccess?: () => void }) {
     const formattedDate = format(data.date, "yyyy-MM-dd");
 
     const docData = {
-      name: data.name,
-      phone: data.phone,
-      email: data.email,
+      name: data.name.trim(),
+      phone: data.phone.trim(),
+      email: data.email.trim(),
       date: formattedDate,
       time: data.time,
       guests: data.guests,
-      notes: data.notes || "",
+      notes: data.notes?.trim() || "",
       status: "pending",
     };
 
-    const reservationId = `res_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+    const reservationId = createReservationId();
+    let persistedOnServer = false;
 
-    // 1. Immediately trigger server-side endpoint (handles Telegram notification & Firestore server backup)
-    const apiPromise = fetch("/api/reservations/notify-telegram", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: reservationId, ...docData }),
-    }).catch((err) => console.error("Failed to trigger Telegram notification:", err));
-
-    // 2. Try client-side Firestore write in parallel with 3s timeout
+    // 1. Trigger server-side endpoint first (persists reservation, notifies Telegram & sends pending email)
     try {
-      const timeout = new Promise<any>((_, reject) =>
-        setTimeout(() => reject(new Error("Firebase timeout")), 3000)
-      );
-      await Promise.race([
-        setDoc(doc(db, "reservations", reservationId), {
-          ...docData,
-          createdAt: serverTimestamp(),
-        }),
-        timeout,
-      ]);
-    } catch (err: any) {
-      console.warn("Client Firestore write fallback:", err?.message);
-      saveToLocalStorage({ ...docData, id: reservationId });
-    } finally {
-      await apiPromise.catch(() => {});
-      analytics.reservationSuccess({ guests: docData.guests });
-      setSubmittedData(data);
-      reset();
-      setIsSubmitting(false);
-      if (onSuccess) {
-        setTimeout(() => {
-          onSuccess();
-          setSubmittedData(null);
-        }, 8000);
+      const apiRes = await fetch("/api/reservations/notify-telegram", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: reservationId, ...docData }),
+      });
+      if (apiRes.ok) {
+        const apiJson = (await apiRes.json()) as {
+          persistedToFirestore?: boolean;
+        };
+        persistedOnServer = Boolean(apiJson?.persistedToFirestore);
       }
+    } catch (err) {
+      console.error("Failed to trigger reservation notification API:", err);
+    }
+
+    // 2. Fallback to client-side Firestore write (with merge: true) only if server persistence failed
+    if (!persistedOnServer) {
+      let timeoutId: ReturnType<typeof setTimeout> | undefined;
+      try {
+        const timeout = new Promise<never>((_, reject) => {
+          timeoutId = setTimeout(
+            () => reject(new Error("Firebase timeout")),
+            3000
+          );
+        });
+        await Promise.race([
+          setDoc(
+            doc(db, "reservations", reservationId),
+            {
+              ...docData,
+              createdAt: serverTimestamp(),
+            },
+            { merge: true }
+          ),
+          timeout,
+        ]);
+      } catch (err: unknown) {
+        console.warn(
+          "Client Firestore write fallback:",
+          err instanceof Error ? err.message : err
+        );
+        saveReservationToLocalStorage({ ...docData, id: reservationId });
+      } finally {
+        if (timeoutId !== undefined) {
+          clearTimeout(timeoutId);
+        }
+      }
+    }
+
+    analytics.reservationSuccess({ guests: docData.guests });
+    setSubmittedData(data);
+    reset();
+    setIsSubmitting(false);
+    if (onSuccess) {
+      setTimeout(() => {
+        onSuccess();
+        setSubmittedData(null);
+      }, 8000);
     }
   };
 

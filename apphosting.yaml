@@ -1,0 +1,82 @@
+# Firebase App Hosting configuration for Bistro Poleczka (backend: poleczka-bistro-app)
+# Secrets are stored in Google Cloud Secret Manager and granted via `firebase apphosting:secrets:grantaccess`.
+
+env:
+  # Powiadomienia E-mail (Resend)
+  - variable: RESEND_API_KEY
+    secret: RESEND_API_KEY
+    availability:
+      - RUNTIME
+
+  - variable: MAIL_FROM
+    value: "Bistro Poleczka <rezerwacje@bistropoleczka.pl>"
+    availability:
+      - RUNTIME
+
+  - variable: MAIL_REPLY_TO
+    value: "kontakt@bistropoleczka.pl"
+    availability:
+      - RUNTIME
+
+  - variable: VENUE_PHONE
+    value: "+48 71 880 87 08"
+    availability:
+      - RUNTIME
+
+  # Powiadomienia SMS (Zadarma API v1)
+  - variable: SMS_ENABLED
+    value: "true"
+    availability:
+      - RUNTIME
+
+  - variable: ZADARMA_API_KEY
+    secret: ZADARMA_API_KEY
+    availability:
+      - RUNTIME
+
+  - variable: ZADARMA_API_SECRET
+    secret: ZADARMA_API_SECRET
+    availability:
+      - RUNTIME
+
+  # Opcjonalny zatwierdzony Sender ID w Zadarma (odkomentuj po aktywacji w panelu Zadarma):
+  # - variable: ZADARMA_SMS_SENDER_ID
+  #   value: "Poleczka"
+  #   availability:
+  #     - RUNTIME
+
+  # Telegram Bot API
+  - variable: TELEGRAM_BOT_TOKEN
+    secret: TELEGRAM_BOT_TOKEN
+    availability:
+      - RUNTIME
+
+  - variable: TELEGRAM_CHAT_ID
+    secret: TELEGRAM_CHAT_ID
+    availability:
+      - RUNTIME
+
+  # Panel administracyjny (/admin/reservations)
+  - variable: ADMIN_PASSWORD
+    secret: ADMIN_PASSWORD
+    availability:
+      - RUNTIME
+
+  # Sanity CMS & Analityka (zmienne publiczne)
+  - variable: NEXT_PUBLIC_SANITY_PROJECT_ID
+    value: "2hk4fqe9"
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: NEXT_PUBLIC_SANITY_DATASET
+    value: "production"
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: NEXT_PUBLIC_GA_ID
+    value: "G-RDJ9BY67X3"
+    availability:
+      - BUILD
+      - RUNTIME
